@@ -54,10 +54,6 @@ export function Saibai(): JSX.Element {
 		<ErrorBoundary name='Saibai'>
 			<div className='grain bg-cyan-50 text-cyan-900 dark:bg-cyan-800 dark:text-cyan-50'>
 				<main className='relative min-h-screen'>
-					{/* header */}
-					<a href='#introduction' className='sticky top-10 z-50 hidden size-0 items-center text-nowrap px-10 font-mono text-lg text-cyan-600 hover:underline sm:flex dark:text-cyan-300'>
-						Saibai Corpus
-					</a>
 					<Acknowledgment />
 					{/* corpus */}
 					<Corpus defaultTab='Chronological' />
