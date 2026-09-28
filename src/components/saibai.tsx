@@ -18,6 +18,7 @@ import { cva } from 'class-variance-authority';
 import { createElement, useCallback, useMemo, useState } from 'react';
 import { feature } from 'topojson-client';
 import 'vidstack/styles/base.css';
+import { CarbonIcon } from './carbon-icons';
 
 // COMPONENTS
 
@@ -29,7 +30,6 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { AlertError } from '@ui/alert';
 import { MediaMuteButton, MediaOutlet, MediaPlayButton, MediaPlayer, MediaSeekButton, MediaSliderThumbnail, MediaSliderValue, MediaTime, MediaTimeSlider } from '@vidstack/react';
 import { Background, Handle, Panel, Position, ReactFlow, ReactFlowProvider } from '@xyflow/react';
-import { FastForward as IconForward, Maximize as FitIcon, Pause as IconPause, Play as IconPlay, Rewind as IconRewind, Volume2 as IconVolumeUp, VolumeX as IconMute } from 'lucide-react';
 import React from 'react';
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 
@@ -377,7 +377,7 @@ function PlayButton({ ...attrs }) {
 	const label = paused ? 'Play' : 'Pause';
 	return (
 		<MediaPlayButton className={cn(MEDIA_BUTTON_CLASSES)} aria-label={label} {...attrs}>
-			{paused ? <IconPlay className='block size-full scale-150' aria-hidden='true' /> : <IconPause className='block size-full scale-150' aria-hidden='true' />}
+			{paused ? <CarbonIcon name='play-filled' className='block size-full scale-150' /> : <CarbonIcon name='pause-outline-filled' className='block size-full scale-150' />}
 		</MediaPlayButton>
 	);
 }
@@ -401,11 +401,11 @@ function AudioControls({ className, ...attrs }: AudioCtrlsProps) {
 			<div className={cn('pointer-events-none min-h-[48px] w-full can-control:pointer-events-auto', BUTTON_WRAPPER)}>
 				<div className={'py-0 ' + BUTTON_WRAPPER}>
 					<MediaSeekButton className={MEDIA_BUTTON_CLASSES} seconds={-30} aria-label='Seek back 30 seconds' data-tooltip='Jump back'>
-						<IconRewind className='size-full' aria-hidden='true' />
+						<CarbonIcon name='rewind-30' className='size-full' />
 					</MediaSeekButton>
 					<PlayButton data-tooltip={paused ? 'Play' : 'Pause'} />
 					<MediaSeekButton className={MEDIA_BUTTON_CLASSES} seconds={30} aria-label='Seek forward 30 seconds' data-tooltip='Jump forward'>
-						<IconForward className='size-full' aria-hidden='true' />
+						<CarbonIcon name='forward-30' className='size-full' />
 					</MediaSeekButton>
 				</div>
 				<div className='m-0 flex grow items-center gap-4 self-stretch border-l p-0 pl-4'>
@@ -414,7 +414,7 @@ function AudioControls({ className, ...attrs }: AudioCtrlsProps) {
 					<MediaTime type='duration' className='text-sm' />
 				</div>
 				<MediaMuteButton className={cn(MEDIA_BUTTON_CLASSES)} aria-label={muted ? 'Unmute' : 'Mute'} data-tooltip={muted ? 'Unmute' : 'Mute'}>
-					{muted ? <IconMute className='block size-full scale-75' aria-hidden='true' /> : <IconVolumeUp className='block size-full scale-75' aria-hidden='true' />}
+					{muted ? <CarbonIcon name='volume-mute-filled' className='block size-full scale-75' /> : <CarbonIcon name='volume-up-filled' className='block size-full scale-75' />}
 				</MediaMuteButton>
 			</div>
 		</div>
@@ -824,7 +824,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
 						title='Vertical Layout'
 						aria-label='Vertical Layout'
 					>
-						<FitIcon className='shrink-0 rounded border bg-white p-1 text-xl text-black' aria-hidden='true' />
+						<CarbonIcon name='maximize' className='shrink-0 rounded border bg-white p-1 text-xl text-black' />
 					</button>
 				</Panel>
 				<Dialog open={!!selNode} onOpenChange={o => !o && setSelNode(null)}>
