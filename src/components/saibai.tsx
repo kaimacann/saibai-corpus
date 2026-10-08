@@ -63,7 +63,7 @@ import {
 
 // TYPES
 
-import type { Person, SaibaiFlowNode as FlowNode } from "@lib/types";
+import type { Person } from "@lib/types";
 import type { Edge as ReactFlowEdge, Node, NodeProps } from "@xyflow/react";
 import type { VariantProps } from "class-variance-authority";
 import type { JSX } from "react";
@@ -219,9 +219,15 @@ export const buttonVariants = cva(
   },
 );
 
-type PersonGraphNode = Node<FlowNode & Record<string, unknown>, "custom"> & {
-  type: "custom";
-};
+type PersonGraphNode = Node<
+  {
+    nodeData: Person;
+    origin: boolean;
+    terminus: boolean;
+    setSelectedNode: React.Dispatch<React.SetStateAction<Person | null>>;
+  } & Record<string, unknown>,
+  "custom"
+> & { type: "custom" };
 
 type GenealogyNode =
   | PersonGraphNode
@@ -1549,11 +1555,7 @@ const CORPUS_TABS = [
  *
  * @returns Fully composed layout with integrated sub-components.
  */
-export default function Corpus({
-  defaultTab,
-}: {
-  defaultTab: string;
-}): React.JSX.Element {
+function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
   return (
     <ErrorBoundary
       name="SaibaiCorpus"

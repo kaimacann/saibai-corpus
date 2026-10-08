@@ -1,5 +1,3 @@
-import type React from "react";
-
 export type Person = {
   id: string;
   name: string;
@@ -15,10 +13,4 @@ export type Person = {
     date: string;
     source: string;
   }[];
-};
-export type SaibaiFlowNode = {
-  nodeData: Person;
-  origin: boolean;
-  terminus: boolean;
-  setSelectedNode: React.Dispatch<React.SetStateAction<Person | null>>;
 };
