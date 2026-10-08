@@ -10,37 +10,65 @@ IMPORTS
 
 // API
 
-import { cn } from '@utils';
-import { useMediaStore } from '@vidstack/react';
-import { useEdgesState, useNodesState, useReactFlow } from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
-import { cva } from 'class-variance-authority';
-import { createElement, useCallback, useMemo, useState } from 'react';
-import { feature } from 'topojson-client';
-import 'vidstack/styles/base.css';
-import { CarbonIcon } from './carbon-icons';
+import { cn } from "@utils";
+import { useMediaStore } from "@vidstack/react";
+import { useEdgesState, useNodesState, useReactFlow } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+import { cva } from "class-variance-authority";
+import { useCallback, useMemo, useState } from "react";
+import { feature } from "topojson-client";
+import "vidstack/styles/base.css";
+import { CarbonIcon } from "./carbon-icons";
 
 // COMPONENTS
 
-import { ErrorBoundary } from '@components/ErrorBoundary';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@components/ui/dialog';
-import Dagre from '@dagrejs/dagre';
-import { Slot } from '@radix-ui/react-slot';
-import * as Tabs from '@radix-ui/react-tabs';
-import { AlertError } from '@ui/alert';
-import { MediaMuteButton, MediaOutlet, MediaPlayButton, MediaPlayer, MediaSeekButton, MediaSliderThumbnail, MediaSliderValue, MediaTime, MediaTimeSlider } from '@vidstack/react';
-import { Background, Handle, Panel, Position, ReactFlow, ReactFlowProvider } from '@xyflow/react';
-import React from 'react';
-import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
+import { ErrorBoundary } from "@components/ErrorBoundary";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@components/ui/dialog";
+import Dagre from "@dagrejs/dagre";
+import { Slot } from "@radix-ui/react-slot";
+import * as Tabs from "@radix-ui/react-tabs";
+import { AlertError } from "@ui/alert";
+import {
+  MediaMuteButton,
+  MediaOutlet,
+  MediaPlayButton,
+  MediaPlayer,
+  MediaSeekButton,
+  MediaSliderThumbnail,
+  MediaSliderValue,
+  MediaTime,
+  MediaTimeSlider,
+} from "@vidstack/react";
+import {
+  Background,
+  Handle,
+  Panel,
+  Position,
+  ReactFlow,
+  ReactFlowProvider,
+} from "@xyflow/react";
+import React from "react";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  ZoomableGroup,
+} from "react-simple-maps";
 
 // TYPES
 
-import type { Person, SaibaiFlowNode as FlowNode } from '@lib/types';
-import type { Edge as ReactFlowEdge, Node, NodeProps } from '@xyflow/react';
-import type { VariantProps } from 'class-variance-authority';
-import type { JSX } from 'react';
-import type { ReactNode } from 'react';
-import type { MapGeography } from 'react-simple-maps';
+import type { Person, SaibaiFlowNode as FlowNode } from "@lib/types";
+import type { Edge as ReactFlowEdge, Node, NodeProps } from "@xyflow/react";
+import type { VariantProps } from "class-variance-authority";
+import type { JSX } from "react";
+import type { ReactNode } from "react";
+import type { MapGeography } from "react-simple-maps";
 
 /*//////////////////////////////////////////////////
 COMPONENTS
@@ -48,70 +76,98 @@ COMPONENTS
 
 /**
  * Renders the Saibai corpus landing page without an Astro layout wrapper.
+ * @returns The Saibai landing page.
  */
 export function Saibai(): JSX.Element {
-	return (
-		<ErrorBoundary name='Saibai'>
-			<div className='grain bg-cyan-50 text-cyan-900 dark:bg-cyan-800 dark:text-cyan-50'>
-				<main className='relative min-h-screen'>
-					<Acknowledgment />
-					{/* corpus */}
-					<Corpus defaultTab='Chronological' />
-				</main>
-				{/* footer */}
-				<footer id='footer' className='grain relative z-20 bg-cyan-50 text-cyan-900 sm:grid-cols-1 md:grid-cols-2 lg:grid dark:bg-cyan-800 dark:text-cyan-50 print:hidden'>
-					<div className='col-start-1 p-12 lg:pr-32'>
-						Saibai Corpus acknowledges the Aboriginal and Torres Strait Islander peoples as the Traditional Custodians of Country, and recognises their enduring connection to land, sea, and community.
-						We pay our respects to the Koeybuway and Moegibuway peoples of Saibai Island, whose rich storytelling traditions we seek to honour and help preserve.
-					</div>
-					<nav className='col-start-2 grid gap-10 p-12 text-2xl sm:grid-cols-2'>
-						<span className='mb-6'>
-							<p className='mb-2 font-mono leading-tight'>saibai corpus</p>
-							<span>© {new Date().getFullYear()}</span>
-						</span>
-						<ul className='flex flex-col gap-2'>
-							{[
-								['Kai Macann', 'https://www.linkedin.com/in/kaimacann/'],
-								['Friendcis Meeko Estores', 'https://www.linkedin.com/in/meeko-estores-78444822b'],
-								['Jack Linz', 'https://www.linkedin.com/in/jack-linz-942a33358'],
-								['Jake Salamon'],
-								['Nathan Kam'],
-								['Benjamin Li'],
-							].map(([n, h]) => (
-								<a key={n} className='flex gap-4 !outline-none transition-transform' href={h} target='_blank'>
-									<span className='decoration-2 underline-offset-4 hocus:underline'>{n}</span>
-								</a>
-							))}
-						</ul>
-					</nav>
-				</footer>
-			</div>
-		</ErrorBoundary>
-	);
+  return (
+    <ErrorBoundary name="Saibai">
+      <div className="grain bg-cyan-50 text-cyan-900 dark:bg-cyan-800 dark:text-cyan-50">
+        <main className="relative min-h-screen">
+          <Acknowledgment />
+          {/* corpus */}
+          <Corpus defaultTab="Chronological" />
+        </main>
+        {/* footer */}
+        <footer
+          id="footer"
+          className="grain relative z-20 bg-cyan-50 text-cyan-900 sm:grid-cols-1 md:grid-cols-2 lg:grid dark:bg-cyan-800 dark:text-cyan-50 print:hidden"
+        >
+          <div className="col-start-1 p-12 lg:pr-32">
+            Saibai Corpus acknowledges the Aboriginal and Torres Strait Islander
+            peoples as the Traditional Custodians of Country, and recognises
+            their enduring connection to land, sea, and community. We pay our
+            respects to the Koeybuway and Moegibuway peoples of Saibai Island,
+            whose rich storytelling traditions we seek to honour and help
+            preserve.
+          </div>
+          <nav className="col-start-2 grid gap-10 p-12 text-2xl sm:grid-cols-2">
+            <span className="mb-6">
+              <p className="mb-2 font-mono leading-tight">saibai corpus</p>
+              <span>© {new Date().getFullYear()}</span>
+            </span>
+            <ul className="flex flex-col gap-2">
+              {[
+                ["Kai Macann", "https://www.linkedin.com/in/kaimacann/"],
+                [
+                  "Friendcis Meeko Estores",
+                  "https://www.linkedin.com/in/meeko-estores-78444822b",
+                ],
+                [
+                  "Jack Linz",
+                  "https://www.linkedin.com/in/jack-linz-942a33358",
+                ],
+                ["Jake Salamon"],
+                ["Nathan Kam"],
+                ["Benjamin Li"],
+              ].map(([n, h]) => (
+                <a
+                  key={n}
+                  className="flex gap-4 !outline-none transition-transform"
+                  href={h}
+                  target="_blank"
+                >
+                  <span className="decoration-2 underline-offset-4 hocus:underline">
+                    {n}
+                  </span>
+                </a>
+              ))}
+            </ul>
+          </nav>
+        </footer>
+      </div>
+    </ErrorBoundary>
+  );
 }
 
 /*//////////////////////////////////////////////////
 CONFIG
 //////////////////////////////////////////////////*/
+/*//////////////////////////////////////////////////
+REGEX
+//////////////////////////////////////////////////*/
+const SHARED_REGEX = /^./;
 
 /**
  * Describes the documented declaration.
  *
  * @remarks Shared wrapper styles for the main Saibai panels.
  */
-export const PANEL_CLASSES = 'relative size-full overflow-clip rounded border border-cyan-800 scrim-cyan-900 scrim-14';
+export const PANEL_CLASSES =
+  "relative size-full overflow-clip rounded border border-cyan-800 scrim-cyan-900 scrim-14";
 /**
  * Describes the documented declaration.
  *
  * @remarks Shared layout styles for tab panels in the Saibai corpus UI.
  */
-export const TAB_VIEW_CLASSES = 'relative data-[state=active]:flex data-[state=inactive]:hidden h-screen w-full grow flex-col p-10';
+export const TAB_VIEW_CLASSES =
+  "relative data-[state=active]:flex data-[state=inactive]:hidden h-screen w-full grow flex-col p-10";
 /**
  * Describes the documented declaration.
  *
  * @remarks Shared control styles for Saibai media buttons.
  */
-export const MEDIA_BUTTON_CLASSES = 'flex size-12 items-center justify-center rounded-full outline-none ring-inset ring-offset-4 data-[focus]:ring-2 data-[focus]:ring-blue-400';
+export const MEDIA_BUTTON_CLASSES =
+  "flex size-12 items-center justify-center rounded-full outline-none ring-inset ring-offset-4 data-[focus]:ring-2 data-[focus]:ring-blue-400";
 
 /*//////////////////////////////////////////////////
 UI COMPONENTS
@@ -127,43 +183,51 @@ UI COMPONENTS
  * @returns A string of compiled Tailwind classes.
  */
 export const buttonVariants = cva(
-	cn(
-		'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold',
-		'ring-offset-primary-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-		'disabled:cursor-not-allowed disabled:opacity-50',
-		'[&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0',
-	),
-	{
-		variants: {
-			variant: {
-				default: 'bg-cyan-700 text-white enabled:hover:bg-cyan-800',
-				tonal: 'border border-cyan-800 bg-cyan-300 text-cyan-950 enabled:hover:bg-cyan-400',
-				secondary: 'border border-yellow-700 bg-yellow-300 text-yellow-950 enabled:hover:bg-yellow-400',
-				destructive: 'border border-rose-700 bg-rose-600 text-white enabled:hover:bg-rose-600/90 dark:border-rose-800 dark:bg-rose-900 dark:hover:bg-rose-900/90',
-				outline: 'border border-gray-5 bg-white text-gray-12 enabled:hover:bg-gray-1 dark:bg-cyan-200 enabled:dark:hover:bg-cyan-200',
-				ghost: 'hover:bg-gray-3',
-				inline: 'text-gray-11 underline-offset-4 enabled:hover:underline',
-			},
-			size: {
-				default: 'h-10 px-4 py-2',
-				xs: 'h-6 rounded-md p-2 text-xs',
-				sm: 'h-9 rounded-md px-3',
-				lg: 'h-11 rounded-md px-8',
-				icon: 'size-10',
-			},
-		},
-		defaultVariants: {
-			variant: 'default',
-			size: 'default',
-		},
-	},
+  cn(
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold",
+    "ring-offset-primary-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+    "disabled:cursor-not-allowed disabled:opacity-50",
+    "[&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0",
+  ),
+  {
+    variants: {
+      variant: {
+        default: "bg-cyan-700 text-white enabled:hover:bg-cyan-800",
+        tonal:
+          "border border-cyan-800 bg-cyan-300 text-cyan-950 enabled:hover:bg-cyan-400",
+        secondary:
+          "border border-yellow-700 bg-yellow-300 text-yellow-950 enabled:hover:bg-yellow-400",
+        destructive:
+          "border border-rose-700 bg-rose-600 text-white enabled:hover:bg-rose-600/90 dark:border-rose-800 dark:bg-rose-900 dark:hover:bg-rose-900/90",
+        outline:
+          "border border-gray-5 bg-white text-gray-12 enabled:hover:bg-gray-1 dark:bg-cyan-200 enabled:dark:hover:bg-cyan-200",
+        ghost: "hover:bg-gray-3",
+        inline: "text-gray-11 underline-offset-4 enabled:hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        xs: "h-6 rounded-md p-2 text-xs",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "size-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
 );
 
+type PersonGraphNode = Node<FlowNode & Record<string, unknown>, "custom"> & {
+  type: "custom";
+};
 
-
-type PersonGraphNode = Node<FlowNode & Record<string, unknown>, 'custom'> & { type: 'custom' };
-
-type GenealogyNode = PersonGraphNode | Node<Record<string, never>, 'marriageConnector'> & { type: 'marriageConnector' };
+type GenealogyNode =
+  | PersonGraphNode
+  | (Node<Record<string, never>, "marriageConnector"> & {
+      type: "marriageConnector";
+    });
 
 /**
  * Describes the documented declaration.
@@ -175,43 +239,21 @@ type GenealogyNode = PersonGraphNode | Node<Record<string, never>, 'marriageConn
  *
  * @returns Rendered HTML button or Radix Slot.
  */
-export const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants> & { asChild?: boolean }>(({ className, variant, size, asChild = false, ...props }, ref) => {
-	const Comp = asChild ? Slot : 'button';
-	return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+export const Button = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement> &
+    VariantProps<typeof buttonVariants> & { asChild?: boolean }
+>(({ className, variant, size, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button";
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size, className }))}
+      ref={ref}
+      {...props}
+    />
+  );
 });
-Button.displayName = 'Button';
-
-/**
- * Renders the marquee component.
- *
- * @remarks A continuous scrolling marquee component for text or elements.
- *
- * @param props - MarqueeComponentProps to control speed, direction, and behavior.
- *
- * @param reverse - Whether the marquee content travels in reverse.
- * @param duration - Duration of one marquee animation cycle in milliseconds.
- * @param delay - Delay before each marquee animation cycle begins in milliseconds.
- * @param ease - Timing function, or the default easing curve when set to true.
- * @param pauseOnHover - Whether hovering pauses the marquee animation.
- * @param pauseOnClick - Whether pressing the marquee pauses the animation.
- * @param className - Additional classes applied to the marquee wrapper.
- * @param children - Content repeated across the marquee track.
- * @param as - Element used for each repeated marquee item.
- *
- * @returns Rendered marquee container.
- */
-export const Marquee = ({ reverse, duration = 40000, delay = 0, ease = 'linear', pauseOnHover, pauseOnClick = true, className, children, as = 'span' }: { reverse?: boolean; duration?: number; delay?: number; ease?: string | true; pauseOnHover?: boolean; pauseOnClick?: boolean; rows?: number; className?: string; children: React.ReactNode; as?: string }): React.JSX.Element => (
-	<ErrorBoundary name='Marquee'>
-		<div className={`group select-none overflow-x-clip ${className}`} tabIndex={-1}>
-			<span
-				className={` ${pauseOnHover && 'group-hover:!paused'} ${pauseOnClick && 'group-active:!paused'} ${reverse && '!direction-reverse'} inline-flex whitespace-nowrap fill-mode-both motion-reduce:!paused`}
-				style={{ animation: `slide ${duration}ms ${delay}ms ${ease === true ? 'cubic-bezier(0.46,0.03,0.52,0.96)' : ease} infinite` }}
-			>
-				{[...Array(4)].map((_x, i) => createElement(as, { key: i }, children))}
-			</span>
-		</div>
-	</ErrorBoundary>
-);
+Button.displayName = "Button";
 
 /**
  * Renders the acknowledgment component.
@@ -221,28 +263,38 @@ export const Marquee = ({ reverse, duration = 40000, delay = 0, ease = 'linear',
  * @returns Dialog modal component.
  */
 export function Acknowledgment(): React.JSX.Element {
-	const [isOpen, setIsOpen] = useState(true);
-	return (
-		<ErrorBoundary name='Acknowledgment'>
-			<Dialog open={isOpen} onOpenChange={setIsOpen}>
-				<DialogContent aria-describedby={undefined} className='light text-clip bg-white text-left text-cyan-900 dark:bg-white dark:text-cyan-900'>
-					<DialogHeader>
-						<DialogTitle className='text-left text-cyan-900'>Sensitivity Warning</DialogTitle>
-						<DialogDescription className='sr-only'>Aboriginal and Torres Strait Islander people sensitivity warning.</DialogDescription>
-					</DialogHeader>
-					<p className='text-sm text-cyan-900'>Aboriginal and Torres Strait Islander people should be aware that this website contains images, sounds and names of deceased persons.</p>
-					<Button
-						onClick={() => {
-							setIsOpen(false);
-						}}
-						className='mt-4 w-fit'
-					>
-						Continue
-					</Button>
-				</DialogContent>
-			</Dialog>
-		</ErrorBoundary>
-	);
+  const [isOpen, setIsOpen] = useState(true);
+  return (
+    <ErrorBoundary name="Acknowledgment">
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent
+          aria-describedby={undefined}
+          className="light text-clip bg-white text-left text-cyan-900 dark:bg-white dark:text-cyan-900"
+        >
+          <DialogHeader>
+            <DialogTitle className="text-left text-cyan-900">
+              Sensitivity Warning
+            </DialogTitle>
+            <DialogDescription className="sr-only">
+              Aboriginal and Torres Strait Islander people sensitivity warning.
+            </DialogDescription>
+          </DialogHeader>
+          <p className="text-sm text-cyan-900">
+            Aboriginal and Torres Strait Islander people should be aware that
+            this website contains images, sounds and names of deceased persons.
+          </p>
+          <Button
+            onClick={() => {
+              setIsOpen(false);
+            }}
+            className="mt-4 w-fit"
+          >
+            Continue
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </ErrorBoundary>
+  );
 }
 
 /*//////////////////////////////////////////////////
@@ -259,7 +311,11 @@ MEDIA COMPONENTS
  *
  * @returns Track div element.
  */
-const SliderTrack = ({ className }: { className?: string }) => <div className={cn('absolute left-0 top-0 z-0 size-full bg-gray-100', className)} />;
+const SliderTrack = ({ className }: { className?: string }) => (
+  <div
+    className={cn("absolute left-0 top-0 z-0 size-full bg-gray-100", className)}
+  />
+);
 
 /**
  * Renders the slider track fill component.
@@ -272,7 +328,13 @@ const SliderTrack = ({ className }: { className?: string }) => <div className={c
  * @returns Track fill div element.
  */
 const SliderTrackFill = ({ className }: { className?: string }) => (
-	<div className={cn('absolute left-0 top-0 z-20 size-full scale-x-[var(--slider-fill-rate)] bg-black will-change-transform live:bg-red-500', className)} style={{ transformOrigin: 'left center' }} />
+  <div
+    className={cn(
+      "absolute left-0 top-0 z-20 size-full scale-x-[var(--slider-fill-rate)] bg-black will-change-transform live:bg-red-500",
+      className,
+    )}
+    style={{ transformOrigin: "left center" }}
+  />
 );
 
 /**
@@ -286,10 +348,13 @@ const SliderTrackFill = ({ className }: { className?: string }) => (
  * @returns Progress div element.
  */
 const SliderTrackProgress = ({ className }: { className?: string }) => (
-	<div
-		className={cn('absolute left-0 top-0 z-10 size-full scale-x-[calc(var(--media-buffered)/var(--media-duration))] bg-black opacity-10 will-change-transform', className)}
-		style={{ transformOrigin: 'left center' }}
-	/>
+  <div
+    className={cn(
+      "absolute left-0 top-0 z-10 size-full scale-x-[calc(var(--media-buffered)/var(--media-duration))] bg-black opacity-10 will-change-transform",
+      className,
+    )}
+    style={{ transformOrigin: "left center" }}
+  />
 );
 
 /**
@@ -303,9 +368,14 @@ const SliderTrackProgress = ({ className }: { className?: string }) => (
  * @returns Thumb indicator div element.
  */
 const SliderThumb = ({ className }: { className?: string }) => (
-	<div className={cn('absolute left-[var(--slider-fill-percent)] top-0 z-20 h-full w-0.5 -translate-x-1/2 scale-200 group-data-[dragging]:left-[var(--slider-pointer-percent)]', className)}>
-		<div className='size-full rounded-full bg-black outline outline-1 outline-white group-data-[focus]:ring-2 group-data-[focus]:ring-blue-400' />
-	</div>
+  <div
+    className={cn(
+      "absolute left-[var(--slider-fill-percent)] top-0 z-20 h-full w-0.5 -translate-x-1/2 scale-200 group-data-[dragging]:left-[var(--slider-pointer-percent)]",
+      className,
+    )}
+  >
+    <div className="size-full rounded-full bg-black outline outline-1 outline-white group-data-[focus]:ring-2 group-data-[focus]:ring-blue-400" />
+  </div>
 );
 
 /**
@@ -319,12 +389,12 @@ const SliderThumb = ({ className }: { className?: string }) => (
  * @returns Preview container element.
  */
 const SliderPreview = ({ children }: { children: ReactNode }) => (
-	<div
-		className='absolute left-[var(--preview-left)] top-[var(--preview-top)] flex -translate-x-1/2 translate-y-1 flex-col items-center justify-center gap-1 opacity-0 transition-opacity duration-200 ease-out group-data-[interactive]:opacity-100 group-data-[interactive]:ease-in'
-		slot='preview'
-	>
-		{children}
-	</div>
+  <div
+    className="absolute left-[var(--preview-left)] top-[var(--preview-top)] flex -translate-x-1/2 translate-y-1 flex-col items-center justify-center gap-1 opacity-0 transition-opacity duration-200 ease-out group-data-[interactive]:opacity-100 group-data-[interactive]:ease-in"
+    slot="preview"
+  >
+    {children}
+  </div>
 );
 
 /**
@@ -332,31 +402,41 @@ const SliderPreview = ({ children }: { children: ReactNode }) => (
  *
  * @remarks Vidstack Media Slider containing track, thumb, and preview.
  *
- * @param src - Src input supplied to media slider's operation.
- *
- *
- *
+ * @param props Media source and optional CSS classes for the slider.
  * @param className - Additional CSS classes merged into media slider.
  *
  * @returns Media time slider component.
  */
-export function MediaSlider({ className, src }: { className?: string; src?: string }): React.JSX.Element {
-	return (
-		<ErrorBoundary name='MediaSlider'>
-			<MediaTimeSlider className={cn('group h-6 py-2 focus:outline-none', className)} aria-label='Audio progress slider'>
-				<div className='relative size-full focus:ring-0'>
-					<SliderTrack />
-					<SliderTrackFill />
-					<SliderTrackProgress />
-					<SliderThumb />
-				</div>
-				<SliderPreview>
-					<MediaSliderThumbnail src={src} />
-					<MediaSliderValue type='pointer' format='time' className='w-max max-w-xs animate-fade-in rounded border bg-white px-2 py-1 shadow delay-75' />
-				</SliderPreview>
-			</MediaTimeSlider>
-		</ErrorBoundary>
-	);
+export function MediaSlider({
+  className,
+  src,
+}: {
+  className?: string;
+  src?: string;
+}): React.JSX.Element {
+  return (
+    <ErrorBoundary name="MediaSlider">
+      <MediaTimeSlider
+        className={cn("group h-6 py-2 focus:outline-none", className)}
+        aria-label="Audio progress slider"
+      >
+        <div className="relative size-full focus:ring-0">
+          <SliderTrack />
+          <SliderTrackFill />
+          <SliderTrackProgress />
+          <SliderThumb />
+        </div>
+        <SliderPreview>
+          <MediaSliderThumbnail src={src} />
+          <MediaSliderValue
+            type="pointer"
+            format="time"
+            className="w-max max-w-xs animate-fade-in rounded border bg-white px-2 py-1 shadow delay-75"
+          />
+        </SliderPreview>
+      </MediaTimeSlider>
+    </ErrorBoundary>
+  );
 }
 
 /**
@@ -369,13 +449,24 @@ export function MediaSlider({ className, src }: { className?: string; src?: stri
  * @returns Play/Pause button component.
  */
 function PlayButton({ ...attrs }) {
-	const { paused } = useMediaStore();
-	const label = paused ? 'Play' : 'Pause';
-	return (
-		<MediaPlayButton className={cn(MEDIA_BUTTON_CLASSES)} aria-label={label} {...attrs}>
-			{paused ? <CarbonIcon name='play-filled' className='block size-full scale-150' /> : <CarbonIcon name='pause-outline-filled' className='block size-full scale-150' />}
-		</MediaPlayButton>
-	);
+  const { paused } = useMediaStore();
+  const label = paused ? "Play" : "Pause";
+  return (
+    <MediaPlayButton
+      className={cn(MEDIA_BUTTON_CLASSES)}
+      aria-label={label}
+      {...attrs}
+    >
+      {paused ? (
+        <CarbonIcon name="play-filled" className="block size-full scale-150" />
+      ) : (
+        <CarbonIcon
+          name="pause-outline-filled"
+          className="block size-full scale-150"
+        />
+      )}
+    </MediaPlayButton>
+  );
 }
 
 /**
@@ -389,32 +480,69 @@ function PlayButton({ ...attrs }) {
  *
  * @returns Media controls layout component.
  */
-function AudioControls({ className, ...attrs }: React.ComponentPropsWithoutRef<'div'> & { className?: string }) {
-	const { paused, muted } = useMediaStore();
-	const BUTTON_WRAPPER = 'flex gap-4 *:-mx-3 *:p-3 items-center';
-	return (
-		<div className={cn('pointer-events-none', className)} role='group' aria-label='Media Controls' {...attrs}>
-			<div className={cn('pointer-events-none min-h-[48px] w-full can-control:pointer-events-auto', BUTTON_WRAPPER)}>
-				<div className={'py-0 ' + BUTTON_WRAPPER}>
-					<MediaSeekButton className={MEDIA_BUTTON_CLASSES} seconds={-30} aria-label='Seek back 30 seconds' data-tooltip='Jump back'>
-						<CarbonIcon name='rewind-30' className='size-full' />
-					</MediaSeekButton>
-					<PlayButton data-tooltip={paused ? 'Play' : 'Pause'} />
-					<MediaSeekButton className={MEDIA_BUTTON_CLASSES} seconds={30} aria-label='Seek forward 30 seconds' data-tooltip='Jump forward'>
-						<CarbonIcon name='forward-30' className='size-full' />
-					</MediaSeekButton>
-				</div>
-				<div className='m-0 flex grow items-center gap-4 self-stretch border-l p-0 pl-4'>
-					<MediaTime type='current' className='text-sm' />
-					<MediaSlider />
-					<MediaTime type='duration' className='text-sm' />
-				</div>
-				<MediaMuteButton className={cn(MEDIA_BUTTON_CLASSES)} aria-label={muted ? 'Unmute' : 'Mute'} data-tooltip={muted ? 'Unmute' : 'Mute'}>
-					{muted ? <CarbonIcon name='volume-mute-filled' className='block size-full scale-75' /> : <CarbonIcon name='volume-up-filled' className='block size-full scale-75' />}
-				</MediaMuteButton>
-			</div>
-		</div>
-	);
+function AudioControls({
+  className,
+  ...attrs
+}: React.ComponentPropsWithoutRef<"div"> & { className?: string }) {
+  const { paused, muted } = useMediaStore();
+  const BUTTON_WRAPPER = "flex gap-4 *:-mx-3 *:p-3 items-center";
+  return (
+    <div
+      className={cn("pointer-events-none", className)}
+      role="group"
+      aria-label="Media Controls"
+      {...attrs}
+    >
+      <div
+        className={cn(
+          "pointer-events-none min-h-[48px] w-full can-control:pointer-events-auto",
+          BUTTON_WRAPPER,
+        )}
+      >
+        <div className={"py-0 " + BUTTON_WRAPPER}>
+          <MediaSeekButton
+            className={MEDIA_BUTTON_CLASSES}
+            seconds={-30}
+            aria-label="Seek back 30 seconds"
+            data-tooltip="Jump back"
+          >
+            <CarbonIcon name="rewind-30" className="size-full" />
+          </MediaSeekButton>
+          <PlayButton data-tooltip={paused ? "Play" : "Pause"} />
+          <MediaSeekButton
+            className={MEDIA_BUTTON_CLASSES}
+            seconds={30}
+            aria-label="Seek forward 30 seconds"
+            data-tooltip="Jump forward"
+          >
+            <CarbonIcon name="forward-30" className="size-full" />
+          </MediaSeekButton>
+        </div>
+        <div className="m-0 flex grow items-center gap-4 self-stretch border-l p-0 pl-4">
+          <MediaTime type="current" className="text-sm" />
+          <MediaSlider />
+          <MediaTime type="duration" className="text-sm" />
+        </div>
+        <MediaMuteButton
+          className={cn(MEDIA_BUTTON_CLASSES)}
+          aria-label={muted ? "Unmute" : "Mute"}
+          data-tooltip={muted ? "Unmute" : "Mute"}
+        >
+          {muted ? (
+            <CarbonIcon
+              name="volume-mute-filled"
+              className="block size-full scale-75"
+            />
+          ) : (
+            <CarbonIcon
+              name="volume-up-filled"
+              className="block size-full scale-75"
+            />
+          )}
+        </MediaMuteButton>
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -434,25 +562,68 @@ function AudioControls({ className, ...attrs }: React.ComponentPropsWithoutRef<'
  *
  * @returns Fully constructed MediaPlayer component.
  */
-export function Player({ src, poster, title, author, meta, className, alt, ...attrs }: { src: string; poster?: string; className?: string; title?: string; author?: string; meta?: string; alt?: string }): React.JSX.Element {
-	return (
-		<ErrorBoundary name='Player'>
-			<MediaPlayer src={src} className={cn('inline-block rounded-md border bg-white text-black shadow', className)} {...attrs}>
-				<MediaOutlet />
-				{title && (
-					<div className='flex flex-row items-center border-b px-5 py-4'>
-						{poster && <img className='mr-6 size-20 shrink-0 basis-20 rounded-md border bg-gray-100 text-transparent' alt={alt || `Media art for '${title}'`} src={poster} />}
-						<div className='-mx-1 basis-full overflow-hidden px-1'>
-							<span className='mb-2 inline-block text-lg font-bold'>{title}</span>
-							{author && <p className='mb-1 mt-0 pt-0 leading-snug text-gray-500'>{author}</p>}
-							{meta && <p className='mb-1 leading-snug text-gray-500'>{meta}</p>}
-						</div>
-					</div>
-				)}
-				<AudioControls className={cn('transition-all buffering:animate-pulse', title ? 'px-5' : 'px-3')} />
-			</MediaPlayer>
-		</ErrorBoundary>
-	);
+export function Player({
+  src,
+  poster,
+  title,
+  author,
+  meta,
+  className,
+  alt,
+  ...attrs
+}: {
+  src: string;
+  poster?: string;
+  className?: string;
+  title?: string;
+  author?: string;
+  meta?: string;
+  alt?: string;
+}): React.JSX.Element {
+  return (
+    <ErrorBoundary name="Player">
+      <MediaPlayer
+        src={src}
+        className={cn(
+          "inline-block rounded-md border bg-white text-black shadow",
+          className,
+        )}
+        {...attrs}
+      >
+        <MediaOutlet />
+        {title && (
+          <div className="flex flex-row items-center border-b px-5 py-4">
+            {poster && (
+              <img
+                className="mr-6 size-20 shrink-0 basis-20 rounded-md border bg-gray-100 text-transparent"
+                alt={alt || `Media art for '${title}'`}
+                src={poster}
+              />
+            )}
+            <div className="-mx-1 basis-full overflow-hidden px-1">
+              <span className="mb-2 inline-block text-lg font-bold">
+                {title}
+              </span>
+              {author && (
+                <p className="mb-1 mt-0 pt-0 leading-snug text-gray-500">
+                  {author}
+                </p>
+              )}
+              {meta && (
+                <p className="mb-1 leading-snug text-gray-500">{meta}</p>
+              )}
+            </div>
+          </div>
+        )}
+        <AudioControls
+          className={cn(
+            "transition-all buffering:animate-pulse",
+            title ? "px-5" : "px-3",
+          )}
+        />
+      </MediaPlayer>
+    </ErrorBoundary>
+  );
 }
 
 /*//////////////////////////////////////////////////
@@ -467,91 +638,159 @@ MAP COMPONENT
  * @returns Geographic Map.
  */
 export function GeographicMap(): React.JSX.Element {
-	const [selectedGeo, setSelectedGeo] = useState<MapGeography | null>(null);
+  const [selectedGeo, setSelectedGeo] = useState<MapGeography | null>(null);
 
-	const geoJsonData = useMemo(() => {
-		const objectKey = 'export (1)1';
-		return SAIBAI.objects[objectKey] ? feature(SAIBAI as never, SAIBAI.objects[objectKey] as never) : null;
-	}, []);
+  const geoJsonData = useMemo(() => {
+    const objectKey = "export (1)1";
+    return SAIBAI.objects[objectKey]
+      ? feature(SAIBAI as never, SAIBAI.objects[objectKey] as never)
+      : null;
+  }, []);
 
-	if (!geoJsonData) return <div>Loading map data or data is invalid...</div>;
+  if (!geoJsonData) return <div>Loading map data or data is invalid...</div>;
 
-	return (
-		<ErrorBoundary
-			name='SaibaiGeographicMap'
-			fallback={() => <AlertError title='Map Display Error' description='The geographic map of Saibai Island could not be displayed. The rest of the page remains fully accessible.' />}
-		>
-			<div className={PANEL_CLASSES}>
-				<ComposableMap projection='geoMercator' className='size-full'>
-					<ZoomableGroup center={[142.62, -9.38]} zoom={50} minZoom={10} maxZoom={500}>
-						<Geographies geography={geoJsonData}>
-							{({ geographies }) =>
-								geographies.map(g => {
-									const properties = g.properties || {};
-										const isLine = typeof g.geometry?.type === 'string' && ['LineString', 'MultiLineString'].includes(g.geometry.type);
-									let className = 'pointer-events-none fill-transparent stroke-none';
-									if (properties.building === 'house') className = 'fill-amber-500';
-									else if (properties.building) className = 'fill-red-950';
-									else if (properties.highway || properties.aeroway) className = 'fill-none stroke-gray-500 stroke-[0.05]';
-									else if (properties.natural === 'coastline') className = isLine ? 'stroke-emerald-800 stroke-[0.05] fill-none' : 'fill-emerald-800';
-									else if (properties.waterway) className = isLine ? 'stroke-cyan-950 stroke-[0.05] fill-none' : 'fill-cyan-950';
-									else if (properties.natural === 'water' || properties.landuse === 'reservoir') className = 'fill-cyan-950';
-									else if (properties.name && properties.name !== 'Saibai Island' && !isLine) className = 'fill-amber-300 hover:fill-amber-400 hover:cursor-pointer';
-									/**
-									 * Handles click.
-									 */
-									let handleClick = () => {};
-									const isInteractive = !isLine && ((properties.landuse && properties.landuse !== 'residential') || (properties.name && properties.name !== 'Saibai Island'));
-									if (isInteractive) {
-										className = cn(className, 'pointer-events-auto fill-yellow-300 hover:cursor-pointer hover:fill-yellow-400');
-										handleClick = () => {
-											setSelectedGeo(g);
-										};
-									}
-									return (
-										<Geography
-											key={g.rsmKey}
-											geography={g}
-											onClick={handleClick}
-											className={cn('pointer-events-auto outline-none focus:outline-none active:outline-none', g.rsmKey, className)}
-										/>
-									);
-								})
-							}
-						</Geographies>
-					</ZoomableGroup>
-				</ComposableMap>
+  return (
+    <ErrorBoundary
+      name="SaibaiGeographicMap"
+      fallback={() => (
+        <AlertError
+          title="Map Display Error"
+          description="The geographic map of Saibai Island could not be displayed. The rest of the page remains fully accessible."
+        />
+      )}
+    >
+      <div className={PANEL_CLASSES}>
+        <ComposableMap projection="geoMercator" className="size-full">
+          <ZoomableGroup
+            center={[142.62, -9.38]}
+            zoom={50}
+            minZoom={10}
+            maxZoom={500}
+          >
+            <Geographies geography={geoJsonData}>
+              {({ geographies }) =>
+                geographies.map((g) => {
+                  const properties = g.properties || {};
+                  const isLine =
+                    typeof g.geometry?.type === "string" &&
+                    ["LineString", "MultiLineString"].includes(g.geometry.type);
+                  let className =
+                    "pointer-events-none fill-transparent stroke-none";
+                  if (properties.building === "house")
+                    className = "fill-amber-500";
+                  else if (properties.building) className = "fill-red-950";
+                  else if (properties.highway || properties.aeroway)
+                    className = "fill-none stroke-gray-500 stroke-[0.05]";
+                  else if (properties.natural === "coastline")
+                    className = isLine
+                      ? "stroke-emerald-800 stroke-[0.05] fill-none"
+                      : "fill-emerald-800";
+                  else if (properties.waterway)
+                    className = isLine
+                      ? "stroke-cyan-950 stroke-[0.05] fill-none"
+                      : "fill-cyan-950";
+                  else if (
+                    properties.natural === "water" ||
+                    properties.landuse === "reservoir"
+                  )
+                    className = "fill-cyan-950";
+                  else if (
+                    properties.name &&
+                    properties.name !== "Saibai Island" &&
+                    !isLine
+                  )
+                    className =
+                      "fill-amber-300 hover:fill-amber-400 hover:cursor-pointer";
+                  /**
+                   * Handles click.
+                   */
+                  let handleClick = () => {};
+                  const isInteractive =
+                    !isLine &&
+                    ((properties.landuse &&
+                      properties.landuse !== "residential") ||
+                      (properties.name && properties.name !== "Saibai Island"));
+                  if (isInteractive) {
+                    className = cn(
+                      className,
+                      "pointer-events-auto fill-yellow-300 hover:cursor-pointer hover:fill-yellow-400",
+                    );
+                    handleClick = () => {
+                      setSelectedGeo(g);
+                    };
+                  }
+                  return (
+                    <Geography
+                      key={g.rsmKey}
+                      geography={g}
+                      onClick={handleClick}
+                      className={cn(
+                        "pointer-events-auto outline-none focus:outline-none active:outline-none",
+                        g.rsmKey,
+                        className,
+                      )}
+                    />
+                  );
+                })
+              }
+            </Geographies>
+          </ZoomableGroup>
+        </ComposableMap>
 
-				{selectedGeo && (
-					<Dialog open={!!selectedGeo} onOpenChange={o => !o && setSelectedGeo(null)}>
-						<DialogContent aria-describedby={undefined} className='text-clip bg-white text-left text-cyan-900 dark:bg-white dark:text-cyan-900'>
-							<DialogHeader className='text-left'>
-								<DialogTitle className='font-mono text-4xl font-bold text-cyan-900'>
-									{selectedGeo.properties?.name ||
-										(selectedGeo.properties?.landuse && selectedGeo.properties.landuse.charAt(0).toUpperCase() + selectedGeo.properties.landuse.slice(1)) ||
-										'Feature Details'}
-								</DialogTitle>
-								{selectedGeo.properties?.description && <DialogDescription className='text-cyan-900/50'>{selectedGeo.properties.description}</DialogDescription>}
-								{!selectedGeo.properties?.description && <DialogDescription className='sr-only'>Details for {selectedGeo.properties?.name || 'feature'}.</DialogDescription>}
-							</DialogHeader>
-							{selectedGeo.properties?.videos?.map((v, i) => (
-								<div key={i} className='relative mb-4 aspect-video w-full max-w-md overflow-hidden rounded'>
-									<div className='absolute inset-0 z-0 animate-pulse rounded bg-gray-500' />
-									<iframe
-										src={`${v.src}?badge=0&autopause=0&player_id=0&app_id=58479`}
-										allow='autoplay; fullscreen; picture-in-picture'
-										className='relative z-10 size-full'
-										title={v.title || `Video ${i + 1}`}
-									/>
-								</div>
-							))}
-							{(!selectedGeo.properties?.videos || selectedGeo.properties.videos.length === 0) && <p className='mb-6 text-sm text-cyan-900 opacity-50'>No videos available for this feature.</p>}
-						</DialogContent>
-					</Dialog>
-				)}
-			</div>
-		</ErrorBoundary>
-	);
+        {selectedGeo && (
+          <Dialog
+            open={!!selectedGeo}
+            onOpenChange={(o) => !o && setSelectedGeo(null)}
+          >
+            <DialogContent
+              aria-describedby={undefined}
+              className="text-clip bg-white text-left text-cyan-900 dark:bg-white dark:text-cyan-900"
+            >
+              <DialogHeader className="text-left">
+                <DialogTitle className="font-mono text-4xl font-bold text-cyan-900">
+                  {selectedGeo.properties?.name ||
+                    (selectedGeo.properties?.landuse &&
+                      selectedGeo.properties.landuse.charAt(0).toUpperCase() +
+                        selectedGeo.properties.landuse.slice(1)) ||
+                    "Feature Details"}
+                </DialogTitle>
+                {selectedGeo.properties?.description && (
+                  <DialogDescription className="text-cyan-900/50">
+                    {selectedGeo.properties.description}
+                  </DialogDescription>
+                )}
+                {!selectedGeo.properties?.description && (
+                  <DialogDescription className="sr-only">
+                    Details for {selectedGeo.properties?.name || "feature"}.
+                  </DialogDescription>
+                )}
+              </DialogHeader>
+              {selectedGeo.properties?.videos?.map((v, i) => (
+                <div
+                  key={i}
+                  className="relative mb-4 aspect-video w-full max-w-md overflow-hidden rounded"
+                >
+                  <div className="absolute inset-0 z-0 animate-pulse rounded bg-gray-500" />
+                  <iframe
+                    src={`${v.src}?badge=0&autopause=0&player_id=0&app_id=58479`}
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    className="relative z-10 size-full"
+                    title={v.title || `Video ${i + 1}`}
+                  />
+                </div>
+              ))}
+              {(!selectedGeo.properties?.videos ||
+                selectedGeo.properties.videos.length === 0) && (
+                <p className="mb-6 text-sm text-cyan-900 opacity-50">
+                  No videos available for this feature.
+                </p>
+              )}
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+    </ErrorBoundary>
+  );
 }
 
 /*//////////////////////////////////////////////////
@@ -559,40 +798,222 @@ GENEALOGY COMPONENTS
 //////////////////////////////////////////////////*/
 
 const genealogyData: Person[] = [
-	{
-		id: 'gemetu-0',
-		name: 'Gemetu',
-		spouseId: 'kokeu-0',
-		parents: [],
-		children: ['giwa-1', 'asa-1', 'asaii-1', 'kaigab-1', 'nancy-1'],
-		clans: ['Daibau'],
-		audio: [
-			{ title: 'Maduba na puidam', author: 'Gemetu (singer, male)', audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3', date: '', source: 'Wax Cylinders' },
-			{ title: 'Mawau na puidam', author: 'Gemetu (singer, male)', audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3', date: '', source: 'Wax Cylinders' },
-		],
-	},
-	{ id: 'kokeu-0', name: 'Kokeu', spouseId: 'gemetu-0', parents: [], children: ['giwa-1', 'asa-1', 'asaii-1', 'kaigab-1', 'nancy-1'], clans: ['Samu'] },
-	{ id: 'giwa-1', name: 'Giwa', spouseId: null, parents: ['gemetu-0', 'kokeu-0'], children: [], clans: [] },
-	{ id: 'asa-1', name: 'Asa', spouseId: 'kargar-1', parents: ['gemetu-0', 'kokeu-0'], children: ['warusam-2', 'nganabusa-2', 'aniba-2', 'warubam-2', 'wodi-2', 'tamu-2'], clans: ['Daibau'] },
-	{ id: 'kargar-1', name: 'Kargar', spouseId: 'asa-1', parents: [], children: ['warusam-2', 'nganabusa-2', 'aniba-2', 'warubam-2', 'wodi-2', 'tamu-2'], clans: ['Kodal'] },
-	{ id: 'warusam-2', name: 'Warusam', spouseId: null, parents: ['asa-1', 'kargar-1'], children: [], clans: ['Daibau'] },
-	{ id: 'nganabusa-2', name: 'Nganabusa', spouseId: null, parents: ['asa-1', 'kargar-1'], children: [], clans: ['Daibau'] },
-	{ id: 'aniba-2', name: 'Aniba', spouseId: null, parents: ['asa-1', 'kargar-1'], children: [], clans: ['Daibau'] },
-	{ id: 'warubam-2', name: 'Warubam', spouseId: null, parents: ['asa-1', 'kargar-1'], children: [], clans: ['Daibau'] },
-	{ id: 'wodi-2', name: 'Wodi', spouseId: 'tamu-2', parents: ['asa-1', 'kargar-1'], children: ['baideu-3', 'teniu-3', 'mudu-3', 'danazur-3'], clans: ['Samu'] },
-	{ id: 'tamu-2', name: 'Tamu', spouseId: 'wodi-2', parents: ['asa-1', 'kargar-1'], children: ['baideu-3', 'teniu-3', 'mudu-3', 'danazur-3'], clans: ['Daibau'] },
-	{ id: 'baideu-3', name: 'Baideu', spouseId: null, parents: ['wodi-2', 'tamu-2'], children: [], clans: ['Samu'] },
-	{ id: 'teniu-3', name: 'Teniu', spouseId: null, parents: ['wodi-2', 'tamu-2'], children: [], clans: ['Samu'] },
-	{ id: 'mudu-3', name: 'Mudu', spouseId: null, parents: ['wodi-2', 'tamu-2'], children: [], clans: ['Samu'] },
-	{ id: 'danazur-3', name: 'Danazur', spouseId: null, parents: ['wodi-2', 'tamu-2'], children: [], clans: ['Samu'] },
-	{ id: 'asaii-1', name: 'Asaii', spouseId: 'kawk-1', parents: ['gemetu-0', 'kokeu-0'], children: ['giwa-2', 'ngangabunga-2', 'uniba-2'], clans: ['Daibau'] },
-	{ id: 'kawk-1', name: 'Kawk', spouseId: 'asaii-1', parents: [], children: ['giwa-2', 'ngangabunga-2', 'uniba-2'], clans: ['Samu'] },
-	{ id: 'giwa-2', name: 'Giwa', spouseId: null, parents: ['kawk-1', 'asaii-1'], children: [], clans: ['Daibau'] },
-	{ id: 'ngangabunga-2', name: 'Ngangabunga', spouseId: null, parents: ['kawk-1', 'asaii-1'], children: [], clans: ['Samu'] },
-	{ id: 'uniba-2', name: 'Uniba', spouseId: null, parents: ['kawk-1', 'asaii-1'], children: [], clans: ['Samu'] },
-	{ id: 'saibai-2', name: 'Saibai', spouseId: 'kaigab-1', parents: [], children: [], clans: ['Tabu'] },
-	{ id: 'kaigab-1', name: 'Kaigab', spouseId: 'saibai-2', parents: ['gemetu-0', 'kokeu-0'], children: [], clans: ['Tabu'] },
-	{ id: 'nancy-1', name: 'Nancy', spouseId: null, parents: ['gemetu-0', 'kokeu-0'], children: [], clans: [] },
+  {
+    id: "gemetu-0",
+    name: "Gemetu",
+    spouseId: "kokeu-0",
+    parents: [],
+    children: ["giwa-1", "asa-1", "asaii-1", "kaigab-1", "nancy-1"],
+    clans: ["Daibau"],
+    audio: [
+      {
+        title: "Maduba na puidam",
+        author: "Gemetu (singer, male)",
+        audio:
+          "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3",
+        date: "",
+        source: "Wax Cylinders",
+      },
+      {
+        title: "Mawau na puidam",
+        author: "Gemetu (singer, male)",
+        audio:
+          "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3",
+        date: "",
+        source: "Wax Cylinders",
+      },
+    ],
+  },
+  {
+    id: "kokeu-0",
+    name: "Kokeu",
+    spouseId: "gemetu-0",
+    parents: [],
+    children: ["giwa-1", "asa-1", "asaii-1", "kaigab-1", "nancy-1"],
+    clans: ["Samu"],
+  },
+  {
+    id: "giwa-1",
+    name: "Giwa",
+    spouseId: null,
+    parents: ["gemetu-0", "kokeu-0"],
+    children: [],
+    clans: [],
+  },
+  {
+    id: "asa-1",
+    name: "Asa",
+    spouseId: "kargar-1",
+    parents: ["gemetu-0", "kokeu-0"],
+    children: [
+      "warusam-2",
+      "nganabusa-2",
+      "aniba-2",
+      "warubam-2",
+      "wodi-2",
+      "tamu-2",
+    ],
+    clans: ["Daibau"],
+  },
+  {
+    id: "kargar-1",
+    name: "Kargar",
+    spouseId: "asa-1",
+    parents: [],
+    children: [
+      "warusam-2",
+      "nganabusa-2",
+      "aniba-2",
+      "warubam-2",
+      "wodi-2",
+      "tamu-2",
+    ],
+    clans: ["Kodal"],
+  },
+  {
+    id: "warusam-2",
+    name: "Warusam",
+    spouseId: null,
+    parents: ["asa-1", "kargar-1"],
+    children: [],
+    clans: ["Daibau"],
+  },
+  {
+    id: "nganabusa-2",
+    name: "Nganabusa",
+    spouseId: null,
+    parents: ["asa-1", "kargar-1"],
+    children: [],
+    clans: ["Daibau"],
+  },
+  {
+    id: "aniba-2",
+    name: "Aniba",
+    spouseId: null,
+    parents: ["asa-1", "kargar-1"],
+    children: [],
+    clans: ["Daibau"],
+  },
+  {
+    id: "warubam-2",
+    name: "Warubam",
+    spouseId: null,
+    parents: ["asa-1", "kargar-1"],
+    children: [],
+    clans: ["Daibau"],
+  },
+  {
+    id: "wodi-2",
+    name: "Wodi",
+    spouseId: "tamu-2",
+    parents: ["asa-1", "kargar-1"],
+    children: ["baideu-3", "teniu-3", "mudu-3", "danazur-3"],
+    clans: ["Samu"],
+  },
+  {
+    id: "tamu-2",
+    name: "Tamu",
+    spouseId: "wodi-2",
+    parents: ["asa-1", "kargar-1"],
+    children: ["baideu-3", "teniu-3", "mudu-3", "danazur-3"],
+    clans: ["Daibau"],
+  },
+  {
+    id: "baideu-3",
+    name: "Baideu",
+    spouseId: null,
+    parents: ["wodi-2", "tamu-2"],
+    children: [],
+    clans: ["Samu"],
+  },
+  {
+    id: "teniu-3",
+    name: "Teniu",
+    spouseId: null,
+    parents: ["wodi-2", "tamu-2"],
+    children: [],
+    clans: ["Samu"],
+  },
+  {
+    id: "mudu-3",
+    name: "Mudu",
+    spouseId: null,
+    parents: ["wodi-2", "tamu-2"],
+    children: [],
+    clans: ["Samu"],
+  },
+  {
+    id: "danazur-3",
+    name: "Danazur",
+    spouseId: null,
+    parents: ["wodi-2", "tamu-2"],
+    children: [],
+    clans: ["Samu"],
+  },
+  {
+    id: "asaii-1",
+    name: "Asaii",
+    spouseId: "kawk-1",
+    parents: ["gemetu-0", "kokeu-0"],
+    children: ["giwa-2", "ngangabunga-2", "uniba-2"],
+    clans: ["Daibau"],
+  },
+  {
+    id: "kawk-1",
+    name: "Kawk",
+    spouseId: "asaii-1",
+    parents: [],
+    children: ["giwa-2", "ngangabunga-2", "uniba-2"],
+    clans: ["Samu"],
+  },
+  {
+    id: "giwa-2",
+    name: "Giwa",
+    spouseId: null,
+    parents: ["kawk-1", "asaii-1"],
+    children: [],
+    clans: ["Daibau"],
+  },
+  {
+    id: "ngangabunga-2",
+    name: "Ngangabunga",
+    spouseId: null,
+    parents: ["kawk-1", "asaii-1"],
+    children: [],
+    clans: ["Samu"],
+  },
+  {
+    id: "uniba-2",
+    name: "Uniba",
+    spouseId: null,
+    parents: ["kawk-1", "asaii-1"],
+    children: [],
+    clans: ["Samu"],
+  },
+  {
+    id: "saibai-2",
+    name: "Saibai",
+    spouseId: "kaigab-1",
+    parents: [],
+    children: [],
+    clans: ["Tabu"],
+  },
+  {
+    id: "kaigab-1",
+    name: "Kaigab",
+    spouseId: "saibai-2",
+    parents: ["gemetu-0", "kokeu-0"],
+    children: [],
+    clans: ["Tabu"],
+  },
+  {
+    id: "nancy-1",
+    name: "Nancy",
+    spouseId: null,
+    parents: ["gemetu-0", "kokeu-0"],
+    children: [],
+    clans: [],
+  },
 ];
 
 /**
@@ -606,33 +1027,45 @@ const genealogyData: Person[] = [
  *
  * @returns Object containing nodes with updated positions and unmodified edges.
  */
-const getLayoutedElements = <TNode extends Node>(nodes: TNode[], edges: ReactFlowEdge[], opts: { direction: string; nodesep?: number; ranksep?: number }): { edges: ReactFlowEdge[]; nodes: TNode[] } => {
-	const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-	g.setGraph({ rankdir: opts.direction, nodesep: opts.nodesep || 50, ranksep: opts.ranksep || 50 });
-	edges.forEach(e => g.setEdge(e.source, e.target));
-	nodes.forEach(n => {
-		let width = n.measured?.width ?? 150;
-		let height = n.measured?.height ?? 50;
-		if (n.type === 'marriageConnector') {
-			width = 20;
-			height = 20;
-		}
-		g.setNode(n.id, { ...n, width, height });
-	});
-	Dagre.layout(g);
-	return {
-		nodes: nodes.map(n => {
-			const { x, y } = g.node(n.id);
-			let width = n.measured?.width ?? 150;
-			let height = n.measured?.height ?? 50;
-			if (n.type === 'marriageConnector') {
-				width = 20;
-				height = 20;
-			}
-			return { ...n, position: { x: x - width / 2, y: y - height / 2 }, draggable: false };
-		}),
-		edges: [...edges],
-	};
+const getLayoutedElements = <TNode extends Node>(
+  nodes: TNode[],
+  edges: ReactFlowEdge[],
+  opts: { direction: string; nodesep?: number; ranksep?: number },
+): { edges: ReactFlowEdge[]; nodes: TNode[] } => {
+  const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+  g.setGraph({
+    rankdir: opts.direction,
+    nodesep: opts.nodesep || 50,
+    ranksep: opts.ranksep || 50,
+  });
+  edges.forEach((e) => g.setEdge(e.source, e.target));
+  nodes.forEach((n) => {
+    let width = n.measured?.width ?? 150;
+    let height = n.measured?.height ?? 50;
+    if (n.type === "marriageConnector") {
+      width = 20;
+      height = 20;
+    }
+    g.setNode(n.id, { ...n, width, height });
+  });
+  Dagre.layout(g);
+  return {
+    nodes: nodes.map((n) => {
+      const { x, y } = g.node(n.id);
+      let width = n.measured?.width ?? 150;
+      let height = n.measured?.height ?? 50;
+      if (n.type === "marriageConnector") {
+        width = 20;
+        height = 20;
+      }
+      return {
+        ...n,
+        position: { x: x - width / 2, y: y - height / 2 },
+        draggable: false,
+      };
+    }),
+    edges: [...edges],
+  };
 };
 
 /**
@@ -648,27 +1081,61 @@ const getLayoutedElements = <TNode extends Node>(nodes: TNode[], edges: ReactFlo
  * @returns Person Node.
  */
 function PersonNode({ data }: NodeProps<PersonGraphNode>) {
-	const { nodeData, setSelectedNode } = data;
-	/**
-	 * Handles node click.
-	 */
-	const handleNodeClick = () => {
-		const originalGNode = genealogyData.find(g => g.id === nodeData.id || (g.name === nodeData.name && !genealogyData.some(p => p.id === nodeData.id && p.name !== nodeData.name)));
-		setSelectedNode(originalGNode || { ...nodeData, spouseId: null, parents: [], children: [] });
-	};
-	return (
-		<button
-			onClick={handleNodeClick}
-			className='flex h-20 max-w-48 flex-col items-center justify-center text-pretty rounded border-2 border-cyan-600 bg-cyan-600 px-4 py-2 text-sm text-white shadow-md hover:bg-cyan-700 disabled:cursor-not-allowed disabled:bg-cyan-950 disabled:text-white'
-			disabled={!nodeData.audio}
-		>
-			<div className='text-center font-semibold'>{nodeData.name}</div>
-			{nodeData.clans && nodeData.clans.length > 0 && <div className='mt-1 text-center text-xs opacity-80'>{nodeData.clans.join(', ')}</div>}
-			{nodeData.annotations && nodeData.annotations.length > 0 && <div className='mt-1 text-center text-xs italic'>{nodeData.annotations.join(', ')}</div>}
-			{data.origin && <Handle type='target' position={Position.Top} className='!size-2 !border-none !bg-cyan-600' />}
-			{data.terminus && <Handle type='source' position={Position.Bottom} className='!size-2 !border-none !bg-cyan-600' />}
-		</button>
-	);
+  const { nodeData, setSelectedNode } = data;
+  /**
+   * Handles node click.
+   */
+  const handleNodeClick = () => {
+    const originalGNode = genealogyData.find(
+      (g) =>
+        g.id === nodeData.id ||
+        (g.name === nodeData.name &&
+          !genealogyData.some(
+            (p) => p.id === nodeData.id && p.name !== nodeData.name,
+          )),
+    );
+    setSelectedNode(
+      originalGNode || {
+        ...nodeData,
+        spouseId: null,
+        parents: [],
+        children: [],
+      },
+    );
+  };
+  return (
+    <button
+      onClick={handleNodeClick}
+      className="flex h-20 max-w-48 flex-col items-center justify-center text-pretty rounded border-2 border-cyan-600 bg-cyan-600 px-4 py-2 text-sm text-white shadow-md hover:bg-cyan-700 disabled:cursor-not-allowed disabled:bg-cyan-950 disabled:text-white"
+      disabled={!nodeData.audio}
+    >
+      <div className="text-center font-semibold">{nodeData.name}</div>
+      {nodeData.clans && nodeData.clans.length > 0 && (
+        <div className="mt-1 text-center text-xs opacity-80">
+          {nodeData.clans.join(", ")}
+        </div>
+      )}
+      {nodeData.annotations && nodeData.annotations.length > 0 && (
+        <div className="mt-1 text-center text-xs italic">
+          {nodeData.annotations.join(", ")}
+        </div>
+      )}
+      {data.origin && (
+        <Handle
+          type="target"
+          position={Position.Top}
+          className="!size-2 !border-none !bg-cyan-600"
+        />
+      )}
+      {data.terminus && (
+        <Handle
+          type="source"
+          position={Position.Bottom}
+          className="!size-2 !border-none !bg-cyan-600"
+        />
+      )}
+    </button>
+  );
 }
 
 /**
@@ -679,16 +1146,44 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
  * @returns Div element styling the marriage node and Handle connectors.
  */
 function MarriageConnectorNode() {
-	return (
-		<>
-			<div style={{ width: '12px', height: '12px', backgroundColor: '#A0A0A0', borderRadius: '50%', border: '1px solid #666' }} />
-			<Handle type='target' position={Position.Top} style={{ background: 'transparent', border: 'none', width: '1px', height: '1px', top: '-5px' }} isConnectable={true} />
-			<Handle type='source' position={Position.Bottom} style={{ background: 'transparent', border: 'none', width: '1px', height: '1px', bottom: '-5px' }} isConnectable={true} />
-		</>
-	);
+  return (
+    <>
+      <div
+        style={{
+          width: "12px",
+          height: "12px",
+          backgroundColor: "#A0A0A0",
+          borderRadius: "50%",
+          border: "1px solid #666",
+        }}
+      />
+      <Handle
+        type="target"
+        position={Position.Top}
+        style={{
+          background: "transparent",
+          border: "none",
+          width: "1px",
+          height: "1px",
+          top: "-5px",
+        }}
+        isConnectable={true}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        style={{
+          background: "transparent",
+          border: "none",
+          width: "1px",
+          height: "1px",
+          bottom: "-5px",
+        }}
+        isConnectable={true}
+      />
+    </>
+  );
 }
-
-
 
 /**
  * Renders the layout flow component.
@@ -701,153 +1196,252 @@ function MarriageConnectorNode() {
  * @returns React Flow map interface with layout controls and item inspection modal.
  */
 const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
-	// STATES
-	const [selNode, setSelNode] = useState<Person | null>(null);
-	const { fitView } = useReactFlow();
-	const [nodes, setNodes, onNodesChange] = useNodesState<GenealogyNode>([]);
-	const [edges, setEdges, onEdgesChange] = useEdgesState<ReactFlowEdge>([]);
-	const containerRef = React.useRef<HTMLDivElement>(null);
+  // STATES
+  const [selNode, setSelNode] = useState<Person | null>(null);
+  const { fitView } = useReactFlow();
+  const [nodes, setNodes, onNodesChange] = useNodesState<GenealogyNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<ReactFlowEdge>([]);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
-	// INIT
-	const { initialNodes, initialEdges } = useMemo(() => {
-		const nNodes: GenealogyNode[] = [];
-		const nEdges: ReactFlowEdge[] = [];
-		const personNodeMap = new Map<string, Person>();
-		const marriageSet = new Set<string>();
-		genealogyData.forEach(g => {
-			nNodes.push({ id: g.id, type: 'custom', data: { setSelectedNode: setSelNode, nodeData: g, origin: false, terminus: false }, position: { x: 0, y: 0 } });
-			personNodeMap.set(g.id, g);
-		});
-		genealogyData.forEach(g => {
-			if (g.spouseId) {
-				const primaryPersonId = g.id;
-				const spouseNodeId = genealogyData.find(p => p.id === g.spouseId)?.id || `spouse-node-for-${primaryPersonId}`;
-				if (!personNodeMap.has(spouseNodeId)) {
-					const spouseDisplayData: Person = { id: spouseNodeId, name: g.spouseId, clans: [], parents: [], children: [], spouseId: primaryPersonId };
-					nNodes.push({ id: spouseNodeId, type: 'custom', data: { setSelectedNode: setSelNode, nodeData: spouseDisplayData, origin: false, terminus: false }, position: { x: 0, y: 0 } });
-					personNodeMap.set(spouseNodeId, spouseDisplayData);
-				}
-				// Deduplicate structural relationships
-				const sortedIds = [primaryPersonId, spouseNodeId].sort();
-				const marriageNodeId = `marriage-${sortedIds[0]}-${sortedIds[1]}`;
-				if (!marriageSet.has(marriageNodeId)) {
-					marriageSet.add(marriageNodeId);
-					nNodes.push({ id: marriageNodeId, type: 'marriageConnector', data: {}, position: { x: 0, y: 0 } });
-					nEdges.push({ id: `edge-${primaryPersonId}-to-${marriageNodeId}`, source: primaryPersonId, target: marriageNodeId, type: 'smoothstep', style: { strokeDasharray: '5,5', stroke: '#888' } });
-					nEdges.push({ id: `edge-${spouseNodeId}-to-${marriageNodeId}`, source: spouseNodeId, target: marriageNodeId, type: 'smoothstep', style: { strokeDasharray: '5,5', stroke: '#888' } });
-					g.children.forEach(c => {
-						if (personNodeMap.has(c)) {
-							nEdges.push({ id: `edge-${marriageNodeId}-to-${c}`, source: marriageNodeId, target: c, type: 'smoothstep' });
-						}
-					});
-				}
-			} else {
-				g.children.forEach(c => {
-					if (personNodeMap.has(c)) nEdges.push({ id: `edge-${g.id}-to-${c}`, source: g.id, target: c, type: 'smoothstep' });
-				});
-			}
-		});
-		const tgts = new Set(nEdges.map(e => e.target));
-		const srcs = new Set(nEdges.map(e => e.source));
-		nNodes.forEach(n => {
-			if (n.type === 'custom') {
-				n.data.origin = tgts.has(n.id);
-				n.data.terminus = srcs.has(n.id);
-			}
-		});
-		return { initialNodes: nNodes, initialEdges: nEdges };
-	}, [genealogyData, setSelNode]);
+  // INIT
+  const { initialNodes, initialEdges } = useMemo(() => {
+    const nNodes: GenealogyNode[] = [];
+    const nEdges: ReactFlowEdge[] = [];
+    const personNodeMap = new Map<string, Person>();
+    const marriageSet = new Set<string>();
+    genealogyData.forEach((g) => {
+      nNodes.push({
+        id: g.id,
+        type: "custom",
+        data: {
+          setSelectedNode: setSelNode,
+          nodeData: g,
+          origin: false,
+          terminus: false,
+        },
+        position: { x: 0, y: 0 },
+      });
+      personNodeMap.set(g.id, g);
+    });
+    genealogyData.forEach((g) => {
+      if (g.spouseId) {
+        const primaryPersonId = g.id;
+        const spouseNodeId =
+          genealogyData.find((p) => p.id === g.spouseId)?.id ||
+          `spouse-node-for-${primaryPersonId}`;
+        if (!personNodeMap.has(spouseNodeId)) {
+          const spouseDisplayData: Person = {
+            id: spouseNodeId,
+            name: g.spouseId,
+            clans: [],
+            parents: [],
+            children: [],
+            spouseId: primaryPersonId,
+          };
+          nNodes.push({
+            id: spouseNodeId,
+            type: "custom",
+            data: {
+              setSelectedNode: setSelNode,
+              nodeData: spouseDisplayData,
+              origin: false,
+              terminus: false,
+            },
+            position: { x: 0, y: 0 },
+          });
+          personNodeMap.set(spouseNodeId, spouseDisplayData);
+        }
+        // Deduplicate structural relationships
+        const sortedIds = [primaryPersonId, spouseNodeId].sort();
+        const marriageNodeId = `marriage-${sortedIds[0]}-${sortedIds[1]}`;
+        if (!marriageSet.has(marriageNodeId)) {
+          marriageSet.add(marriageNodeId);
+          nNodes.push({
+            id: marriageNodeId,
+            type: "marriageConnector",
+            data: {},
+            position: { x: 0, y: 0 },
+          });
+          nEdges.push({
+            id: `edge-${primaryPersonId}-to-${marriageNodeId}`,
+            source: primaryPersonId,
+            target: marriageNodeId,
+            type: "smoothstep",
+            style: { strokeDasharray: "5,5", stroke: "#888" },
+          });
+          nEdges.push({
+            id: `edge-${spouseNodeId}-to-${marriageNodeId}`,
+            source: spouseNodeId,
+            target: marriageNodeId,
+            type: "smoothstep",
+            style: { strokeDasharray: "5,5", stroke: "#888" },
+          });
+          g.children.forEach((c) => {
+            if (personNodeMap.has(c)) {
+              nEdges.push({
+                id: `edge-${marriageNodeId}-to-${c}`,
+                source: marriageNodeId,
+                target: c,
+                type: "smoothstep",
+              });
+            }
+          });
+        }
+      } else {
+        g.children.forEach((c) => {
+          if (personNodeMap.has(c))
+            nEdges.push({
+              id: `edge-${g.id}-to-${c}`,
+              source: g.id,
+              target: c,
+              type: "smoothstep",
+            });
+        });
+      }
+    });
+    const tgts = new Set(nEdges.map((e) => e.target));
+    const srcs = new Set(nEdges.map((e) => e.source));
+    nNodes.forEach((n) => {
+      if (n.type === "custom") {
+        n.data.origin = tgts.has(n.id);
+        n.data.terminus = srcs.has(n.id);
+      }
+    });
+    return { initialNodes: nNodes, initialEdges: nEdges };
+  }, [genealogyData, setSelNode]);
 
-	React.useEffect(() => {
-		if (initialNodes.length > 0) {
-			const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(initialNodes, initialEdges, { direction: 'TB', nodesep: 70, ranksep: 90 });
-			setNodes(layoutedNodes);
-			setEdges(layoutedEdges);
-			// Native `fitView` React Flow prop correctly manages initial bounding box measurements safely.
-		}
-	}, [initialNodes, initialEdges, setNodes, setEdges]);
+  React.useEffect(() => {
+    if (initialNodes.length > 0) {
+      const { nodes: layoutedNodes, edges: layoutedEdges } =
+        getLayoutedElements(initialNodes, initialEdges, {
+          direction: "TB",
+          nodesep: 70,
+          ranksep: 90,
+        });
+      setNodes(layoutedNodes);
+      setEdges(layoutedEdges);
+      // Native `fitView` React Flow prop correctly manages initial bounding box measurements safely.
+    }
+  }, [initialNodes, initialEdges, setNodes, setEdges]);
 
-	React.useEffect(() => {
-		const el = containerRef.current;
-		if (!el) return;
-		const observer = new IntersectionObserver(
-			entries => {
-				const entry = entries[0];
-				if (entry.isIntersecting) {
-					window.requestAnimationFrame(() => {
-						fitView();
-					});
-				}
-			},
-			{ threshold: 0.1 },
-		);
-		observer.observe(el);
-		return () => {
-			observer.disconnect();
-		};
-	}, [fitView]);
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          window.requestAnimationFrame(() => {
+            fitView();
+          });
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(containerRef.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [fitView]);
 
-	const onLayout = useCallback(
-		(direction: string) => {
-			const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, { direction, nodesep: 70, ranksep: 90 });
-			setNodes([...layoutedNodes]);
-			setEdges([...layoutedEdges]);
-			window.requestAnimationFrame(() => fitView());
-		},
-		[nodes, edges, setNodes, setEdges, fitView],
-	);
+  const onLayout = useCallback(
+    (direction: string) => {
+      const { nodes: layoutedNodes, edges: layoutedEdges } =
+        getLayoutedElements(nodes, edges, {
+          direction,
+          nodesep: 70,
+          ranksep: 90,
+        });
+      setNodes([...layoutedNodes]);
+      setEdges([...layoutedEdges]);
+      window.requestAnimationFrame(() => fitView());
+    },
+    [nodes, edges, setNodes, setEdges, fitView],
+  );
 
-	return (
-		<div ref={containerRef} className='size-full'>
-			<ReactFlow
-				nodes={nodes}
-				edges={edges}
-				onNodesChange={onNodesChange}
-				onEdgesChange={onEdgesChange}
-				nodeTypes={({ custom: PersonNode, marriageConnector: MarriageConnectorNode })}
-				fitView
-				fitViewOptions={{ padding: 0.2 }}
-				minZoom={0.1}
-				className='size-full'
-			>
-				<Background />
-				<Panel position='top-right'>
-					<button
-						type='button'
-						onClick={() => {
-							onLayout('TB');
-						}}
-						title='Vertical Layout'
-						aria-label='Vertical Layout'
-					>
-						<CarbonIcon name='maximize' className='shrink-0 rounded border bg-white p-1 text-xl text-black' />
-					</button>
-				</Panel>
-				<Dialog open={!!selNode} onOpenChange={o => !o && setSelNode(null)}>
-					<DialogContent aria-describedby={undefined} className='text-clip bg-white text-left text-cyan-900 dark:bg-white dark:text-cyan-900'>
-						{selNode && (
-							<>
-								<DialogHeader>
-									<DialogTitle className='text-left font-mono text-4xl font-bold text-cyan-900'>{selNode.name}</DialogTitle>
-									<DialogDescription className='sr-only'>Details for {selNode.name}</DialogDescription>
-									{selNode.clans?.length > 0 && <p className='text-left text-cyan-900/70'>Clan: {selNode.clans.join(', ')}</p>}
-									{selNode.spouseId && <p className='text-left text-cyan-900/70'>Spouse: {selNode.spouseId.split('-')[0].replace(/^./, c => c.toUpperCase())}</p>}
-									{selNode.children?.length > 0 && (
-										<p className='text-left text-cyan-900/70'>Children: {selNode.children.map(i => i.split('-')[0]?.replace(/^./, c => c.toUpperCase())).join(', ')}</p>
-									)}
-								</DialogHeader>
-								<div className='flex flex-col gap-y-3 pt-2'>
-									{selNode.audio?.map(({ title: t, author: a, audio: v }) => (
-										<Player key={v} title={t} author={a} src={v} />
-									))}
-								</div>
-							</>
-						)}
-					</DialogContent>
-				</Dialog>
-			</ReactFlow>
-		</div>
-	);
+  return (
+    <div ref={containerRef} className="size-full">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodeTypes={{
+          custom: PersonNode,
+          marriageConnector: MarriageConnectorNode,
+        }}
+        fitView
+        fitViewOptions={{ padding: 0.2 }}
+        minZoom={0.1}
+        className="size-full"
+      >
+        <Background />
+        <Panel position="top-right">
+          <button
+            type="button"
+            onClick={() => {
+              onLayout("TB");
+            }}
+            title="Vertical Layout"
+            aria-label="Vertical Layout"
+          >
+            <CarbonIcon
+              name="maximize"
+              className="shrink-0 rounded border bg-white p-1 text-xl text-black"
+            />
+          </button>
+        </Panel>
+        <Dialog open={!!selNode} onOpenChange={(o) => !o && setSelNode(null)}>
+          <DialogContent
+            aria-describedby={undefined}
+            className="text-clip bg-white text-left text-cyan-900 dark:bg-white dark:text-cyan-900"
+          >
+            {selNode && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="text-left font-mono text-4xl font-bold text-cyan-900">
+                    {selNode.name}
+                  </DialogTitle>
+                  <DialogDescription className="sr-only">
+                    Details for {selNode.name}
+                  </DialogDescription>
+                  {selNode.clans?.length > 0 && (
+                    <p className="text-left text-cyan-900/70">
+                      Clan: {selNode.clans.join(", ")}
+                    </p>
+                  )}
+                  {selNode.spouseId && (
+                    <p className="text-left text-cyan-900/70">
+                      Spouse:{" "}
+                      {selNode.spouseId
+                        .split("-")[0]
+                        .replace(SHARED_REGEX, (c) => c.toUpperCase())}
+                    </p>
+                  )}
+                  {selNode.children?.length > 0 && (
+                    <p className="text-left text-cyan-900/70">
+                      Children:{" "}
+                      {selNode.children
+                        .map((i) =>
+                          i
+                            .split("-")[0]
+                            ?.replace(SHARED_REGEX, (c) => c.toUpperCase()),
+                        )
+                        .join(", ")}
+                    </p>
+                  )}
+                </DialogHeader>
+                <div className="flex flex-col gap-y-3 pt-2">
+                  {selNode.audio?.map(({ title: t, author: a, audio: v }) => (
+                    <Player key={v} title={t} author={a} src={v} />
+                  ))}
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
+      </ReactFlow>
+    </div>
+  );
 };
 
 /**
@@ -858,18 +1452,23 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
  * @returns Tree provider hierarchy.
  */
 export function Genealogy(): React.JSX.Element {
-	return (
-		<ErrorBoundary
-			name='SaibaiGenealogy'
-			fallback={() => <AlertError title='Genealogy Tree Error' description='The genealogy diagram of the Saibai families could not be displayed. The rest of the page remains fully accessible.' />}
-		>
-			<div className={PANEL_CLASSES}>
-				<ReactFlowProvider>
-					<LayoutFlow genealogyData={genealogyData} />
-				</ReactFlowProvider>
-			</div>
-		</ErrorBoundary>
-	);
+  return (
+    <ErrorBoundary
+      name="SaibaiGenealogy"
+      fallback={() => (
+        <AlertError
+          title="Genealogy Tree Error"
+          description="The genealogy diagram of the Saibai families could not be displayed. The rest of the page remains fully accessible."
+        />
+      )}
+    >
+      <div className={PANEL_CLASSES}>
+        <ReactFlowProvider>
+          <LayoutFlow genealogyData={genealogyData} />
+        </ReactFlowProvider>
+      </div>
+    </ErrorBoundary>
+  );
 }
 
 /*//////////////////////////////////////////////////
@@ -887,29 +1486,57 @@ MAIN CORPUS DASHBOARD
  *
  * @returns Customized Radix Tabs.Trigger.
  */
-const TabsTrigger = ({ value: val, children }: { value: string; children: React.ReactNode }) => {
-	/**
-	 * Handles click.
-	 */
-	const handleClick = () => {
-		if (typeof window !== 'undefined') {
-			const newUrl = `${window.location.pathname}?tab=${encodeURIComponent(val)}#history`;
-			window.history.replaceState({}, '', newUrl);
-			document.getElementById('history')?.scrollIntoView({ behavior: 'smooth' });
-		}
-	};
-	return (
-		<Tabs.Trigger value={val} onClick={handleClick} key={val} className='-mx-2 rounded px-2 py-0.5 text-left hover:bg-cyan-800 active:bg-cyan-800 data-[state=active]:bg-cyan-700'>
-			{children}
-		</Tabs.Trigger>
-	);
+const TabsTrigger = ({
+  value: val,
+  children,
+}: {
+  value: string;
+  children: React.ReactNode;
+}) => {
+  /**
+   * Handles click.
+   */
+  const handleClick = () => {
+    if (typeof window !== "undefined") {
+      const newUrl = `${window.location.pathname}?tab=${encodeURIComponent(val)}#history`;
+      window.history.replaceState({}, "", newUrl);
+      document
+        .getElementById("history")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  return (
+    <Tabs.Trigger
+      value={val}
+      onClick={handleClick}
+      key={val}
+      className="-mx-2 rounded px-2 py-0.5 text-left hover:bg-cyan-800 active:bg-cyan-800 data-[state=active]:bg-cyan-700"
+    >
+      {children}
+    </Tabs.Trigger>
+  );
 };
 
 // Abstracted Tab Configs for Corpus
 const CORPUS_TABS = [
-	{ id: 'Chronological', label: 'Chronological', className: 'p-10', Component: null },
-	{ id: 'Geographic', label: 'Geographic', className: TAB_VIEW_CLASSES, Component: GeographicMap },
-	{ id: 'Genealogical', label: 'Genealogical', className: TAB_VIEW_CLASSES, Component: Genealogy },
+  {
+    id: "Chronological",
+    label: "Chronological",
+    className: "p-10",
+    Component: null,
+  },
+  {
+    id: "Geographic",
+    label: "Geographic",
+    className: TAB_VIEW_CLASSES,
+    Component: GeographicMap,
+  },
+  {
+    id: "Genealogical",
+    label: "Genealogical",
+    className: TAB_VIEW_CLASSES,
+    Component: Genealogy,
+  },
 ];
 
 /**
@@ -918,97 +1545,171 @@ const CORPUS_TABS = [
  * @remarks The primary dashboard interface organizing Timeline, Map, and Genealogy views into tabs.
  *
  * @param defaultTab - Initializes the view (e.g., 'Chronological', 'Geographic', 'Genealogical').
+ * @param props The initial tab selection for the corpus dashboard.
  *
  * @returns Fully composed layout with integrated sub-components.
  */
-export default function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
-	return (
-		<ErrorBoundary
-			name='SaibaiCorpus'
-			fallback={() => (
-				<AlertError title='Saibai Corpus Crashed' description='An unexpected error occurred while rendering the Saibai Corpus dashboard. The rest of the page remains fully accessible.' />
-			)}
-		>
-			<Tabs.Root defaultValue={defaultTab || 'Chronological'} className='grid-cols-[1fr_3fr] sm:grid'>
-				<div className='col-span-2 grid min-h-screen grid-cols-[3rem_1fr] grid-rows-[auto_1fr_auto] bg-cyan-50 sm:grid-cols-[1fr_3fr] dark:bg-cyan-800'>
-					<div className='h-10 sm:h-20' />
-					<div className='h-10 border-l border-teal-400 sm:h-20 dark:border-teal-500' />
-					<div className='col-start-1 row-start-2 w-full border-t border-teal-400 dark:border-teal-500' />
-					<section className='prose flex max-w-none flex-col justify-center text-clip border-l border-t border-teal-400 px-6 py-20 text-cyan-900 sm:ml-0 dark:border-teal-500 dark:text-cyan-50'>
-						<h2 className='my-0 mb-8 font-mono text-6xl sm:text-8xl'>Saibai Corpus</h2>
-						<p className='text-xl opacity-60 sm:text-3xl'>Carrying island stories, wherever the journey leads</p>
-						<div className='max-w-3xl'>
-							<p className='sm:text-xl'>
-								As rising seas threaten homes, sacred sites, and connection to country, this living archive holds space for memory, identity, and belonging. Every scrap of Saibai—language, story,
-								place, and kin—has been gathered and collated into one site, with multiple ways to explore: a timeline, an audio archive, maps, and more.
-							</p>
-						</div>
-					</section>
-					<div className='h-10 border-t border-teal-400 sm:h-20 dark:border-teal-500' />
-					<div className='border-l border-t border-teal-400 dark:border-teal-500' />
-				</div>
+export default function Corpus({
+  defaultTab,
+}: {
+  defaultTab: string;
+}): React.JSX.Element {
+  return (
+    <ErrorBoundary
+      name="SaibaiCorpus"
+      fallback={() => (
+        <AlertError
+          title="Saibai Corpus Crashed"
+          description="An unexpected error occurred while rendering the Saibai Corpus dashboard. The rest of the page remains fully accessible."
+        />
+      )}
+    >
+      <Tabs.Root
+        defaultValue={defaultTab || "Chronological"}
+        className="grid-cols-[1fr_3fr] sm:grid"
+      >
+        <div className="col-span-2 grid min-h-screen grid-cols-[3rem_1fr] grid-rows-[auto_1fr_auto] bg-cyan-50 sm:grid-cols-[1fr_3fr] dark:bg-cyan-800">
+          <div className="h-10 sm:h-20" />
+          <div className="h-10 border-l border-teal-400 sm:h-20 dark:border-teal-500" />
+          <div className="col-start-1 row-start-2 w-full border-t border-teal-400 dark:border-teal-500" />
+          <section className="prose flex max-w-none flex-col justify-center text-clip border-l border-t border-teal-400 px-6 py-20 text-cyan-900 sm:ml-0 dark:border-teal-500 dark:text-cyan-50">
+            <h2 className="my-0 mb-8 font-mono text-6xl sm:text-8xl">
+              Saibai Corpus
+            </h2>
+            <p className="text-xl opacity-60 sm:text-3xl">
+              Carrying island stories, wherever the journey leads
+            </p>
+            <div className="max-w-3xl">
+              <p className="sm:text-xl">
+                As rising seas threaten homes, sacred sites, and connection to
+                country, this living archive holds space for memory, identity,
+                and belonging. Every scrap of Saibai—language, story, place, and
+                kin—has been gathered and collated into one site, with multiple
+                ways to explore: a timeline, an audio archive, maps, and more.
+              </p>
+            </div>
+          </section>
+          <div className="h-10 border-t border-teal-400 sm:h-20 dark:border-teal-500" />
+          <div className="border-l border-t border-teal-400 dark:border-teal-500" />
+        </div>
 
-				<div className='relative z-20 row-start-2 bg-cyan-950 p-10 pb-0 text-cyan-200 sm:pb-10'>
-					<Tabs.List className='flex flex-col gap-y-2 rounded border border-cyan-800 px-6 py-5 text-sm leading-tight shadow md:sticky md:top-16 [&>*]:py-1' aria-label='Corpus view modes'>
-						<h3 className='font-bold'>Content</h3>
-						{CORPUS_TABS.map(({ id: i, label: l }) => (
-							<TabsTrigger key={i} value={i}>
-								{l}
-							</TabsTrigger>
-						))}
-					</Tabs.List>
-				</div>
+        <div className="relative z-20 row-start-2 bg-cyan-950 p-10 pb-0 text-cyan-200 sm:pb-10">
+          <Tabs.List
+            className="flex flex-col gap-y-2 rounded border border-cyan-800 px-6 py-5 text-sm leading-tight shadow md:sticky md:top-16 [&>*]:py-1"
+            aria-label="Corpus view modes"
+          >
+            <h3 className="font-bold">Content</h3>
+            {CORPUS_TABS.map(({ id: i, label: l }) => (
+              <TabsTrigger key={i} value={i}>
+                {l}
+              </TabsTrigger>
+            ))}
+          </Tabs.List>
+        </div>
 
-				<div id='history' className='relative z-20 row-start-2 min-h-screen bg-cyan-950 text-cyan-200'>
-						{CORPUS_TABS.map(r => (
-							<Tabs.Content key={r.id} value={r.id} className={r.className}>
-								{r.Component ? (
-									<r.Component />
-							) : (
-								<div className='max-w-prose'>
-										{Object.entries(({
-	'Wax Cylinders': {
-		description: 'During the 1898 Alfred Cort Haddon Expedition, Haddon, Ray, and Jack were on Saibai Island from 22 to 25 October and recorded a series of wax cylinders.',
-		date: '',
-		items: [
-			{ title: 'Na puidam purda', author: 'Wap (singer, male)', audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1076XX-0100M0.mp3' },
-			{ title: 'Maduba na puidam', author: 'Gemetu (singer, male)', audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3' },
-			{ title: 'Mawa na puidam', author: 'Kinaur (singer, male)', audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1078XX-0100M0.mp3' },
-			{ title: 'Mawau na puidam', author: 'Gemetu (singer, male)', audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3' },
-			{ title: 'Nau poida', author: 'Aimab (singer, male)', audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1080XX-0100M0.mp3' },
-			{ title: 'About Saibai', author: 'Jack Assaii (speaker, male)', audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1045XX-0100M0.mp3' },
-		],
-	},
-	'Learn KKY': {
-		date: '',
-		items: [
-			{ title: 'PART 01 - Oral history podcast', author: 'Jeffrey Aniba Waia', audio: 'https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-1.mp3?_=2' },
-			{ title: 'PART 02 - Oral history podcast', author: 'Jeffrey Aniba Waia', audio: 'https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-2.mp3?_=2' },
-			{ title: 'PART 03 - Oral history podcast', author: 'Jeffrey Aniba Waia', audio: 'https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-3.mp3?_=2' },
-		],
-	},
-})).map(([s, d]) => (
-										<div key={s}>
-											<div className='sticky top-0 z-20 -mx-2 -mt-4'>
-												<h2 className='bg-cyan-950 px-2 py-4 text-xl font-semibold'>{s}</h2>
-												<div className='h-2 scrim-cyan-950 scrim-t-2' />
-											</div>
-												{'description' in d && d.description && <p className='mb-8'>{d.description}</p>}
-											<div className='flex flex-col gap-y-4 pb-8'>
-													{d.items.map(({ title: t, author: a, audio: v }) => (
-													<Player key={v} title={t} author={a} src={v} />
-												))}
-											</div>
-										</div>
-									))}
-								</div>
-							)}
-						</Tabs.Content>
-					))}
-				</div>
-			</Tabs.Root>
-		</ErrorBoundary>
-	);
+        <div
+          id="history"
+          className="relative z-20 row-start-2 min-h-screen bg-cyan-950 text-cyan-200"
+        >
+          {CORPUS_TABS.map((r) => (
+            <Tabs.Content key={r.id} value={r.id} className={r.className}>
+              {r.Component ? (
+                <r.Component />
+              ) : (
+                <div className="max-w-prose">
+                  {Object.entries({
+                    "Wax Cylinders": {
+                      description:
+                        "During the 1898 Alfred Cort Haddon Expedition, Haddon, Ray, and Jack were on Saibai Island from 22 to 25 October and recorded a series of wax cylinders.",
+                      date: "",
+                      items: [
+                        {
+                          title: "Na puidam purda",
+                          author: "Wap (singer, male)",
+                          audio:
+                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1076XX-0100M0.mp3",
+                        },
+                        {
+                          title: "Maduba na puidam",
+                          author: "Gemetu (singer, male)",
+                          audio:
+                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3",
+                        },
+                        {
+                          title: "Mawa na puidam",
+                          author: "Kinaur (singer, male)",
+                          audio:
+                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1078XX-0100M0.mp3",
+                        },
+                        {
+                          title: "Mawau na puidam",
+                          author: "Gemetu (singer, male)",
+                          audio:
+                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3",
+                        },
+                        {
+                          title: "Nau poida",
+                          author: "Aimab (singer, male)",
+                          audio:
+                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1080XX-0100M0.mp3",
+                        },
+                        {
+                          title: "About Saibai",
+                          author: "Jack Assaii (speaker, male)",
+                          audio:
+                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1045XX-0100M0.mp3",
+                        },
+                      ],
+                    },
+                    "Learn KKY": {
+                      date: "",
+                      items: [
+                        {
+                          title: "PART 01 - Oral history podcast",
+                          author: "Jeffrey Aniba Waia",
+                          audio:
+                            "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-1.mp3?_=2",
+                        },
+                        {
+                          title: "PART 02 - Oral history podcast",
+                          author: "Jeffrey Aniba Waia",
+                          audio:
+                            "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-2.mp3?_=2",
+                        },
+                        {
+                          title: "PART 03 - Oral history podcast",
+                          author: "Jeffrey Aniba Waia",
+                          audio:
+                            "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-3.mp3?_=2",
+                        },
+                      ],
+                    },
+                  }).map(([s, d]) => (
+                    <div key={s}>
+                      <div className="sticky top-0 z-20 -mx-2 -mt-4">
+                        <h2 className="bg-cyan-950 px-2 py-4 text-xl font-semibold">
+                          {s}
+                        </h2>
+                        <div className="h-2 scrim-cyan-950 scrim-t-2" />
+                      </div>
+                      {"description" in d && d.description && (
+                        <p className="mb-8">{d.description}</p>
+                      )}
+                      <div className="flex flex-col gap-y-4 pb-8">
+                        {d.items.map(({ title: t, author: a, audio: v }) => (
+                          <Player key={v} title={t} author={a} src={v} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Tabs.Content>
+          ))}
+        </div>
+      </Tabs.Root>
+    </ErrorBoundary>
+  );
 }
 
 /*//////////////////////////////////////////////////
@@ -1316,4 +2017,3 @@ const SAIBAI = {
 		}
 	}
 };
-
