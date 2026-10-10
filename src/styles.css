@@ -102,23 +102,4 @@
 			@apply box-decoration-clone outline-none ring-2;
 		}
 	}
-
-	/* Used for marquee */
-	@keyframes slide {
-		from {
-			transform: translateX(0);
-		}
-		to {
-			transform: translateX(-50%);
-		}
-	}
-
-	@keyframes docs-toolbar-sweep {
-		0% {
-			transform: translateX(-100%);
-		}
-		100% {
-			transform: translateX(100%);
-		}
-	}
 }
