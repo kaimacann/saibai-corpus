@@ -46,6 +46,20 @@ const applyOpacityValue = (variable: string) => {
 
 const transform =
 	'translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) ';
+const gridSpans = (start: number, end: number) =>
+	Object.fromEntries(
+		Array.from({ length: end - start + 1 }, (_, i) => {
+			const span = start + i;
+			return [`span-${span}`, `span ${span} / span ${span}`];
+		}),
+	);
+const gridLines = (start: number, end: number) =>
+	Object.fromEntries(
+		Array.from({ length: end - start + 1 }, (_, i) => {
+			const line = start + i;
+			return [line, String(line)];
+		}),
+	);
 
 const preset: Omit<Config, 'content'> = {
 	darkMode: ['variant', ['@media (prefers-color-scheme: dark) { &:not(.light *, .light) }', '&:is(.dark *, .dark)']],
@@ -125,40 +139,16 @@ const preset: Omit<Config, 'content'> = {
 			gridTemplateColumns: { 20: 'repeat(20, minmax(0, 1fr))' },
 			// Simple 20 row grid
 			gridTemplateRows: { 20: 'repeat(20, minmax(0, 1fr))' },
-			gridColumn: {
-				'span-13': 'span 13 / span 13',
-				'span-14': 'span 14 / span 14',
-				'span-15': 'span 15 / span 15',
-				'span-16': 'span 16 / span 16',
-				'span-17': 'span 17 / span 17',
-				'span-18': 'span 18 / span 18',
-				'span-19': 'span 19 / span 19',
-				'span-20': 'span 20 / span 20',
-			},
-			gridRow: {
-				'span-7': 'span 7 / span 7',
-				'span-8': 'span 8 / span 8',
-				'span-9': 'span 9 / span 9',
-				'span-10': 'span 10 / span 10',
-				'span-11': 'span 11 / span 11',
-				'span-12': 'span 12 / span 12',
-				'span-13': 'span 13 / span 13',
-				'span-14': 'span 14 / span 14',
-				'span-15': 'span 15 / span 15',
-				'span-16': 'span 16 / span 16',
-				'span-17': 'span 17 / span 17',
-				'span-18': 'span 18 / span 18',
-				'span-19': 'span 19 / span 19',
-				'span-20': 'span 20 / span 20',
-			},
+			gridColumn: gridSpans(13, 20),
+			gridRow: gridSpans(7, 20),
 			// prettier-ignore
-			gridColumnStart: {13:'13',14:'14',15:'15',16:'16',17:'17',18:'18',19:'19',20:'20',21:'21',},
+			gridColumnStart: gridLines(13, 21),
 			// prettier-ignore
-			gridRowStart: {8:'8',9:'9',10:'10',11:'11',12:'12',13:'13',14:'14',15:'15',16:'16',17:'17',18:'18',19:'19',20:'20',21:'21',},
+			gridRowStart: gridLines(8, 21),
 			// prettier-ignore
-			gridColumnEnd: {13:'13',14:'14',15:'15',16:'16',17:'17',18:'18',19:'19',20:'20',21:'21',},
+			gridColumnEnd: gridLines(13, 21),
 			// prettier-ignore
-			gridRowEnd: { 8: '8', 9: '9', 10: '10', 11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19', 20: '20', 21: '21' },
+			gridRowEnd: gridLines(8, 21),
 			typography: ({ theme }: PluginUtils) => ({
 				DEFAULT: {
 					css: {
@@ -187,12 +177,7 @@ const preset: Omit<Config, 'content'> = {
 							textDecoration: 'underline',
 							textUnderlineOffset: '3px',
 						},
-						h1: { color: 'inherit' },
-						h2: { color: 'inherit' },
-						h3: { color: 'inherit' },
-						h4: { color: 'inherit' },
-						h5: { color: 'inherit' },
-						h6: { color: 'inherit' },
+						'h1, h2, h3, h4, h5, h6': { color: 'inherit' },
 						'a:hover': { textUnderlineOffset: '3px' },
 						// set color with opacity
 						blockquote: { color: 'var(--primary-7)', borderLeftColor: 'rgba(var(--primary-7), 0.5)' },
