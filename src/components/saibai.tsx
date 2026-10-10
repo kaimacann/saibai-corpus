@@ -710,20 +710,19 @@ export function GeographicMap(): React.JSX.Element {
                   /**
                    * Handles click.
                    */
-                  let handleClick = () => {};
                   const isInteractive =
                     !isLine &&
                     ((properties.landuse &&
                       properties.landuse !== "residential") ||
                       (properties.name && properties.name !== "Saibai Island"));
+                  const handleClick = isInteractive
+                    ? () => setSelectedGeo(g)
+                    : undefined;
                   if (isInteractive) {
                     className = cn(
                       className,
                       "pointer-events-auto fill-yellow-300 hover:cursor-pointer hover:fill-yellow-400",
                     );
-                    handleClick = () => {
-                      setSelectedGeo(g);
-                    };
                   }
                   return (
                     <Geography
@@ -1022,6 +1021,11 @@ const genealogyData: Person[] = [
   },
 ];
 
+const getNodeDimensions = (node: Node) =>
+  node.type === "marriageConnector"
+    ? { width: 20, height: 20 }
+    : { width: node.measured?.width ?? 150, height: node.measured?.height ?? 50 };
+
 /**
  * Handles get layouted elements.
  *
@@ -1045,25 +1049,12 @@ const getLayoutedElements = <TNode extends Node>(
     ranksep: opts.ranksep || 50,
   });
   edges.forEach((e) => g.setEdge(e.source, e.target));
-  nodes.forEach((n) => {
-    let width = n.measured?.width ?? 150;
-    let height = n.measured?.height ?? 50;
-    if (n.type === "marriageConnector") {
-      width = 20;
-      height = 20;
-    }
-    g.setNode(n.id, { ...n, width, height });
-  });
+  nodes.forEach((n) => g.setNode(n.id, { ...n, ...getNodeDimensions(n) }));
   Dagre.layout(g);
   return {
     nodes: nodes.map((n) => {
       const { x, y } = g.node(n.id);
-      let width = n.measured?.width ?? 150;
-      let height = n.measured?.height ?? 50;
-      if (n.type === "marriageConnector") {
-        width = 20;
-        height = 20;
-      }
+      const { width, height } = getNodeDimensions(n);
       return {
         ...n,
         position: { x: x - width / 2, y: y - height / 2 },
