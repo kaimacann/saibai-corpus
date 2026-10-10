@@ -1,6 +1,8 @@
 import { cva } from "class-variance-authority";
 
+/** Semantic palette names available to the shared controls. */
 export type UiColor = "primary" | "secondary" | "gray" | "destructive";
+/** Treatment names used to build a semantic UI variant. */
 export type UiType =
   | "default"
   | "outline"
@@ -9,15 +11,20 @@ export type UiType =
   | "saturated"
   | "link"
   | "underline";
+/** Standard size scale shared across buttons and form controls. */
 export type UiSize = "xs" | "sm" | "md" | "lg" | "xl";
 
+/** Valid color and treatment combinations for action controls. */
 export type ActionVariant =
   UiColor | `${UiColor}-${Exclude<UiType, "default" | "saturated">}`;
+/** Valid color and treatment combinations for input controls. */
 export type ControlVariant =
   UiColor | `${UiColor}-${Extract<UiType, "outline" | "ghost" | "tonal">}`;
+/** Valid color and treatment combinations for containing surfaces. */
 export type SurfaceVariant =
   UiColor | `${UiColor}-${Exclude<UiType, "default" | "link" | "underline">}`;
 
+/** Button dimensions, extended with the compact icon-only option. */
 type ButtonSize = UiSize | "icon";
 
 const ACTION_VARIANT_CLASSES = {

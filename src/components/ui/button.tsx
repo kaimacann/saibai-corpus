@@ -3,7 +3,9 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@utils";
 import { ACTION_VARIANTS, type ActionVariant, type UiSize } from "./variants";
 
+/** Supported button dimensions, including the square icon-only treatment. */
 type ButtonSize = UiSize | "icon";
+/** Visual variant options shared by button and link controls. */
 type ButtonStyleProps = {
   variant?: ActionVariant;
   size?: ButtonSize;
@@ -12,6 +14,7 @@ type ButtonStyleProps = {
 /** Button HTML attributes combined with the Saibai button variant options. */
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   ButtonStyleProps & { asChild?: boolean };
+/** Anchor attributes combined with the shared button styling options. */
 type ButtonLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> &
   ButtonStyleProps;
 
