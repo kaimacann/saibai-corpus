@@ -14,7 +14,6 @@ import { cn } from "@utils";
 import { useMediaStore } from "@vidstack/react";
 import { useEdgesState, useNodesState, useReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { cva } from "class-variance-authority";
 import { useCallback, useMemo, useState } from "react";
 import { feature } from "topojson-client";
 import "vidstack/styles/base.css";
@@ -23,6 +22,7 @@ import { CarbonIcon } from "./carbon-icons";
 // COMPONENTS
 
 import { ErrorBoundary } from "@components/ErrorBoundary";
+import { Button, ButtonLink } from "@components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -31,7 +31,6 @@ import {
   DialogTitle,
 } from "@components/ui/dialog";
 import Dagre from "@dagrejs/dagre";
-import { Slot } from "@radix-ui/react-slot";
 import * as Tabs from "@radix-ui/react-tabs";
 import { AlertError } from "@ui/alert";
 import {
@@ -63,12 +62,18 @@ import {
 
 // TYPES
 
-import type { Person } from "@lib/types";
+import type {
+  AudioCtrlsProps,
+  Person,
+  PlayerProps,
+  SaibaiFlowNode as FlowNode,
+} from "@lib/types";
 import type { Edge as ReactFlowEdge, Node, NodeProps } from "@xyflow/react";
-import type { VariantProps } from "class-variance-authority";
 import type { JSX } from "react";
 import type { ReactNode } from "react";
 import type { MapGeography } from "react-simple-maps";
+
+export { Button, ButtonLink };
 
 /*//////////////////////////////////////////////////
 COMPONENTS
@@ -76,7 +81,8 @@ COMPONENTS
 
 /**
  * Renders the Saibai corpus landing page without an Astro layout wrapper.
- * @returns The Saibai landing page.
+ *
+ * @returns The landing page sections and footer inside the Saibai error boundary.
  */
 export function Saibai(): JSX.Element {
   return (
@@ -120,16 +126,14 @@ export function Saibai(): JSX.Element {
                 ["Nathan Kam"],
                 ["Benjamin Li"],
               ].map(([n, h]) => (
-                <a
+                <ButtonLink
                   key={n}
-                  className="flex gap-4 !outline-none transition-transform"
                   href={h}
                   target="_blank"
+                  variant="primary-link"
                 >
-                  <span className="decoration-2 underline-offset-4 hocus:underline">
-                    {n}
-                  </span>
-                </a>
+                  {n}
+                </ButtonLink>
               ))}
             </ul>
           </nav>
@@ -173,96 +177,16 @@ export const MEDIA_BUTTON_CLASSES =
 UI COMPONENTS
 //////////////////////////////////////////////////*/
 
-/**
- * Describes the documented declaration.
- *
- * @remarks Defines variant styles for the Button component using class-variance-authority.
- *
- * @param props - Standard CVA parameters.
- *
- * @returns A string of compiled Tailwind classes.
- */
-export const buttonVariants = cva(
-  cn(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold",
-    "ring-offset-primary-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-    "disabled:cursor-not-allowed disabled:opacity-50",
-    "[&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0",
-  ),
-  {
-    variants: {
-      variant: {
-        default: "bg-cyan-700 text-white enabled:hover:bg-cyan-800",
-        tonal:
-          "border border-cyan-800 bg-cyan-300 text-cyan-950 enabled:hover:bg-cyan-400",
-        secondary:
-          "border border-yellow-700 bg-yellow-300 text-yellow-950 enabled:hover:bg-yellow-400",
-        destructive:
-          "border border-rose-700 bg-rose-600 text-white enabled:hover:bg-rose-600/90 dark:border-rose-800 dark:bg-rose-900 dark:hover:bg-rose-900/90",
-        toolbar: "rounded border bg-white p-1 text-xl text-black transition-none enabled:hover:bg-white",
-        person: "flex max-w-48 flex-col gap-0 text-pretty border-2 border-cyan-600 bg-cyan-600 font-normal text-white shadow-md transition-none focus-visible:ring-0 focus-visible:ring-offset-0 enabled:hover:bg-cyan-700 disabled:bg-cyan-950 disabled:text-white",
-        outline:
-          "border border-gray-5 bg-white text-gray-12 enabled:hover:bg-gray-1 dark:bg-cyan-200 enabled:dark:hover:bg-cyan-200",
-        ghost: "hover:bg-gray-3",
-        inline: "text-gray-11 underline-offset-4 enabled:hover:underline",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        xs: "h-6 rounded-md p-2 text-xs",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "size-10",
-        person: "h-20 rounded px-4 py-2",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  },
-);
-
-type PersonGraphNode = Node<
-  {
-    nodeData: Person;
-    origin: boolean;
-    terminus: boolean;
-    setSelectedNode: React.Dispatch<React.SetStateAction<Person | null>>;
-  } & Record<string, unknown>,
-  "custom"
-> & { type: "custom" };
-
-type GenealogyNode =
-  | PersonGraphNode
-  | (Node<Record<string, never>, "marriageConnector"> & {
-      type: "marriageConnector";
-    });
-
-/**
- * Describes the documented declaration.
- *
- * @remarks A generic button component that supports Radix Slot for polymorphic rendering.
- *
- * @param props - ButtonProps containing styling variants and children.
- * @param ref - React forward ref.
- *
- * @returns Rendered HTML button or Radix Slot.
- */
-export const Button = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement> &
-    VariantProps<typeof buttonVariants> & { asChild?: boolean }
->(({ className, variant, size, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : "button";
-  return (
-    <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
-      ref={ref}
-      {...props}
-    />
-  );
-});
-Button.displayName = "Button";
+/** React Flow payload for a person node, including its person record fields. */
+type PersonNodeData = FlowNode & Record<string, unknown>;
+/** React Flow node specialization used to render an individual person. */
+type PersonGraphNode = Node<PersonNodeData, "custom"> & { type: "custom" };
+/** Layout-only React Flow node used to connect spouses in the genealogy graph. */
+type MarriageGraphNode = Node<Record<string, never>, "marriageConnector"> & {
+  type: "marriageConnector";
+};
+/** Either a visible person node or a marriage connector in the genealogy graph. */
+type GenealogyNode = PersonGraphNode | MarriageGraphNode;
 
 /**
  * Renders the acknowledgment component.
@@ -409,8 +333,9 @@ const SliderPreview = ({ children }: { children: ReactNode }) => (
  *
  * @remarks Vidstack Media Slider containing track, thumb, and preview.
  *
- * @param props Media source and optional CSS classes for the slider.
- * @param className - Additional CSS classes merged into media slider.
+ * @param props - Optional styling and preview image settings for the seekable audio timeline.
+ * @param className - Optional classes merged with the media slider's base styling.
+ * @param src - Optional preview image URL shown while seeking through the recording.
  *
  * @returns Media time slider component.
  */
@@ -451,6 +376,7 @@ export function MediaSlider({
  *
  * @remarks Vidstack Play/Pause button wrapper handling iconography.
  *
+ * @param props - HTML button attributes forwarded to Vidstack's play/pause control.
  * @param attrs - Additional HTML attributes passed through play button.
  *
  * @returns Play/Pause button component.
@@ -460,7 +386,7 @@ function PlayButton({ ...attrs }) {
   const label = paused ? "Play" : "Pause";
   return (
     <MediaPlayButton
-      className={cn(MEDIA_BUTTON_CLASSES)}
+      className={MEDIA_BUTTON_CLASSES}
       aria-label={label}
       {...attrs}
     >
@@ -481,16 +407,13 @@ function PlayButton({ ...attrs }) {
  *
  * @remarks Consolidated media controls handling play, seek, volume, and timeline.
  *
- * @param props - AudioCtrlsProps.
+ * @param props - Audio control attributes, including optional styling and media-control event handlers.
  * @param className - Additional CSS classes merged into audio controls.
  * @param attrs - Additional HTML attributes passed through audio controls.
  *
  * @returns Media controls layout component.
  */
-function AudioControls({
-  className,
-  ...attrs
-}: React.ComponentPropsWithoutRef<"div"> & { className?: string }) {
+function AudioControls({ className, ...attrs }: AudioCtrlsProps) {
   const { paused, muted } = useMediaStore();
   const BUTTON_WRAPPER = "flex gap-4 *:-mx-3 *:p-3 items-center";
   return (
@@ -531,7 +454,7 @@ function AudioControls({
           <MediaTime type="duration" className="text-sm" />
         </div>
         <MediaMuteButton
-          className={cn(MEDIA_BUTTON_CLASSES)}
+          className={MEDIA_BUTTON_CLASSES}
           aria-label={muted ? "Unmute" : "Mute"}
           data-tooltip={muted ? "Unmute" : "Mute"}
         >
@@ -557,15 +480,15 @@ function AudioControls({
  *
  * @remarks Core audio player component rendering artwork, metadata, and controls via Vidstack.
  *
- * @param props - PlayerProps containing media source and metadata.
- * @param src - Src input supplied to player's operation.
- * @param poster - Poster input supplied to player's operation.
- * @param title - Heading text shown in player.
- * @param author - Author input supplied to player's operation.
- * @param meta - Meta input supplied to player's operation.
- * @param className - Additional CSS classes merged into player.
- * @param alt - Alt input supplied to player's operation.
- * @param attrs - Additional HTML attributes passed through player.
+ * @param props - Media source, optional artwork and metadata, and player attributes.
+ * @param src - Required URL or source descriptor for the audio recording.
+ * @param poster - Optional artwork URL displayed beside the track metadata.
+ * @param title - Optional track heading; metadata is shown when this is provided.
+ * @param author - Optional creator name displayed beneath the track heading.
+ * @param meta - Optional supporting metadata such as duration or collection.
+ * @param className - Optional classes merged with the player's base styling.
+ * @param alt - Accessible text for the artwork image when a poster is supplied.
+ * @param attrs - Remaining Vidstack player attributes forwarded to the player.
  *
  * @returns Fully constructed MediaPlayer component.
  */
@@ -578,15 +501,7 @@ export function Player({
   className,
   alt,
   ...attrs
-}: {
-  src: string;
-  poster?: string;
-  className?: string;
-  title?: string;
-  author?: string;
-  meta?: string;
-  alt?: string;
-}): React.JSX.Element {
+}: PlayerProps): React.JSX.Element {
   return (
     <ErrorBoundary name="Player">
       <MediaPlayer
@@ -1071,11 +986,8 @@ const getLayoutedElements = <TNode extends Node>(
  *
  * @remarks React Flow Custom Node to display a Person in the tree.
  *
- * @param data - FlowNode data containing personal information and edge visibility toggles.
- *
- *
- *
- *
+ * @param props - React Flow node properties containing the person data and canvas interaction callbacks.
+ * @param data - Node data containing personal information and edge visibility toggles.
  * @returns Person Node.
  */
 function PersonNode({ data }: NodeProps<PersonGraphNode>) {
@@ -1105,10 +1017,11 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
     <Button
       onClick={handleNodeClick}
       disabled={!nodeData.audio}
-      variant="person"
-      size="person"
+      variant="primary"
+      size="xl"
+      className="h-20 max-w-48 flex-col gap-0 text-pretty px-4 py-2"
     >
-      <div className="text-center font-semibold">{nodeData.name}</div>
+      <div className="text-center">{nodeData.name}</div>
       {nodeData.clans && nodeData.clans.length > 0 && (
         <div className="mt-1 text-center text-xs opacity-80">
           {nodeData.clans.join(", ")}
@@ -1183,6 +1096,11 @@ function MarriageConnectorNode() {
     </>
   );
 }
+
+const nodeTypes = {
+  custom: PersonNode,
+  marriageConnector: MarriageConnectorNode,
+};
 
 /**
  * Renders the layout flow component.
@@ -1364,10 +1282,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        nodeTypes={{
-          custom: PersonNode,
-          marriageConnector: MarriageConnectorNode,
-        }}
+        nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         minZoom={0.1}
@@ -1382,7 +1297,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
             }}
             title="Vertical Layout"
             aria-label="Vertical Layout"
-            variant="toolbar"
+            variant="gray-outline"
             size="icon"
           >
             <CarbonIcon name="maximize" />
@@ -1542,8 +1457,8 @@ const CORPUS_TABS = [
  *
  * @remarks The primary dashboard interface organizing Timeline, Map, and Genealogy views into tabs.
  *
+ * @param props - Initial tab selection that determines which corpus view is shown first.
  * @param defaultTab - Initializes the view (e.g., 'Chronological', 'Geographic', 'Genealogical').
- * @param props The initial tab selection for the corpus dashboard.
  *
  * @returns Fully composed layout with integrated sub-components.
  */
@@ -1611,74 +1526,7 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
                 <r.Component />
               ) : (
                 <div className="max-w-prose">
-                  {Object.entries({
-                    "Wax Cylinders": {
-                      description:
-                        "During the 1898 Alfred Cort Haddon Expedition, Haddon, Ray, and Jack were on Saibai Island from 22 to 25 October and recorded a series of wax cylinders.",
-                      date: "",
-                      items: [
-                        {
-                          title: "Na puidam purda",
-                          author: "Wap (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1076XX-0100M0.mp3",
-                        },
-                        {
-                          title: "Maduba na puidam",
-                          author: "Gemetu (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3",
-                        },
-                        {
-                          title: "Mawa na puidam",
-                          author: "Kinaur (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1078XX-0100M0.mp3",
-                        },
-                        {
-                          title: "Mawau na puidam",
-                          author: "Gemetu (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3",
-                        },
-                        {
-                          title: "Nau poida",
-                          author: "Aimab (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1080XX-0100M0.mp3",
-                        },
-                        {
-                          title: "About Saibai",
-                          author: "Jack Assaii (speaker, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1045XX-0100M0.mp3",
-                        },
-                      ],
-                    },
-                    "Learn KKY": {
-                      date: "",
-                      items: [
-                        {
-                          title: "PART 01 - Oral history podcast",
-                          author: "Jeffrey Aniba Waia",
-                          audio:
-                            "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-1.mp3?_=2",
-                        },
-                        {
-                          title: "PART 02 - Oral history podcast",
-                          author: "Jeffrey Aniba Waia",
-                          audio:
-                            "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-2.mp3?_=2",
-                        },
-                        {
-                          title: "PART 03 - Oral history podcast",
-                          author: "Jeffrey Aniba Waia",
-                          audio:
-                            "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-3.mp3?_=2",
-                        },
-                      ],
-                    },
-                  }).map(([s, d]) => (
+                  {Object.entries(AUDIO).map(([s, d]) => (
                     <div key={s}>
                       <div className="sticky top-0 z-20 -mx-2 -mt-4">
                         <h2 className="bg-cyan-950 px-2 py-4 text-xl font-semibold">
@@ -2010,4 +1858,73 @@ const SAIBAI = {
 			]
 		}
 	}
+};
+
+const AUDIO = {
+  "Wax Cylinders": {
+    description:
+      "During the 1898 Alfred Cort Haddon Expedition, Haddon, Ray, and Jack were on Saibai Island from 22 to 25 October and recorded a series of wax cylinders.",
+    date: "",
+    items: [
+      {
+        title: "Na puidam purda",
+        author: "Wap (singer, male)",
+        audio:
+          "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1076XX-0100M0.mp3",
+      },
+      {
+        title: "Maduba na puidam",
+        author: "Gemetu (singer, male)",
+        audio:
+          "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3",
+      },
+      {
+        title: "Mawa na puidam",
+        author: "Kinaur (singer, male)",
+        audio:
+          "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1078XX-0100M0.mp3",
+      },
+      {
+        title: "Mawau na puidam",
+        author: "Gemetu (singer, male)",
+        audio:
+          "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3",
+      },
+      {
+        title: "Nau poida",
+        author: "Aimab (singer, male)",
+        audio:
+          "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1080XX-0100M0.mp3",
+      },
+      {
+        title: "About Saibai",
+        author: "Jack Assaii (speaker, male)",
+        audio:
+          "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1045XX-0100M0.mp3",
+      },
+    ],
+  },
+  "Learn KKY": {
+    date: "",
+    items: [
+      {
+        title: "PART 01 - Oral history podcast",
+        author: "Jeffrey Aniba Waia",
+        audio:
+          "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-1.mp3?_=2",
+      },
+      {
+        title: "PART 02 - Oral history podcast",
+        author: "Jeffrey Aniba Waia",
+        audio:
+          "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-2.mp3?_=2",
+      },
+      {
+        title: "PART 03 - Oral history podcast",
+        author: "Jeffrey Aniba Waia",
+        audio:
+          "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-3.mp3?_=2",
+      },
+    ],
+  },
 };
