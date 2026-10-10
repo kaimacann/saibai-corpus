@@ -44,6 +44,14 @@ const applyOpacityValue = (variable: string) => {
 	};
 };
 
+const legacyColorLevels = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
+const colorLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
+const colorScale = (name: string) =>
+	Object.fromEntries([
+		...legacyColorLevels.map((n) => [n, applyOpacityValue(`--${name}${n}`)] as const),
+		...colorLevels.map((n) => [n, applyOpacityValue(`--${name}-${n}`)] as const),
+	]) as Record<number, ReturnType<typeof applyOpacityValue>>;
+
 const transform =
 	'translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) ';
 const gridSpans = (start: number, end: number) =>
@@ -109,21 +117,11 @@ const preset: Omit<Config, 'content'> = {
 			},
 			borderRadius: { 100: '100%' },
 			colors: {
-				primary: (() => {
-					const legacy = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
-					const scale = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-					return Object.fromEntries([...legacy.map(n => [n, applyOpacityValue(`--primary${n}`)]), ...scale.map(n => [n, applyOpacityValue(`--primary-${n}`)])] as (
-						number | ReturnType<typeof applyOpacityValue>
-					)[][]) as Record<number, ReturnType<typeof applyOpacityValue>>;
-				})(),
-				gray: Object.fromEntries([...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => [n, applyOpacityValue(`--gray-${n}`)])]) as Record<number, ReturnType<typeof applyOpacityValue>>,
-				secondary: (() => {
-					const legacy = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
-					const scale = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
-					return Object.fromEntries([...legacy.map(n => [n, applyOpacityValue(`--secondary${n}`)]), ...scale.map(n => [n, applyOpacityValue(`--secondary-${n}`)])] as (
-						number | ReturnType<typeof applyOpacityValue>
-					)[][]) as Record<number, ReturnType<typeof applyOpacityValue>>;
-				})(),
+				primary: colorScale('primary'),
+				gray: Object.fromEntries(
+					colorLevels.map((n) => [n, applyOpacityValue(`--gray-${n}`)] as const),
+				) as Record<number, ReturnType<typeof applyOpacityValue>>,
+				secondary: colorScale('secondary'),
 				accent: applyOpacityValue('--accent'),
 				'accent-foreground': applyOpacityValue('--accent-foreground'),
 				ring: applyOpacityValue('--ring'),
