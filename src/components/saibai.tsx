@@ -14,7 +14,6 @@ import { cn } from "@utils";
 import { useMediaStore } from "@vidstack/react";
 import { useEdgesState, useNodesState, useReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { cva } from "class-variance-authority";
 import { useCallback, useMemo, useState } from "react";
 import { feature } from "topojson-client";
 import "vidstack/styles/base.css";
@@ -23,6 +22,7 @@ import { CarbonIcon } from "./carbon-icons";
 // COMPONENTS
 
 import { ErrorBoundary } from "@components/ErrorBoundary";
+import { Button, ButtonLink } from "@components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -31,7 +31,6 @@ import {
   DialogTitle,
 } from "@components/ui/dialog";
 import Dagre from "@dagrejs/dagre";
-import { Slot } from "@radix-ui/react-slot";
 import * as Tabs from "@radix-ui/react-tabs";
 import { AlertError } from "@ui/alert";
 import {
@@ -70,10 +69,11 @@ import type {
   SaibaiFlowNode as FlowNode,
 } from "@lib/types";
 import type { Edge as ReactFlowEdge, Node, NodeProps } from "@xyflow/react";
-import type { VariantProps } from "class-variance-authority";
 import type { JSX } from "react";
 import type { ReactNode } from "react";
 import type { MapGeography } from "react-simple-maps";
+
+export { Button, ButtonLink };
 
 /*//////////////////////////////////////////////////
 COMPONENTS
@@ -126,16 +126,14 @@ export function Saibai(): JSX.Element {
                 ["Nathan Kam"],
                 ["Benjamin Li"],
               ].map(([n, h]) => (
-                <a
+                <ButtonLink
                   key={n}
-                  className="flex gap-4 !outline-none transition-transform"
                   href={h}
                   target="_blank"
+                  variant="primary-link"
                 >
-                  <span className="decoration-2 underline-offset-4 hocus:underline">
-                    {n}
-                  </span>
-                </a>
+                  {n}
+                </ButtonLink>
               ))}
             </ul>
           </nav>
@@ -179,58 +177,6 @@ export const MEDIA_BUTTON_CLASSES =
 UI COMPONENTS
 //////////////////////////////////////////////////*/
 
-/**
- * Describes the documented declaration.
- *
- * @remarks Defines variant styles for the Button component using class-variance-authority.
- *
- * @param props - Standard CVA parameters.
- *
- * @returns A string of compiled Tailwind classes.
- */
-export const buttonVariants = cva(
-  cn(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold",
-    "ring-offset-primary-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-    "disabled:cursor-not-allowed disabled:opacity-50",
-    "[&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0",
-  ),
-  {
-    variants: {
-      variant: {
-        default: "bg-cyan-700 text-white enabled:hover:bg-cyan-800",
-        tonal:
-          "border border-cyan-800 bg-cyan-300 text-cyan-950 enabled:hover:bg-cyan-400",
-        secondary:
-          "border border-yellow-700 bg-yellow-300 text-yellow-950 enabled:hover:bg-yellow-400",
-        destructive:
-          "border border-rose-700 bg-rose-600 text-white enabled:hover:bg-rose-600/90 dark:border-rose-800 dark:bg-rose-900 dark:hover:bg-rose-900/90",
-        toolbar: "rounded border bg-white p-1 text-xl text-black transition-none enabled:hover:bg-white",
-        person: "flex max-w-48 flex-col gap-0 text-pretty border-2 border-cyan-600 bg-cyan-600 font-normal text-white shadow-md transition-none focus-visible:ring-0 focus-visible:ring-offset-0 enabled:hover:bg-cyan-700 disabled:bg-cyan-950 disabled:text-white",
-        outline:
-          "border border-gray-5 bg-white text-gray-12 enabled:hover:bg-gray-1 dark:bg-cyan-200 enabled:dark:hover:bg-cyan-200",
-        ghost: "hover:bg-gray-3",
-        inline: "text-gray-11 underline-offset-4 enabled:hover:underline",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        xs: "h-6 rounded-md p-2 text-xs",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "size-10",
-        person: "h-20 rounded px-4 py-2",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  },
-);
-
-/** Button HTML attributes combined with the Saibai button variant options. */
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
-  VariantProps<typeof buttonVariants> & { asChild?: boolean };
 /** React Flow payload for a person node, including its person record fields. */
 type PersonNodeData = FlowNode & Record<string, unknown>;
 /** React Flow node specialization used to render an individual person. */
@@ -241,30 +187,6 @@ type MarriageGraphNode = Node<Record<string, never>, "marriageConnector"> & {
 };
 /** Either a visible person node or a marriage connector in the genealogy graph. */
 type GenealogyNode = PersonGraphNode | MarriageGraphNode;
-
-/**
- * Renders the shared Saibai button with optional polymorphic child composition.
- *
- * @remarks A generic button component that supports Radix Slot for polymorphic rendering.
- *
- * @param props - Native button attributes, children, and visual variant options.
- * @param ref - Ref attached to the rendered button element.
- *
- * @returns Rendered HTML button or Radix Slot.
- */
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
-    );
-  },
-);
-Button.displayName = "Button";
 
 /**
  * Renders the acknowledgment component.
@@ -464,7 +386,7 @@ function PlayButton({ ...attrs }) {
   const label = paused ? "Play" : "Pause";
   return (
     <MediaPlayButton
-      className={cn(MEDIA_BUTTON_CLASSES)}
+      className={MEDIA_BUTTON_CLASSES}
       aria-label={label}
       {...attrs}
     >
@@ -532,7 +454,7 @@ function AudioControls({ className, ...attrs }: AudioCtrlsProps) {
           <MediaTime type="duration" className="text-sm" />
         </div>
         <MediaMuteButton
-          className={cn(MEDIA_BUTTON_CLASSES)}
+          className={MEDIA_BUTTON_CLASSES}
           aria-label={muted ? "Unmute" : "Mute"}
           data-tooltip={muted ? "Unmute" : "Mute"}
         >
@@ -1095,10 +1017,11 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
     <Button
       onClick={handleNodeClick}
       disabled={!nodeData.audio}
-      variant="person"
-      size="person"
+      variant="primary"
+      size="xl"
+      className="h-20 max-w-48 flex-col gap-0 text-pretty px-4 py-2"
     >
-      <div className="text-center font-semibold">{nodeData.name}</div>
+      <div className="text-center">{nodeData.name}</div>
       {nodeData.clans && nodeData.clans.length > 0 && (
         <div className="mt-1 text-center text-xs opacity-80">
           {nodeData.clans.join(", ")}
@@ -1374,7 +1297,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
             }}
             title="Vertical Layout"
             aria-label="Vertical Layout"
-            variant="toolbar"
+            variant="gray-outline"
             size="icon"
           >
             <CarbonIcon name="maximize" />
