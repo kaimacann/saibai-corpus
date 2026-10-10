@@ -23,6 +23,7 @@ import { CarbonIcon } from "./carbon-icons";
 
 import { ErrorBoundary } from "@components/ErrorBoundary";
 import { Button, ButtonLink } from "@components/ui/button";
+import { CONTROL_VARIANTS } from "@components/ui/variants";
 import {
   Dialog,
   DialogContent,
@@ -202,7 +203,8 @@ export function Acknowledgment(): React.JSX.Element {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
           aria-describedby={undefined}
-          className="light text-clip text-left text-cyan-900"
+          variant="primary"
+          className="light text-clip text-left"
         >
           <DialogHeader>
             <DialogTitle>Sensitivity Warning</DialogTitle>
@@ -665,7 +667,8 @@ export function GeographicMap(): React.JSX.Element {
           >
             <DialogContent
               aria-describedby={undefined}
-              className="text-clip text-left text-cyan-900"
+              variant="primary"
+              className="text-clip text-left"
             >
               <DialogHeader>
                 <DialogTitle className="font-mono text-4xl font-bold">
@@ -1306,7 +1309,8 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
         <Dialog open={!!selNode} onOpenChange={(o) => !o && setSelNode(null)}>
           <DialogContent
             aria-describedby={undefined}
-            className="text-clip text-left text-cyan-900"
+            variant="primary"
+            className="text-clip text-left"
           >
             {selNode && (
               <>
@@ -1423,7 +1427,10 @@ const TabsTrigger = ({
       value={val}
       onClick={handleClick}
       key={val}
-      className="-mx-2 rounded px-2 py-0.5 text-left hover:bg-cyan-800 active:bg-cyan-800 data-[state=active]:bg-cyan-700"
+      className={cn(
+        CONTROL_VARIANTS({ variant: "primary-ghost", size: "xs" }),
+        "-mx-2 rounded text-left",
+      )}
     >
       {children}
     </Tabs.Trigger>
