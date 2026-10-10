@@ -216,12 +216,7 @@ export function Acknowledgment(): React.JSX.Element {
             Aboriginal and Torres Strait Islander people should be aware that
             this website contains images, sounds and names of deceased persons.
           </p>
-          <Button
-            onClick={() => {
-              setIsOpen(false);
-            }}
-            className="mt-4"
-          >
+          <Button onClick={() => setIsOpen(false)} className="mt-4">
             Continue
           </Button>
         </DialogContent>
@@ -1025,7 +1020,7 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
       className="h-20 max-w-48 flex-col gap-0 text-pretty px-4 py-2"
     >
       <div className="text-center">{nodeData.name}</div>
-      {nodeData.clans && nodeData.clans.length > 0 && (
+      {nodeData.clans.length > 0 && (
         <div className="mt-1 text-center text-xs opacity-80">
           {nodeData.clans.join(", ")}
         </div>
@@ -1321,7 +1316,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
                   <DialogDescription className="sr-only">
                     Details for {selNode.name}
                   </DialogDescription>
-                  {selNode.clans?.length > 0 && (
+                  {selNode.clans.length > 0 && (
                     <p className="text-cyan-900/70">
                       Clan: {selNode.clans.join(", ")}
                     </p>
@@ -1334,7 +1329,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
                         .replace(SHARED_REGEX, (c) => c.toUpperCase())}
                     </p>
                   )}
-                  {selNode.children?.length > 0 && (
+                  {selNode.children.length > 0 && (
                     <p className="text-cyan-900/70">
                       Children:{" "}
                       {selNode.children
@@ -1404,7 +1399,7 @@ MAIN CORPUS DASHBOARD
  * @returns Customized Radix Tabs.Trigger.
  */
 const TabsTrigger = ({
-  value: val,
+  value,
   children,
 }: {
   value: string;
@@ -1415,7 +1410,7 @@ const TabsTrigger = ({
    */
   const handleClick = () => {
     if (typeof window !== "undefined") {
-      const newUrl = `${window.location.pathname}?tab=${encodeURIComponent(val)}#history`;
+      const newUrl = `${window.location.pathname}?tab=${encodeURIComponent(value)}#history`;
       window.history.replaceState({}, "", newUrl);
       document
         .getElementById("history")
@@ -1424,9 +1419,8 @@ const TabsTrigger = ({
   };
   return (
     <Tabs.Trigger
-      value={val}
+      value={value}
       onClick={handleClick}
-      key={val}
       className={cn(
         CONTROL_VARIANTS({ variant: "primary-ghost", size: "xs" }),
         "-mx-2 rounded text-left",
@@ -1515,9 +1509,9 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
             aria-label="Corpus view modes"
           >
             <h3 className="font-bold">Content</h3>
-            {CORPUS_TABS.map(({ id: i, label: l }) => (
-              <TabsTrigger key={i} value={i}>
-                {l}
+            {CORPUS_TABS.map(({ id, label }) => (
+              <TabsTrigger key={id} value={id}>
+                {label}
               </TabsTrigger>
             ))}
           </Tabs.List>
