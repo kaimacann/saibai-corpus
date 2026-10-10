@@ -36,6 +36,5 @@ export type SaibaiFlowNode = {
   terminus: boolean;
   setSelectedNode: React.Dispatch<React.SetStateAction<Person | null>>;
 };
-/** Button attributes combined with the shared corpus button style variants. */
 /** Standard div attributes accepted by audio control groups. */
 export type AudioCtrlsProps = React.ComponentPropsWithoutRef<"div">;
