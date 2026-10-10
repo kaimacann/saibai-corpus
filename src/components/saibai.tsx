@@ -205,6 +205,8 @@ export const buttonVariants = cva(
           "border border-yellow-700 bg-yellow-300 text-yellow-950 enabled:hover:bg-yellow-400",
         destructive:
           "border border-rose-700 bg-rose-600 text-white enabled:hover:bg-rose-600/90 dark:border-rose-800 dark:bg-rose-900 dark:hover:bg-rose-900/90",
+        toolbar: "rounded border bg-white p-1 text-xl text-black transition-none enabled:hover:bg-white",
+        person: "flex max-w-48 flex-col items-center justify-center gap-0 text-pretty border-2 border-cyan-600 bg-cyan-600 text-sm font-normal text-white shadow-md transition-none focus-visible:ring-0 focus-visible:ring-offset-0 enabled:hover:bg-cyan-700 disabled:bg-cyan-950 disabled:text-white",
         outline:
           "border border-gray-5 bg-white text-gray-12 enabled:hover:bg-gray-1 dark:bg-cyan-200 enabled:dark:hover:bg-cyan-200",
         ghost: "hover:bg-gray-3",
@@ -216,6 +218,7 @@ export const buttonVariants = cva(
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "size-10",
+        person: "h-20 rounded px-4 py-2",
       },
     },
     defaultVariants: {
@@ -1091,10 +1094,11 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
     );
   };
   return (
-    <button
+    <Button
       onClick={handleNodeClick}
-      className="flex h-20 max-w-48 flex-col items-center justify-center text-pretty rounded border-2 border-cyan-600 bg-cyan-600 px-4 py-2 text-sm text-white shadow-md hover:bg-cyan-700 disabled:cursor-not-allowed disabled:bg-cyan-950 disabled:text-white"
       disabled={!nodeData.audio}
+      variant="person"
+      size="person"
     >
       <div className="text-center font-semibold">{nodeData.name}</div>
       {nodeData.clans && nodeData.clans.length > 0 && (
@@ -1121,7 +1125,7 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
           className="!size-2 !border-none !bg-cyan-600"
         />
       )}
-    </button>
+    </Button>
   );
 }
 
@@ -1365,19 +1369,18 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
       >
         <Background />
         <Panel position="top-right">
-          <button
+          <Button
             type="button"
             onClick={() => {
               onLayout("TB");
             }}
             title="Vertical Layout"
             aria-label="Vertical Layout"
+            variant="toolbar"
+            size="icon"
           >
-            <CarbonIcon
-              name="maximize"
-              className="shrink-0 rounded border bg-white p-1 text-xl text-black"
-            />
-          </button>
+            <CarbonIcon name="maximize" />
+          </Button>
         </Panel>
         <Dialog open={!!selNode} onOpenChange={(o) => !o && setSelNode(null)}>
           <DialogContent
