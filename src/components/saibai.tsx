@@ -200,7 +200,7 @@ export const buttonVariants = cva(
         destructive:
           "border border-rose-700 bg-rose-600 text-white enabled:hover:bg-rose-600/90 dark:border-rose-800 dark:bg-rose-900 dark:hover:bg-rose-900/90",
         toolbar: "rounded border bg-white p-1 text-xl text-black transition-none enabled:hover:bg-white",
-        person: "flex max-w-48 flex-col items-center justify-center gap-0 text-pretty border-2 border-cyan-600 bg-cyan-600 text-sm font-normal text-white shadow-md transition-none focus-visible:ring-0 focus-visible:ring-offset-0 enabled:hover:bg-cyan-700 disabled:bg-cyan-950 disabled:text-white",
+        person: "flex max-w-48 flex-col gap-0 text-pretty border-2 border-cyan-600 bg-cyan-600 font-normal text-white shadow-md transition-none focus-visible:ring-0 focus-visible:ring-offset-0 enabled:hover:bg-cyan-700 disabled:bg-cyan-950 disabled:text-white",
         outline:
           "border border-gray-5 bg-white text-gray-12 enabled:hover:bg-gray-1 dark:bg-cyan-200 enabled:dark:hover:bg-cyan-200",
         ghost: "hover:bg-gray-3",
@@ -278,12 +278,10 @@ export function Acknowledgment(): React.JSX.Element {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
           aria-describedby={undefined}
-          className="light text-clip bg-white text-left text-cyan-900 dark:bg-white dark:text-cyan-900"
+          className="light text-clip text-left text-cyan-900"
         >
           <DialogHeader>
-            <DialogTitle className="text-left text-cyan-900">
-              Sensitivity Warning
-            </DialogTitle>
+            <DialogTitle>Sensitivity Warning</DialogTitle>
             <DialogDescription className="sr-only">
               Aboriginal and Torres Strait Islander people sensitivity warning.
             </DialogDescription>
@@ -296,7 +294,7 @@ export function Acknowledgment(): React.JSX.Element {
             onClick={() => {
               setIsOpen(false);
             }}
-            className="mt-4 w-fit"
+            className="mt-4"
           >
             Continue
           </Button>
@@ -752,10 +750,10 @@ export function GeographicMap(): React.JSX.Element {
           >
             <DialogContent
               aria-describedby={undefined}
-              className="text-clip bg-white text-left text-cyan-900 dark:bg-white dark:text-cyan-900"
+              className="text-clip text-left text-cyan-900"
             >
-              <DialogHeader className="text-left">
-                <DialogTitle className="font-mono text-4xl font-bold text-cyan-900">
+              <DialogHeader>
+                <DialogTitle className="font-mono text-4xl font-bold">
                   {selectedGeo.properties?.name ||
                     (selectedGeo.properties?.landuse &&
                       selectedGeo.properties.landuse.charAt(0).toUpperCase() +
@@ -1393,24 +1391,24 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
         <Dialog open={!!selNode} onOpenChange={(o) => !o && setSelNode(null)}>
           <DialogContent
             aria-describedby={undefined}
-            className="text-clip bg-white text-left text-cyan-900 dark:bg-white dark:text-cyan-900"
+            className="text-clip text-left text-cyan-900"
           >
             {selNode && (
               <>
                 <DialogHeader>
-                  <DialogTitle className="text-left font-mono text-4xl font-bold text-cyan-900">
+                  <DialogTitle className="font-mono text-4xl font-bold">
                     {selNode.name}
                   </DialogTitle>
                   <DialogDescription className="sr-only">
                     Details for {selNode.name}
                   </DialogDescription>
                   {selNode.clans?.length > 0 && (
-                    <p className="text-left text-cyan-900/70">
+                    <p className="text-cyan-900/70">
                       Clan: {selNode.clans.join(", ")}
                     </p>
                   )}
                   {selNode.spouseId && (
-                    <p className="text-left text-cyan-900/70">
+                    <p className="text-cyan-900/70">
                       Spouse:{" "}
                       {selNode.spouseId
                         .split("-")[0]
@@ -1418,7 +1416,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
                     </p>
                   )}
                   {selNode.children?.length > 0 && (
-                    <p className="text-left text-cyan-900/70">
+                    <p className="text-cyan-900/70">
                       Children:{" "}
                       {selNode.children
                         .map((i) =>
