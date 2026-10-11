@@ -1,4 +1,5 @@
 {
+{
   "$schema": "./node_modules/@terra-symposium/quality/quality.schema.json",
   "sourceRoots": [
     "src"
@@ -12,6 +13,12 @@
     ".mjs",
     ".cjs"
   ],
+  "aliases": {
+    "@components/": "src/components/",
+    "@lib/": "src/lib/",
+    "@utils": "src/lib/utils"
+  },
+  "tsconfig": "tsconfig.json",
   "enabledChecks": {
     "format": true,
     "lint": true,
@@ -118,10 +125,29 @@
     "ref",
     "direction"
   ],
+  "autofix": {
+    "document": false,
+    "knip": false,
+    "lint": false,
+    "name": true
+  },
+  "singleUse": {
+    "skippedDirectories": [
+      "src/components"
+    ]
+  },
+  "repeatedClasses": {
+    "minimumCount": 3
+  },
+  "regexDedup": {
+    "minimumCount": 2
+  },
   "tools": {
     "prettier": "prettier",
     "eslint": "eslint",
     "knip": "knip",
     "tsc": "tsc"
   }
+}
+
 }
