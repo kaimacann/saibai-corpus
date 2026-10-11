@@ -1,38 +1,49 @@
 # Saibai Corpus
 
-An interactive living corpus of Saibai stories, language, recordings, maps, and family connections.
+A public-facing corpus site presenting historical Saibai material through an Astro and React application.
 
-**Website:** [saibai-corpus.netlify.app](https://saibai-corpus.netlify.app) · **GitHub:** [kaimacann/saibai-corpus](https://github.com/kaimacann/saibai-corpus)
+## What it does
 
-## About
+It presents curated Saibai corpus material through an interactive site with explicit reuse boundaries.
 
-The site brings together several ways to explore the corpus:
+## Prerequisites, setup, usage, and operations
 
-- A chronological view of stories and recorded material
-- Audio playback for selected recordings
-- A map view focused on Saibai Island
-- A family and genealogy view
+Use the Node and pnpm versions declared in `package.json`. Run `pnpm install --frozen-lockfile` and `pnpm dev`; use `pnpm build` for deployment output.
 
-The site displays a sensitivity notice because its collection includes images, sounds, and names of deceased people. It acknowledges Aboriginal and Torres Strait Islander peoples as Traditional Custodians and pays respect to the Koeybuway and Moegibuway peoples of Saibai Island. Please approach the material with care and respect.
-
-## Run locally
-
-Use Node.js 22.19 or later and pnpm 10.30.3.
+### Common commands
 
 ```sh
-pnpm install --frozen-lockfile
 pnpm dev
-```
-
-Useful checks:
-
-```sh
 pnpm check
 pnpm build
 ```
 
-The development server prints the local URL when it starts. The production build is written to `dist/`.
+## Security and Limitations
 
-## Deploy on Netlify
+The software license does not grant blanket reuse rights for cultural, family, genealogical, oral-history, language, place-based, or third-party materials. Follow cultural protocols and seek permission.
 
-The Netlify project is [saibai-corpus](https://app.netlify.com/projects/saibai-corpus), and its intended public URL is [saibai-corpus.netlify.app](https://saibai-corpus.netlify.app). Connect this repository to that project, using the repository root as the base directory. The checked-in [`netlify.toml`](netlify.toml) sets `pnpm build` as the build command, `dist` as the publish directory, and Node.js 22.19. The site does not require runtime secrets.
+## Development and structure
+
+Astro and React render corpus content. `CONTENT-NOTICE.md` explains reuse limits; Netlify configuration describes static publishing.
+
+## Validation
+
+pnpm check, pnpm quality:all, pnpm test:all, pnpm build
+
+| Check | Command |
+| --- | --- |
+| dev | `pnpm dev` |
+| check | `pnpm check` |
+| build | `pnpm build` |
+
+## References
+
+Source references: [CONTENT-NOTICE.md](CONTENT-NOTICE.md), [package.json](package.json).
+
+## Contributing
+
+No contribution guide was present in the inspected source snapshot.
+
+## Credits and license
+
+The repository includes an MIT license at [LICENSE](LICENSE).
