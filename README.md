@@ -15,6 +15,8 @@ The site brings together several ways to explore the corpus:
 
 The site displays a sensitivity notice because its collection includes images, sounds, and names of deceased people. It acknowledges Aboriginal and Torres Strait Islander peoples as Traditional Custodians and pays respect to the Koeybuway and Moegibuway peoples of Saibai Island. Please approach the material with care and respect.
 
+The project’s MIT license applies to software source authored for the site; it does not grant a blanket license to corpus or third-party content. Read [`CONTENT-NOTICE.md`](CONTENT-NOTICE.md) before reusing material.
+
 ## Run locally
 
 Use Node.js 22.19 or later and pnpm 10.30.3.
