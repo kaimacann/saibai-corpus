@@ -1,5 +1,4 @@
 {
-{
   "$schema": "./node_modules/@terra-symposium/quality/quality.schema.json",
   "sourceRoots": [
     "src"
@@ -148,6 +147,4 @@
     "knip": "knip",
     "tsc": "tsc"
   }
-}
-
 }
