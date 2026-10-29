@@ -76,15 +76,7 @@ const BUTTON_SIZE_CLASSES: Record<ButtonSize, string> = {
   icon: "size-10 text-sm",
 };
 
-/**
- * Describes the documented declaration.
- *
- * @remarks Defines variant styles for the Button component using class-variance-authority.
- *
- * @param props - Standard CVA parameters.
- *
- * @returns A string of compiled Tailwind classes.
- */
+/** Combines action color, treatment, and size choices into static button classes. */
 export const ACTION_VARIANTS = cva("", {
   variants: {
     variant: ACTION_VARIANT_CLASSES,

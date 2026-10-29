@@ -43,8 +43,6 @@ import {
   MediaTime,
   MediaTimeSlider,
 } from "@vidstack/react";
-import {
-} from "@xyflow/react";
 import React from "react";
 import {
   ComposableMap,
@@ -61,7 +59,6 @@ import type {
   PlayerProps,
 } from "@lib/types";
 import type { Edge as ReactFlowEdge, Node, NodeProps } from "@xyflow/react";
-import type { VariantProps } from "class-variance-authority";
 
 import type { JSX } from "react";
 import type { ReactNode } from "react";
@@ -134,9 +131,6 @@ export function Saibai(): JSX.Element {
 /*//////////////////////////////////////////////////
 CONFIG
 //////////////////////////////////////////////////*/
-/*//////////////////////////////////////////////////
-REGEX
-//////////////////////////////////////////////////*/
 /** Shared wrapper styles for corpus panels. */
 export const PANEL_CLASSES =
   "relative size-full overflow-clip rounded border border-cyan-800 scrim-cyan-900 scrim-14";
@@ -150,53 +144,6 @@ export const MEDIA_BUTTON_CLASSES =
 /*//////////////////////////////////////////////////
 UI COMPONENTS
 //////////////////////////////////////////////////*/
-
-/**
-/**
- * Describes the documented declaration.
- *
- * @remarks Defines variant styles for the Button component using class-variance-authority.
- *
- * @param props - Standard CVA parameters.
- *
- * @returns A string of compiled Tailwind classes.
- */
-export const buttonVariants = cva(
-  cn(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold",
-    "ring-offset-primary-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-    "disabled:cursor-not-allowed disabled:opacity-50",
-    "[&_svg]:pointer-events-none [&_svg]:size-5 [&_svg]:shrink-0",
-  ),
-  {
-    variants: {
-      variant: {
-        default: "bg-cyan-700 text-white enabled:hover:bg-cyan-800",
-        tonal:
-          "border border-cyan-800 bg-cyan-300 text-cyan-950 enabled:hover:bg-cyan-400",
-        secondary:
-          "border border-yellow-700 bg-yellow-300 text-yellow-950 enabled:hover:bg-yellow-400",
-        destructive:
-          "border border-rose-700 bg-rose-600 text-white enabled:hover:bg-rose-600/90 dark:border-rose-800 dark:bg-rose-900 dark:hover:bg-rose-900/90",
-        outline:
-          "border border-gray-5 bg-white text-gray-12 enabled:hover:bg-gray-1 dark:bg-cyan-200 enabled:dark:hover:bg-cyan-200",
-        ghost: "hover:bg-gray-3",
-        inline: "text-gray-11 underline-offset-4 enabled:hover:underline",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        xs: "h-6 rounded-md p-2 text-xs",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "size-10",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  },
-);
 
 type PersonGraphNode = Node<
   {
@@ -215,31 +162,6 @@ type GenealogyNode =
     });
 
 /**
- * Describes the documented declaration.
- *
- * @remarks A generic button component that supports Radix Slot for polymorphic rendering.
- *
- * @param props - ButtonProps containing styling variants and children.
- * @param ref - React forward ref.
- *
- * @returns Rendered HTML button or Radix Slot.
- */
-export const Button = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement> &
-    VariantProps<typeof buttonVariants> & { asChild?: boolean }
->(({ className, variant, size, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : "button";
-  return (
-    <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
-      ref={ref}
-      {...props}
-    />
-  );
-});
-Button.displayName = "Button";
-
  * Renders the acknowledgment component.
  *
  * @remarks Sensitivity warning modal intended for initial page load.
@@ -997,16 +919,9 @@ const genealogyData: Person[] = [
   },
 ];
 
-/**
- * Handles get layouted elements.
- *
- * @remarks Calculates directed acyclic graph layout using Dagre.
- *
- * @param nodes - Array of unpositioned React Flow nodes.
- * @param edges - Array of React Flow edges.
- * @param options - Optional config for the operation.
- *
- * @returns Object containing nodes with updated positions and unmodified edges.
+/** Positions nodes with Dagre and returns the same edges in a new array.
+ * @param opts Layout direction and optional node/rank spacing.
+ * @returns Positioned nodes and a copied edge array.
  */
 const getLayoutedElements = <TNode extends Node>(
   nodes: TNode[],
@@ -1085,9 +1000,11 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
     );
   };
   return (
-    <button
+    <Button
+      variant="primary"
+      size="md"
       onClick={handleNodeClick}
-      className="flex h-20 max-w-48 flex-col items-center justify-center text-pretty rounded border-2 border-cyan-600 bg-cyan-600 px-4 py-2 text-sm text-white shadow-md hover:bg-cyan-700 disabled:cursor-not-allowed disabled:bg-cyan-950 disabled:text-white"
+      className="h-20 max-w-48 flex-col gap-0 whitespace-normal text-pretty shadow-md"
       disabled={!nodeData.audio}
     >
       <div className="text-center font-semibold">{nodeData.name}</div>
@@ -1115,7 +1032,7 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
           className="!size-2 !border-none !bg-cyan-600"
         />
       )}
-    </button>
+    </Button>
   );
 }
 
@@ -1357,7 +1274,9 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
       >
         <Background />
         <Panel position="top-right">
-          <button
+          <Button
+            variant="gray-outline"
+            size="icon"
             type="button"
             onClick={() => {
               onLayout("TB");
@@ -1365,11 +1284,8 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
             title="Vertical Layout"
             aria-label="Vertical Layout"
           >
-            <CarbonIcon
-              name="maximize"
-              className="shrink-0 rounded border bg-white p-1 text-xl text-black"
-            />
-          </button>
+            <CarbonIcon name="maximize" />
+          </Button>
         </Panel>
         <Dialog open={!!selNode} onOpenChange={(o) => !o && setSelNode(null)}>
           <DialogContent
