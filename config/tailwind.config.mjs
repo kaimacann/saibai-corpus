@@ -1,4 +1,4 @@
-import preset from '.././tailwind.preset.ts';
+import preset from './tailwind.preset.ts';
 import vidstack from 'vidstack/tailwind.cjs';
 
 export default {

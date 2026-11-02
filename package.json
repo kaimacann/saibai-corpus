@@ -8,10 +8,12 @@
 		"node": ">=22.19.0"
 	},
 	"scripts": {
-		"dev": "astro dev",
-		"build": "astro build",
-		"check": "astro check",
-		"quality": "astro sync && pnpm exec terra-quality quality --all"
+		"dev": "astro dev --config config/astro.config.mjs",
+		"build": "astro build --config config/astro.config.mjs",
+		"check": "astro check --config config/astro.config.mjs --tsconfig config/tsconfig.json",
+		"quality": "astro sync --config config/astro.config.mjs && pnpm run lint && pnpm run knip && node scripts/terra-quality.mjs quality --all",
+		"lint": "eslint --config config/eslint.config.mjs .",
+		"knip": "knip --config config/knip.json"
 	},
 	"dependencies": {
 		"@astrojs/react": "^6.0.4",

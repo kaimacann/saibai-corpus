@@ -1,5 +1,6 @@
 {
   "$schema": "../node_modules/@terra-symposium/quality/quality.schema.json",
+  "root": "..",
   "sourceRoots": [
     "src"
   ],
@@ -17,11 +18,11 @@
     "@lib/": "src/lib/",
     "@utils": "src/lib/utils"
   },
-  "tsconfig": "tsconfig.json",
+  "tsconfig": "config/tsconfig.json",
   "enabledChecks": {
     "format": true,
-    "lint": true,
-    "knip": true,
+    "lint": false,
+    "knip": false,
     "type": true,
     "recommend": true,
     "name": true,
