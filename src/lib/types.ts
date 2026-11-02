@@ -1,3 +1,4 @@
+/** A Saibai genealogy entry with family relationships and optional media. */
 export type Person = {
   id: string;
   name: string;
@@ -21,6 +22,3 @@ export type SaibaiFlowNode = {
   terminus: boolean;
   setSelectedNode: React.Dispatch<React.SetStateAction<Person | null>>;
 };
-/** Standard div attributes accepted by audio control groups. */
-export type AudioCtrlsProps = React.ComponentPropsWithoutRef<"div">;
-

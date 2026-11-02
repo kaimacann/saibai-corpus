@@ -86,10 +86,7 @@ const BUTTON_SIZE_CLASSES: Record<ButtonSize, string> = {
  * @returns A string of compiled Tailwind classes.
  */
 export const ACTION_VARIANTS = cva("", {
-  variants: {
-    variant: ACTION_VARIANT_CLASSES,
-    size: BUTTON_SIZE_CLASSES,
-  },
+  variants: { variant: ACTION_VARIANT_CLASSES, size: BUTTON_SIZE_CLASSES },
   defaultVariants: { variant: "primary" },
 });
 
@@ -136,17 +133,13 @@ const CONTROL_SIZE_CLASSES: Record<UiSize, string> = {
 };
 
 export const CONTROL_VARIANTS = cva("inline-flex items-center justify-center", {
-  variants: {
-    variant: CONTROL_VARIANT_CLASSES,
-    size: CONTROL_SIZE_CLASSES,
-  },
+  variants: { variant: CONTROL_VARIANT_CLASSES, size: CONTROL_SIZE_CLASSES },
   defaultVariants: { variant: "primary", size: "md" },
 });
 
 const SURFACE_VARIANT_CLASSES = {
   primary: "border border-cyan-800 bg-white text-cyan-900",
-  "primary-outline":
-    "border border-cyan-800 bg-transparent text-cyan-900",
+  "primary-outline": "border border-cyan-800 bg-transparent text-cyan-900",
   "primary-ghost": "border-transparent bg-transparent text-cyan-900",
   "primary-tonal": "border border-cyan-200 bg-cyan-50 text-cyan-950",
   "primary-saturated": "border border-cyan-800 bg-cyan-800 text-white",
@@ -162,8 +155,7 @@ const SURFACE_VARIANT_CLASSES = {
   "gray-tonal": "border border-gray-200 bg-gray-100 text-gray-900",
   "gray-saturated": "border border-gray-900 bg-gray-900 text-white",
   destructive: "border border-rose-200 bg-white text-rose-950",
-  "destructive-outline":
-    "border border-rose-600 bg-transparent text-rose-950",
+  "destructive-outline": "border border-rose-600 bg-transparent text-rose-950",
   "destructive-ghost": "border-transparent bg-transparent text-rose-950",
   "destructive-tonal": "border border-rose-300 bg-rose-50 text-rose-950",
   "destructive-saturated": "border border-rose-800 bg-rose-800 text-white",
