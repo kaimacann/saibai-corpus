@@ -1,1 +1,9 @@
-config/pnpm-workspace.yaml
+packages:
+  - config
+lockfileDir: config
+virtualStoreDir: node_modules/.pnpm
+allowBuilds:
+  esbuild: true
+
+overrides:
+  d3-color: 3.1.0
