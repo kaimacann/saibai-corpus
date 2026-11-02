@@ -10,10 +10,8 @@
 	"scripts": {
 		"dev": "astro dev",
 		"build": "astro build",
-		"preview": "astro preview",
 		"check": "astro check",
-		"quality:all": "pnpm exec terra-quality quality --all",
-		"test:all": "pnpm run check && pnpm run build"
+		"quality": "astro sync && pnpm exec terra-quality quality --all"
 	},
 	"dependencies": {
 		"@astrojs/react": "^6.0.4",
