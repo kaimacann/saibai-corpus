@@ -9,7 +9,7 @@ overrides:
 
 importers:
 
-  .:
+  ..:
     dependencies:
       '@astrojs/react':
         specifier: ^6.0.4
