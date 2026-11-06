@@ -26,9 +26,9 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.1.12
         version: 1.1.21(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@terra-symposium/error-boundaries':
-        specifier: 0.1.0
-        version: 0.1.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@terra-symposium/standards-error-boundaries':
+        specifier: 0.1.2
+        version: 0.1.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@vidstack/react':
         specifier: ^0.4.5
         version: 0.4.5(@types/react@19.3.0)(maverick.js@0.33.1)(media-icons@0.4.2)(react@19.2.7)(vidstack@0.4.5)
@@ -935,12 +935,14 @@ packages:
   '@opentelemetry/sdk-trace-base@2.9.0':
     resolution: {integrity: sha512-cp9zmTl62R8PJrpvFcmc8N2JQU/xfa0S+61q511Nji+QxCfZ8Ifvg7H27G8cANe4crg4RTrWsVvanHiXjSp6ag==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
   '@opentelemetry/sdk-trace-node@2.9.0':
     resolution: {integrity: sha512-ec9a7ps37huy5itYk0MalaZdSLlM6AXWp/FhtEjgMpp5leEGojBDvAl/UWttQnkMZOvFHKzRESn8TD3yKTF5nQ==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
@@ -1549,16 +1551,16 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || >=4.0.0 || insiders'
 
-  '@terra-symposium/error-boundaries@0.1.0':
-    resolution: {integrity: sha512-UUjXSEbCKhG+dB5m5lbA2thjdD99DOsobhqI3G1bZZY5/eFwl7JwLAXi/pio29W+S8LMD6NGsKxxiMUp37bmjw==, tarball: https://npm.pkg.github.com/download/@terra-symposium/error-boundaries/0.1.0/e0a670ca0d6e1832ffcd2a2aebf19e109e6f1e6e}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-
   '@terra-symposium/quality@0.4.52':
     resolution: {integrity: sha512-m0PP4ACHR2zO6DNj8f5kVswSG2BoYa9uzSCNotZ8EJam+keabtZifS8fytV48hg8WefoysIgjODX1eR6XC4clg==}
     engines: {node: '>=18.18'}
     hasBin: true
+
+  '@terra-symposium/standards-error-boundaries@0.1.2':
+    resolution: {integrity: sha512-dpFbMiXw+44yWxfyurxQ+Ff/R7dAZfUB1jgXHypU/JHlYqMt56DQNlqGySK+7NGfwnBYbCObHvTGzSMGjEfxjA==}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
 
   '@tybys/wasm-util@0.10.4':
     resolution: {integrity: sha512-W3c4gRigFS0T/Ma4qIYF3GDAc5AQdHb1yL5znJT1Zv1YaD9Kitx656wBjvr19qbiosmZT8lWDM5BEMynUqX65A==}
@@ -4912,14 +4914,14 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.19(yaml@2.9.1)
 
-  '@terra-symposium/error-boundaries@0.1.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
-    dependencies:
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-
   '@terra-symposium/quality@0.4.52':
     dependencies:
       typescript: 5.9.3
+
+  '@terra-symposium/standards-error-boundaries@0.1.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
 
   '@tybys/wasm-util@0.10.4':
     dependencies:
