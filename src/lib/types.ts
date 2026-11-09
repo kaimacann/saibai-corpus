@@ -15,10 +15,3 @@ export type Person = {
     source: string;
   }[];
 };
-/** React Flow node state connecting a person record to graph selection actions. */
-export type SaibaiFlowNode = {
-  nodeData: Person;
-  origin: boolean;
-  terminus: boolean;
-  setSelectedNode: React.Dispatch<React.SetStateAction<Person | null>>;
-};

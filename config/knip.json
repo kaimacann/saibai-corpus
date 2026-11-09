@@ -3,11 +3,30 @@
   "ignoreDependencies": [
     "prettier"
   ],
-  "entry": [
-    "config/astro.config.mjs",
-    "config/tailwind.config.mjs",
-    "src/pages/**/*.astro",
-    "test/**/*.mjs",
-    "config/**/*.{js,mjs,cjs,ts}"
-  ]
+  "workspaces": {
+    ".": {
+      "entry": [
+        "src/pages/**/*.astro",
+        "scripts/terra-quality.mjs"
+      ],
+      "project": [
+        "src/**/*.{js,mjs,cjs,jsx,ts,tsx,astro,css}"
+      ],
+      "astro": {
+        "config": "config/astro.config.mjs"
+      }
+    },
+    "config": {
+      "entry": [
+        "knip.json",
+        "package.json",
+        "quality.json",
+        "tailwind.preset.ts",
+        "tsconfig.json"
+      ],
+      "project": [
+        "*.{js,mjs,cjs,ts}"
+      ]
+    }
+  }
 }
