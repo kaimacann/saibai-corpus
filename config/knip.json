@@ -7,6 +7,8 @@
     ".": {
       "entry": [
         "src/pages/**/*.astro",
+        "src/components/saibai.tsx",
+        "src/styles.css",
         "scripts/terra-quality.mjs"
       ],
       "project": [
