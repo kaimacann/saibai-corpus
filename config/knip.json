@@ -1,13 +1,31 @@
 {
   "ignoreExportsUsedInFile": true,
-  "ignoreDependencies": [
-    "prettier"
-  ],
-  "entry": [
-    "config/astro.config.mjs",
-    "config/tailwind.config.mjs",
-    "src/pages/**/*.astro",
-    "test/**/*.mjs",
-    "config/**/*.{js,mjs,cjs,ts}"
-  ]
+  "workspaces": {
+    ".": {
+      "entry": [
+        "src/pages/**/*.astro",
+        "src/components/saibai.tsx",
+        "test/**/*.mjs",
+        "scripts/**/*.mjs"
+      ],
+      "project": [
+        "src/**/*.{astro,js,mjs,cjs,jsx,ts,tsx}",
+        "test/**/*.mjs",
+        "scripts/**/*.mjs"
+      ],
+      "ignoreDependencies": ["@astrojs/check", "@astrojs/react", "astro"],
+      "paths": {
+        "@components/*": ["src/components/*"],
+        "@lib/*": ["src/lib/*"],
+        "@ui/*": ["src/components/ui/*"],
+        "@utils": ["src/lib/utils.ts"]
+      }
+    },
+    "config": {
+      "ignoreDependencies": [
+        "prettier"
+      ],
+      "project": ["**/*.{js,mjs,cjs,jsx,ts,tsx}"]
+    }
+  }
 }

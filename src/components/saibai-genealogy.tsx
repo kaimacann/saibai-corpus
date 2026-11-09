@@ -25,12 +25,18 @@ import { ErrorBoundary } from "@components/ErrorBoundary";
 import { CarbonIcon } from "./carbon-icons";
 import { PANEL_CLASSES, Player } from "./saibai";
 import type { Edge as ReactFlowEdge, Node, NodeProps } from "@xyflow/react";
-import type { Person, SaibaiFlowNode as FlowNode } from "@lib/types";
+import type { Person } from "@lib/types";
 
-/** React Flow payload for a person node, including its person record fields. */
-type PersonNodeData = FlowNode & Record<string, unknown>;
 /** React Flow node specialization used to render an individual person. */
-type PersonGraphNode = Node<PersonNodeData, "custom"> & { type: "custom" };
+type PersonGraphNode = Node<
+  {
+    nodeData: Person;
+    origin: boolean;
+    terminus: boolean;
+    setSelectedNode: React.Dispatch<React.SetStateAction<Person | null>>;
+  } & Record<string, unknown>,
+  "custom"
+> & { type: "custom" };
 /** Layout-only React Flow node used to connect spouses in the genealogy graph. */
 type MarriageGraphNode = Node<Record<string, never>, "marriageConnector"> & {
   type: "marriageConnector";
