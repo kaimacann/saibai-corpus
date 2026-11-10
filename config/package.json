@@ -1,5 +1,5 @@
 {
-  "name": "saibai-corpus",
+  "name": "saibai-corpus-config",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -13,30 +13,7 @@
     "check": "cd .. && astro check --config config/astro.config.mjs --tsconfig config/tsconfig.json",
     "quality": "cd .. && astro sync --config config/astro.config.mjs && pnpm run lint && pnpm run knip && node scripts/terra-quality.mjs quality --all",
     "lint": "cd .. && eslint --config config/eslint.config.mjs .",
-    "knip": "cd .. && knip --config config/knip.json",
+    "knip": "cd .. && knip --config config/knip.json --tsConfig config/tsconfig.json",
     "test": "cd .. && node --test test/*.test.mjs"
-  },
-  "dependencies": {
-    "@astrojs/react": "^6.0.4"
-  },
-  "devDependencies": {
-    "astro": "^7.2.8",
-    "@astrojs/check": "^0.9.4",
-    "@eslint/js": "^9",
-    "@headlessui/tailwindcss": "^0.2.2",
-    "@tailwindcss/typography": "^0.5.20",
-    "autoprefixer": "^10.5.4",
-    "eslint": "^9",
-    "eslint-plugin-astro": "^1.3.1",
-    "eslint-plugin-unused-imports": "^4.4.1",
-    "globals": "^16.4.0",
-    "knip": "^6.33.0",
-    "postcss": "^8.5.26",
-    "prettier": "^3.9.6",
-    "tailwindcss": "^3.4.19",
-    "tailwindcss-animate": "^1.0.7",
-    "tailwindcss-scrim-gradients": "^0.4.2",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8"
   }
 }

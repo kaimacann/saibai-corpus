@@ -5,15 +5,24 @@
       "entry": [
         "src/pages/**/*.astro",
         "src/components/saibai.tsx",
+        "src/styles.css",
         "test/**/*.mjs",
         "scripts/**/*.mjs"
       ],
       "project": [
-        "src/**/*.{astro,js,mjs,cjs,jsx,ts,tsx}",
+        "src/**/*.{js,mjs,cjs,jsx,ts,tsx,astro,css}",
         "test/**/*.mjs",
         "scripts/**/*.mjs"
       ],
-      "ignoreDependencies": ["@astrojs/check", "@astrojs/react", "astro"],
+      "ignoreDependencies": [
+        "@astrojs/check",
+        "@astrojs/react",
+        "astro",
+        "prettier"
+      ],
+      "astro": {
+        "config": "config/astro.config.mjs"
+      },
       "paths": {
         "@components/*": ["src/components/*"],
         "@lib/*": ["src/lib/*"],
@@ -22,10 +31,16 @@
       }
     },
     "config": {
-      "ignoreDependencies": [
-        "prettier"
+      "entry": [
+        "knip.json",
+        "package.json",
+        "quality.json",
+        "tailwind.preset.ts",
+        "tsconfig.json"
       ],
-      "project": ["**/*.{js,mjs,cjs,jsx,ts,tsx}"]
+      "project": [
+        "*.{js,mjs,cjs,jsx,ts,tsx}"
+      ]
     }
   }
 }

@@ -20,6 +20,14 @@ const { outputText } = ts.transpileModule(source, {
 });
 const executable = outputText
   .replaceAll(
+    '"@terra-symposium/standards-error-boundaries/react"',
+    JSON.stringify(
+      pathToFileURL(
+        require.resolve("@terra-symposium/standards-error-boundaries/react"),
+      ).href,
+    ),
+  )
+  .replaceAll(
     '"react/jsx-runtime"',
     JSON.stringify(pathToFileURL(require.resolve("react/jsx-runtime")).href),
   )

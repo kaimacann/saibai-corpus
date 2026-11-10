@@ -9,3 +9,5 @@ dist/
 # Local environment
 .env*
 !.env.example
+
+error.log

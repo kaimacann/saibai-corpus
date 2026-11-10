@@ -5,7 +5,7 @@ import globals from 'globals';
 import ts from 'typescript-eslint';
 
 export default [
-	{ ignores: ['dist/**', '.astro/**', '.netlify/**', 'node_modules/**'] },
+	{ ignores: ['dist/**', '.astro/**', '.netlify/**', 'node_modules/**', 'config/.astro/**', 'config/dist/**'] },
 	js.configs.recommended,
 	...ts.configs.recommended,
 	...astro.configs['flat/recommended'],
