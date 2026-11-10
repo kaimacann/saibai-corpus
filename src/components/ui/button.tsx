@@ -48,9 +48,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
-/** Renders a navigation link with the shared action treatment variants. */
+/** Renders a navigation link with the shared action treatments, defaulting to primary-underline. */
 export const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
-  ({ className, variant = "primary-link", size, ...props }, ref) => (
+  ({ className, variant = "primary-underline", size, ...props }, ref) => (
     <a
       className={cn(
         "inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",

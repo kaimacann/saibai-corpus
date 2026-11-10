@@ -9,7 +9,6 @@ export type UiType =
   | "ghost"
   | "tonal"
   | "saturated"
-  | "link"
   | "underline";
 /** Standard size scale shared across buttons and form controls. */
 export type UiSize = "xs" | "sm" | "md" | "lg" | "xl";
@@ -22,7 +21,7 @@ export type ControlVariant =
   UiColor | `${UiColor}-${Extract<UiType, "outline" | "ghost" | "tonal">}`;
 /** Valid color and treatment combinations for containing surfaces. */
 export type SurfaceVariant =
-  UiColor | `${UiColor}-${Exclude<UiType, "default" | "link" | "underline">}`;
+  UiColor | `${UiColor}-${Exclude<UiType, "default" | "underline">}`;
 
 /** Button dimensions, extended with the compact icon-only option. */
 type ButtonSize = UiSize | "icon";
@@ -34,8 +33,6 @@ const ACTION_VARIANT_CLASSES = {
   "primary-ghost": "text-cyan-900 enabled:hover:bg-cyan-100",
   "primary-tonal":
     "border border-cyan-800 bg-cyan-300 text-cyan-950 enabled:hover:bg-cyan-400",
-  "primary-link":
-    "text-cyan-900 dark:text-cyan-50 underline-offset-4 hover:underline focus-visible:underline disabled:hover:no-underline",
   "primary-underline": "text-cyan-900 dark:text-cyan-50 underline",
   secondary: "bg-yellow-300 text-yellow-950 enabled:hover:bg-yellow-400",
   "secondary-outline":
@@ -43,8 +40,6 @@ const ACTION_VARIANT_CLASSES = {
   "secondary-ghost": "text-yellow-950 enabled:hover:bg-yellow-100",
   "secondary-tonal":
     "border border-yellow-700 bg-yellow-300 text-yellow-950 enabled:hover:bg-yellow-400",
-  "secondary-link":
-    "text-yellow-950 underline-offset-4 hover:underline focus-visible:underline disabled:hover:no-underline",
   "secondary-underline": "text-yellow-950 underline",
   gray: "bg-gray-900 text-white enabled:hover:bg-gray-800",
   "gray-outline":
@@ -52,8 +47,6 @@ const ACTION_VARIANT_CLASSES = {
   "gray-ghost": "text-gray-900 enabled:hover:bg-gray-100",
   "gray-tonal":
     "border border-gray-200 bg-gray-100 text-gray-900 enabled:hover:bg-gray-200",
-  "gray-link":
-    "text-gray-700 dark:text-gray-200 underline-offset-4 hover:underline focus-visible:underline disabled:hover:no-underline",
   "gray-underline": "text-gray-700 dark:text-gray-200 underline",
   destructive:
     "border border-rose-700 bg-rose-600 text-white enabled:hover:bg-rose-600/90 dark:border-rose-800 dark:bg-rose-900 dark:hover:bg-rose-900/90",
@@ -62,8 +55,6 @@ const ACTION_VARIANT_CLASSES = {
   "destructive-ghost": "text-rose-700 enabled:hover:bg-rose-50",
   "destructive-tonal":
     "border border-rose-300 bg-rose-50 text-rose-950 enabled:hover:bg-rose-100",
-  "destructive-link":
-    "text-rose-700 underline-offset-4 hover:underline focus-visible:underline disabled:hover:no-underline",
   "destructive-underline": "text-rose-700 underline",
 } satisfies Record<ActionVariant, string>;
 
