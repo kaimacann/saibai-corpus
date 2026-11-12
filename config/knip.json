@@ -15,9 +15,6 @@
         "scripts/**/*.mjs"
       ],
       "ignoreDependencies": [
-        "@astrojs/check",
-        "@astrojs/react",
-        "astro",
         "prettier"
       ],
       "astro": {
