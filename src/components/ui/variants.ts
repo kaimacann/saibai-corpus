@@ -1,30 +1,20 @@
 import { cva } from "class-variance-authority";
 
 /** Semantic palette names available to the shared controls. */
-export type UiColor = "primary" | "secondary" | "gray" | "destructive";
+type UiColor = "primary" | "secondary" | "gray" | "destructive";
 /** Treatment names used to build a semantic UI variant. */
-export type UiType =
-  | "default"
-  | "outline"
-  | "ghost"
-  | "tonal"
-  | "saturated"
-  | "underline";
+type UiType =
+  "default" | "outline" | "ghost" | "tonal" | "saturated" | "underline";
 /** Standard size scale shared across buttons and form controls. */
 export type UiSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 /** Valid color and treatment combinations for action controls. */
 export type ActionVariant =
   UiColor | `${UiColor}-${Exclude<UiType, "default" | "saturated">}`;
-/** Valid color and treatment combinations for input controls. */
-export type ControlVariant =
-  UiColor | `${UiColor}-${Extract<UiType, "outline" | "ghost" | "tonal">}`;
+
 /** Valid color and treatment combinations for containing surfaces. */
 export type SurfaceVariant =
   UiColor | `${UiColor}-${Exclude<UiType, "default" | "underline">}`;
-
-/** Button dimensions, extended with the compact icon-only option. */
-type ButtonSize = UiSize | "icon";
 
 const ACTION_VARIANT_CLASSES = {
   primary: "bg-cyan-700 text-white enabled:hover:bg-cyan-800",
@@ -58,7 +48,7 @@ const ACTION_VARIANT_CLASSES = {
   "destructive-underline": "text-rose-700 underline",
 } satisfies Record<ActionVariant, string>;
 
-const BUTTON_SIZE_CLASSES: Record<ButtonSize, string> = {
+const BUTTON_SIZE_CLASSES: Record<UiSize | "icon", string> = {
   xs: "h-6 px-2 text-xs",
   sm: "h-9 px-3 text-sm",
   md: "h-10 px-4 py-2 text-sm",
@@ -67,15 +57,7 @@ const BUTTON_SIZE_CLASSES: Record<ButtonSize, string> = {
   icon: "size-10 text-sm",
 };
 
-/**
- * Describes the documented declaration.
- *
- * @remarks Defines variant styles for the Button component using class-variance-authority.
- *
- * @param props - Standard CVA parameters.
- *
- * @returns A string of compiled Tailwind classes.
- */
+/** Compiles semantic palette and size options into the shared action-button classes. */
 export const ACTION_VARIANTS = cva("", {
   variants: { variant: ACTION_VARIANT_CLASSES, size: BUTTON_SIZE_CLASSES },
   defaultVariants: { variant: "primary" },
@@ -113,7 +95,10 @@ const CONTROL_VARIANT_CLASSES = {
     "text-rose-200 enabled:hover:bg-rose-800 data-[state=active]:bg-rose-700 data-[state=active]:text-white",
   "destructive-tonal":
     "bg-rose-900 text-rose-100 data-[state=active]:bg-rose-700 data-[state=active]:text-white",
-} satisfies Record<ControlVariant, string>;
+} satisfies Record<
+  UiColor | `${UiColor}-${Extract<UiType, "outline" | "ghost" | "tonal">}`,
+  string
+>;
 
 const CONTROL_SIZE_CLASSES: Record<UiSize, string> = {
   xs: "h-6 px-2 py-0.5 text-sm",

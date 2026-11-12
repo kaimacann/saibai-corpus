@@ -1,5 +1,5 @@
 import Dagre from "@dagrejs/dagre";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Background,
   Handle,
@@ -24,24 +24,30 @@ import { AlertError } from "@ui/alert";
 import { ErrorBoundary } from "@components/ErrorBoundary";
 import { CarbonIcon } from "./carbon-icons";
 import { PANEL_CLASSES, Player } from "./saibai";
+import {
+  getSpousePairChildren,
+  markGenealogyNodeEndpoints,
+} from "@lib/genealogy-endpoints";
 import type { Edge as ReactFlowEdge, Node, NodeProps } from "@xyflow/react";
 import type { Person } from "@lib/types";
 
-/** React Flow payload for a person node, including its person record fields. */
-type PersonNodeData = {
-  nodeData: Person;
-  origin: boolean;
-  terminus: boolean;
-  setSelectedNode: React.Dispatch<React.SetStateAction<Person | null>>;
-} & Record<string, unknown>;
 /** React Flow node specialization used to render an individual person. */
-type PersonGraphNode = Node<PersonNodeData, "custom"> & { type: "custom" };
-/** Layout-only React Flow node used to connect spouses in the genealogy graph. */
-type MarriageGraphNode = Node<Record<string, never>, "marriageConnector"> & {
-  type: "marriageConnector";
-};
+type PersonGraphNode = Node<
+  {
+    nodeData: Person;
+    origin: boolean;
+    terminus: boolean;
+    setSelectedNode: React.Dispatch<React.SetStateAction<Person | null>>;
+  } & Record<string, unknown>,
+  "custom"
+> & { type: "custom" };
+
 /** Either a visible person node or a marriage connector in the genealogy graph. */
-type GenealogyNode = PersonGraphNode | MarriageGraphNode;
+type GenealogyNode =
+  | PersonGraphNode
+  | (Node<Record<string, never>, "marriageConnector"> & {
+      type: "marriageConnector";
+    });
 const SHARED_REGEX = /^./;
 
 const genealogyData: Person[] = [
@@ -263,76 +269,115 @@ const genealogyData: Person[] = [
   },
 ];
 
-const getNodeDimensions = (node: Node) =>
-  node.type === "marriageConnector"
+/**
+ * Returns the layout dimensions used for a person or marriage connector node.
+ *
+ * @param node - React Flow node whose layout dimensions are needed.
+ * @returns Connector dimensions or the node's measured size with defaults.
+ */
+function getNodeDimensions(node: Node): { width: number; height: number } {
+  return node.type === "marriageConnector"
     ? { width: 20, height: 20 }
     : {
         width: node.measured?.width ?? 150,
         height: node.measured?.height ?? 50,
       };
+}
 
 /**
- * Handles get layouted elements.
- *
- * @remarks Calculates directed acyclic graph layout using Dagre.
+ * Calculates Dagre positions for nodes and returns the input edges unchanged.
  *
  * @param nodes - Array of unpositioned React Flow nodes.
  * @param edges - Array of React Flow edges.
- * @param options - Optional config for the operation.
+ * @param opts - Direction and optional spacing values for the layout.
  *
  * @returns Object containing nodes with updated positions and unmodified edges.
  */
-const getLayoutedElements = <TNode extends Node>(
+function getLayoutedElements<TNode extends Node>(
   nodes: TNode[],
   edges: ReactFlowEdge[],
   opts: { direction: string; nodesep?: number; ranksep?: number },
-): { edges: ReactFlowEdge[]; nodes: TNode[] } => {
-  const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+): { edges: ReactFlowEdge[]; nodes: TNode[] } {
+  /** Supplies empty metadata for graph edges without explicit labels.
+   * @returns An empty label object for Dagre.
+   */
+  function emptyEdgeLabel(): Record<string, never> {
+    return {};
+  }
+  const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(emptyEdgeLabel);
   g.setGraph({
     rankdir: opts.direction,
     nodesep: opts.nodesep || 50,
     ranksep: opts.ranksep || 50,
   });
-  edges.forEach((e) => g.setEdge(e.source, e.target));
-  nodes.forEach((n) => g.setNode(n.id, { ...n, ...getNodeDimensions(n) }));
+  /** Adds each source relationship to Dagre's working graph.
+   * @param e - React Flow edge whose endpoints define the relationship.
+   */
+  function addEdgeToGraph(e: ReactFlowEdge): void {
+    g.setEdge(e.source, e.target);
+  }
+  /** Adds one node with dimensions needed by Dagre's positioning pass.
+   * @param n - React Flow node to size and register.
+   */
+  function addNodeToGraph(n: TNode): void {
+    g.setNode(n.id, { ...n, ...getNodeDimensions(n) });
+  }
+  edges.forEach(addEdgeToGraph);
+  nodes.forEach(addNodeToGraph);
   Dagre.layout(g);
+
+  /** Applies Dagre's center coordinates to React Flow's top-left positions.
+   * @param n - Original node to position in the laid-out graph.
+   * @returns The node with layout position and dragging disabled.
+   */
+  function positionNode(n: TNode): TNode {
+    const { x, y } = g.node(n.id);
+    const { width, height } = getNodeDimensions(n);
+    return {
+      ...n,
+      position: { x: x - width / 2, y: y - height / 2 },
+      draggable: false,
+    };
+  }
   return {
-    nodes: nodes.map((n) => {
-      const { x, y } = g.node(n.id);
-      const { width, height } = getNodeDimensions(n);
-      return {
-        ...n,
-        position: { x: x - width / 2, y: y - height / 2 },
-        draggable: false,
-      };
-    }),
+    nodes: nodes.map(positionNode),
     edges: [...edges],
   };
-};
+}
 
 /**
- * Renders the person node component.
+ * Renders a person node in the React Flow genealogy graph.
  *
  * @remarks React Flow Custom Node to display a Person in the tree.
  *
- * @param props - React Flow node properties containing the person data and canvas interaction callbacks.
  * @param data - Node data containing personal information and edge visibility toggles.
- * @returns Person Node.
+ * @returns The rendered person node.
  */
 function PersonNode({ data }: NodeProps<PersonGraphNode>) {
   const { nodeData, setSelectedNode } = data;
-  /**
-   * Handles node click.
+  /** Finds a different person sharing the selected node's id.
+   * @param p - Record checked for an id/name collision.
+   * @returns Whether the record conflicts with the rendered node identity.
    */
-  const handleNodeClick = () => {
-    const originalGNode = genealogyData.find(
-      (g) =>
-        g.id === nodeData.id ||
-        (g.name === nodeData.name &&
-          !genealogyData.some(
-            (p) => p.id === nodeData.id && p.name !== nodeData.name,
-          )),
+  function hasConflictingNameForSelectedId(p: Person): boolean {
+    return p.id === nodeData.id && p.name !== nodeData.name;
+  }
+  /** Matches the original data record represented by this rendered node.
+   * @param p - Record from the source genealogy data.
+   * @returns Whether the record maps uniquely to the rendered node.
+   */
+  function matchesSelectedPerson(p: Person): boolean {
+    return (
+      p.id === nodeData.id ||
+      (p.name === nodeData.name &&
+        !genealogyData.some(hasConflictingNameForSelectedId))
     );
+  }
+  /**
+   * Selects the source person record or creates a detail-safe fallback.
+   */
+  function handleNodeClick(): void {
+    const originalGNode = genealogyData.find(matchesSelectedPerson);
     setSelectedNode(
       originalGNode || {
         ...nodeData,
@@ -341,7 +386,7 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
         children: [],
       },
     );
-  };
+  }
   return (
     <Button
       onClick={handleNodeClick}
@@ -440,7 +485,11 @@ const nodeTypes = {
  *
  * @returns React Flow map interface with layout controls and item inspection modal.
  */
-const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
+function LayoutFlow({
+  genealogyData,
+}: {
+  genealogyData: Person[];
+}): React.JSX.Element {
   // STATES
   const [selNode, setSelNode] = useState<Person | null>(null);
   const { fitView } = useReactFlow();
@@ -449,113 +498,176 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   // INIT
-  const { initialNodes, initialEdges } = useMemo(() => {
+  /** Creates the person and marriage nodes plus their parent-child edges.
+   * @returns Unpositioned React Flow nodes and relationship edges for Dagre.
+   */
+  function buildInitialGraph(): {
+    initialNodes: GenealogyNode[];
+    initialEdges: ReactFlowEdge[];
+  } {
     const nNodes: GenealogyNode[] = [];
     const nEdges: ReactFlowEdge[] = [];
     const personNodeMap = new Map<string, Person>();
     const marriageSet = new Set<string>();
-    genealogyData.forEach((g) => {
+    const marriageChildEdgeSet = new Set<string>();
+
+    /** Registers one source person as a React Flow node.
+     * @param p - Source genealogy record to include in the graph.
+     */
+    function addPersonNode(p: Person): void {
       nNodes.push({
-        id: g.id,
+        id: p.id,
         type: "custom",
         data: {
           setSelectedNode: setSelNode,
-          nodeData: g,
+          nodeData: p,
           origin: false,
           terminus: false,
         },
         position: { x: 0, y: 0 },
       });
-      personNodeMap.set(g.id, g);
-    });
-    genealogyData.forEach((g) => {
-      if (g.spouseId) {
-        const primaryPersonId = g.id;
-        const spouseNodeId =
-          genealogyData.find((p) => p.id === g.spouseId)?.id ||
-          `spouse-node-for-${primaryPersonId}`;
-        if (!personNodeMap.has(spouseNodeId)) {
-          const spouseDisplayData: Person = {
-            id: spouseNodeId,
-            name: g.spouseId,
-            clans: [],
-            parents: [],
-            children: [],
-            spouseId: primaryPersonId,
-          };
-          nNodes.push({
-            id: spouseNodeId,
-            type: "custom",
-            data: {
-              setSelectedNode: setSelNode,
-              nodeData: spouseDisplayData,
-              origin: false,
-              terminus: false,
-            },
-            position: { x: 0, y: 0 },
-          });
-          personNodeMap.set(spouseNodeId, spouseDisplayData);
-        }
-        // Deduplicate structural relationships
-        const sortedIds = [primaryPersonId, spouseNodeId].sort();
-        const marriageNodeId = `marriage-${sortedIds[0]}-${sortedIds[1]}`;
-        if (!marriageSet.has(marriageNodeId)) {
-          marriageSet.add(marriageNodeId);
-          nNodes.push({
-            id: marriageNodeId,
-            type: "marriageConnector",
-            data: {},
-            position: { x: 0, y: 0 },
-          });
-          nEdges.push({
-            id: `edge-${primaryPersonId}-to-${marriageNodeId}`,
-            source: primaryPersonId,
-            target: marriageNodeId,
-            type: "smoothstep",
-            style: { strokeDasharray: "5,5", stroke: "#888" },
-          });
-          nEdges.push({
-            id: `edge-${spouseNodeId}-to-${marriageNodeId}`,
-            source: spouseNodeId,
-            target: marriageNodeId,
-            type: "smoothstep",
-            style: { strokeDasharray: "5,5", stroke: "#888" },
-          });
-          g.children.forEach((c) => {
-            if (personNodeMap.has(c)) {
-              nEdges.push({
-                id: `edge-${marriageNodeId}-to-${c}`,
-                source: marriageNodeId,
-                target: c,
-                type: "smoothstep",
-              });
-            }
-          });
-        }
-      } else {
-        g.children.forEach((c) => {
-          if (personNodeMap.has(c))
-            nEdges.push({
-              id: `edge-${g.id}-to-${c}`,
-              source: g.id,
-              target: c,
-              type: "smoothstep",
-            });
+      personNodeMap.set(p.id, p);
+    }
+
+    /** Adds a child edge from a marriage connector when its target exists.
+     * @param marriageNodeId - Connector joining the two spouses.
+     * @param childId - Child person id targeted by the relationship.
+     */
+    function addChildMarriageEdge(
+      marriageNodeId: string,
+      childId: string,
+    ): void {
+      if (!personNodeMap.has(childId)) return;
+      const edgeId = `edge-${marriageNodeId}-to-${childId}`;
+      if (marriageChildEdgeSet.has(edgeId)) return;
+      marriageChildEdgeSet.add(edgeId);
+      nEdges.push({
+        id: edgeId,
+        source: marriageNodeId,
+        target: childId,
+        type: "smoothstep",
+      });
+    }
+
+    /** Adds an ordinary parent-child edge when the child is in the source list.
+     * @param parentId - Person node that supplies the relationship.
+     * @param childId - Child person id targeted by the relationship.
+     */
+    function addParentChildEdge(parentId: string, childId: string): void {
+      if (!personNodeMap.has(childId)) return;
+      nEdges.push({
+        id: `edge-${parentId}-to-${childId}`,
+        source: parentId,
+        target: childId,
+        type: "smoothstep",
+      });
+    }
+
+    /** Adds a person's spouse connector and the connector's child edges.
+     * @param person - Person record whose spouse and children are linked.
+     */
+    function addMarriageRelationships(person: Person): void {
+      if (!person.spouseId) return;
+      const primaryPersonId = person.id;
+      /** Locates the source person whose id is the spouse reference.
+       * @param c - Person record considered as the spouse.
+       * @returns Whether the source record matches the spouse id.
+       */
+      function isSpouse(c: Person): boolean {
+        return c.id === person.spouseId;
+      }
+      const spouseNodeId =
+        genealogyData.find(isSpouse)?.id ||
+        `spouse-node-for-${primaryPersonId}`;
+      if (!personNodeMap.has(spouseNodeId)) {
+        const spouseDisplayData: Person = {
+          id: spouseNodeId,
+          name: person.spouseId,
+          clans: [],
+          parents: [],
+          children: [],
+          spouseId: primaryPersonId,
+        };
+        nNodes.push({
+          id: spouseNodeId,
+          type: "custom",
+          data: {
+            setSelectedNode: setSelNode,
+            nodeData: spouseDisplayData,
+            origin: false,
+            terminus: false,
+          },
+          position: { x: 0, y: 0 },
+        });
+        personNodeMap.set(spouseNodeId, spouseDisplayData);
+      }
+      // Deduplicate structural relationships
+      const sortedIds = [primaryPersonId, spouseNodeId].sort();
+      const marriageNodeId = `marriage-${sortedIds[0]}-${sortedIds[1]}`;
+      if (!marriageSet.has(marriageNodeId)) {
+        marriageSet.add(marriageNodeId);
+        nNodes.push({
+          id: marriageNodeId,
+          type: "marriageConnector",
+          data: {},
+          position: { x: 0, y: 0 },
+        });
+        nEdges.push({
+          id: `edge-${primaryPersonId}-to-${marriageNodeId}`,
+          source: primaryPersonId,
+          target: marriageNodeId,
+          type: "smoothstep",
+          style: { strokeDasharray: "5,5", stroke: "#888" },
+        });
+        nEdges.push({
+          id: `edge-${spouseNodeId}-to-${marriageNodeId}`,
+          source: spouseNodeId,
+          target: marriageNodeId,
+          type: "smoothstep",
+          style: { strokeDasharray: "5,5", stroke: "#888" },
         });
       }
-    });
-    const tgts = new Set(nEdges.map((e) => e.target));
-    const srcs = new Set(nEdges.map((e) => e.source));
-    nNodes.forEach((n) => {
-      if (n.type === "custom") {
-        n.data.origin = tgts.has(n.id);
-        n.data.terminus = srcs.has(n.id);
+      /** Connects each recorded child to this spouse pair's connector.
+       * @param c - Source record id of the child.
+       */
+      function addMarriageChildEdge(c: string): void {
+        addChildMarriageEdge(marriageNodeId, c);
       }
-    });
-    return { initialNodes: nNodes, initialEdges: nEdges };
-  }, [genealogyData, setSelNode]);
+      getSpousePairChildren(genealogyData, person.id, person.spouseId).forEach(
+        addMarriageChildEdge,
+      );
+    }
 
-  React.useEffect(() => {
+    /** Adds non-marriage parent-child edges for one source person.
+     * @param p - Record whose children are linked directly.
+     */
+    function addDirectRelationships(p: Person): void {
+      if (p.spouseId) {
+        addMarriageRelationships(p);
+        return;
+      }
+
+      /** Connects a recorded child directly when the person has no spouse.
+       * @param c - Source record id of the child.
+       */
+      function addDirectChildEdge(c: string): void {
+        addParentChildEdge(p.id, c);
+      }
+      p.children.forEach(addDirectChildEdge);
+    }
+
+    genealogyData.forEach(addPersonNode);
+    genealogyData.forEach(addDirectRelationships);
+    markGenealogyNodeEndpoints(nNodes, nEdges);
+    return { initialNodes: nNodes, initialEdges: nEdges };
+  }
+  const { initialNodes, initialEdges } = useMemo(buildInitialGraph, [
+    genealogyData,
+    setSelNode,
+  ]);
+
+  /** Applies the initial Dagre layout once the source graph is available. */
+  function initGraphLayout(): void {
     if (initialNodes.length > 0) {
       const { nodes: layoutedNodes, edges: layoutedEdges } =
         getLayoutedElements(initialNodes, initialEdges, {
@@ -567,41 +679,113 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
       setEdges(layoutedEdges);
       // Native `fitView` React Flow prop correctly manages initial bounding box measurements safely.
     }
-  }, [initialNodes, initialEdges, setNodes, setEdges]);
+  }
+  React.useEffect(initGraphLayout, [
+    initialNodes,
+    initialEdges,
+    setNodes,
+    setEdges,
+  ]);
 
-  React.useEffect(() => {
+  /** Fits the graph when its container first becomes visible. */
+  function fitVisibleGraph(): void {
+    fitView();
+  }
+
+  /** Re-centers the graph after its container enters the viewport.
+   * @param entries - Intersection records reported for the observed container.
+   */
+  function handleContainerVisibility(
+    entries: IntersectionObserverEntry[],
+  ): void {
+    // This observer is attached to one graph container, so only its first entry matters.
+    const entry = entries[0];
+    if (entry?.isIntersecting) {
+      window.requestAnimationFrame(fitVisibleGraph);
+    }
+  }
+
+  /** Releases the observer registered for the graph container.
+   * @param observer - Browser observer watching the genealogy container.
+   */
+  function disconnectContainerObserver(observer: IntersectionObserver): void {
+    observer.disconnect();
+  }
+
+  /** Observes the graph container and returns React's observer cleanup callback.
+   * @returns A callback that disconnects the observer, or undefined before mount.
+   */
+  function observeGraphContainer(): (() => void) | undefined {
     if (!containerRef.current) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting) {
-          window.requestAnimationFrame(() => {
-            fitView();
-          });
-        }
-      },
-      { threshold: 0.1 },
-    );
+    const observer = new IntersectionObserver(handleContainerVisibility, {
+      threshold: 0.1,
+    });
     observer.observe(containerRef.current);
-    return () => {
-      observer.disconnect();
-    };
-  }, [fitView]);
+    /** Disconnects the observer when React removes the graph container. */
+    function cleanupObserver(): void {
+      disconnectContainerObserver(observer);
+    }
+    return cleanupObserver;
+  }
+  React.useEffect(observeGraphContainer, [fitView]);
 
-  const onLayout = useCallback(
-    (direction: string) => {
-      const { nodes: layoutedNodes, edges: layoutedEdges } =
-        getLayoutedElements(nodes, edges, {
-          direction,
-          nodesep: 70,
-          ranksep: 90,
-        });
-      setNodes([...layoutedNodes]);
-      setEdges([...layoutedEdges]);
-      window.requestAnimationFrame(() => fitView());
-    },
-    [nodes, edges, setNodes, setEdges, fitView],
-  );
+  /** Applies the requested graph direction and recenters its visible nodes.
+   * @param direction - Dagre rank direction, such as `TB` or `LR`.
+   */
+  function onLayout(direction: string): void {
+    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+      nodes,
+      edges,
+      {
+        direction,
+        nodesep: 70,
+        ranksep: 90,
+      },
+    );
+    setNodes([...layoutedNodes]);
+    setEdges([...layoutedEdges]);
+    window.requestAnimationFrame(fitVisibleGraph);
+  }
+
+  /** Requests the vertical layout used by the panel's layout button. */
+  function handleVerticalLayout(): void {
+    onLayout("TB");
+  }
+
+  /** Clears the selected person after the details dialog closes.
+   * @param i - Whether the dialog remains open after the change.
+   */
+  function handlePersonDialogChange(i: boolean): void {
+    if (!i) setSelNode(null);
+  }
+
+  /** Capitalizes the first character of a display name segment.
+   * @param character - Name segment whose initial should be uppercased.
+   * @returns The segment's initial character in uppercase.
+   */
+  function capitalizeInitial(character: string): string {
+    return character.toUpperCase();
+  }
+
+  /** Converts a source person id into the visible child name.
+   * @param p - Genealogy id containing the name before its first hyphen.
+   * @returns The capitalized name segment, or undefined for an empty id.
+   */
+  function getChildName(p: string): string | undefined {
+    return p.split("-")[0]?.replace(SHARED_REGEX, capitalizeInitial);
+  }
+
+  /** Renders an audio item attached to the selected genealogy person.
+   * @param r - Audio metadata from the person's genealogy record.
+   * @returns The recording's player row.
+   */
+  function renderPersonAudio(
+    r: NonNullable<Person["audio"]>[number],
+  ): React.JSX.Element {
+    return (
+      <Player key={r.audio} title={r.title} author={r.author} src={r.audio} />
+    );
+  }
 
   return (
     <div ref={containerRef} className="size-full">
@@ -620,9 +804,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
         <Panel position="top-right">
           <Button
             type="button"
-            onClick={() => {
-              onLayout("TB");
-            }}
+            onClick={handleVerticalLayout}
             title="Vertical Layout"
             aria-label="Vertical Layout"
             variant="gray-outline"
@@ -631,7 +813,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
             <CarbonIcon name="maximize" />
           </Button>
         </Panel>
-        <Dialog open={!!selNode} onOpenChange={(o) => !o && setSelNode(null)}>
+        <Dialog open={!!selNode} onOpenChange={handlePersonDialogChange}>
           <DialogContent
             aria-describedby={undefined}
             className="text-clip text-left"
@@ -655,26 +837,17 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
                       Spouse:{" "}
                       {selNode.spouseId
                         .split("-")[0]
-                        .replace(SHARED_REGEX, (c) => c.toUpperCase())}
+                        .replace(SHARED_REGEX, capitalizeInitial)}
                     </p>
                   )}
                   {selNode.children.length > 0 && (
                     <p className="text-cyan-900/70">
-                      Children:{" "}
-                      {selNode.children
-                        .map((i) =>
-                          i
-                            .split("-")[0]
-                            ?.replace(SHARED_REGEX, (c) => c.toUpperCase()),
-                        )
-                        .join(", ")}
+                      Children: {selNode.children.map(getChildName).join(", ")}
                     </p>
                   )}
                 </DialogHeader>
                 <div className="flex flex-col gap-y-3 pt-2">
-                  {selNode.audio?.map(({ title: t, author: a, audio: v }) => (
-                    <Player key={v} title={t} author={a} src={v} />
-                  ))}
+                  {selNode.audio?.map(renderPersonAudio)}
                 </div>
               </>
             )}
@@ -683,7 +856,7 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
       </ReactFlow>
     </div>
   );
-};
+}
 
 /**
  * Renders the genealogy component.
@@ -693,16 +866,22 @@ const LayoutFlow = ({ genealogyData }: { genealogyData: Person[] }) => {
  * @returns Tree provider hierarchy.
  */
 export function Genealogy(): React.JSX.Element {
+  /**
+   * Renders a focused fallback when genealogy rendering fails.
+   *
+   * @return Accessible error alert for an unavailable genealogy graph.
+   */
+  function renderGenealogyErr(): React.JSX.Element {
+    return (
+      <AlertError
+        title="Genealogy Tree Error"
+        description="The genealogy diagram of the Saibai families could not be displayed. The rest of the page remains fully accessible."
+      />
+    );
+  }
+
   return (
-    <ErrorBoundary
-      name="SaibaiGenealogy"
-      fallback={() => (
-        <AlertError
-          title="Genealogy Tree Error"
-          description="The genealogy diagram of the Saibai families could not be displayed. The rest of the page remains fully accessible."
-        />
-      )}
-    >
+    <ErrorBoundary name="SaibaiGenealogy" fallback={renderGenealogyErr}>
       <div className={PANEL_CLASSES}>
         <ReactFlowProvider>
           <LayoutFlow genealogyData={genealogyData} />

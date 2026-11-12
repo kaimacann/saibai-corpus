@@ -33,24 +33,30 @@ const ICON_PATHS = {
   ],
 } as const;
 
+/** Turns one path string into a keyed SVG node.
+ * @param p - SVG path description for a single icon layer.
+ * @param i - Layer position in the selected icon's path array.
+ * @returns The path node used to draw that icon layer.
+ */
+function renderIconPath(p: string, i: number): React.JSX.Element {
+  return <path d={p} key={i} />;
+}
+
 /**
  * Renders a Carbon Design System icon from the extracted dashboard icon set.
- * @param props SVG attributes and the icon name to render.
+ * @param name - Key of the icon to render from the extracted dashboard set.
+ * @param svgProps - Additional SVG attributes forwarded to the root element.
  * @returns The requested SVG icon.
  */
 export function CarbonIcon({
   name,
-  ...props
+  ...svgProps
 }: SVGProps<SVGSVGElement> & {
   name: keyof typeof ICON_PATHS;
 }): React.JSX.Element {
   return (
-    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" {...props}>
-      <g fill="currentColor">
-        {ICON_PATHS[name].map((d, i) => (
-          <path d={d} key={i} />
-        ))}
-      </g>
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" {...svgProps}>
+      <g fill="currentColor">{ICON_PATHS[name].map(renderIconPath)}</g>
     </svg>
   );
 }

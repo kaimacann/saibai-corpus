@@ -12,9 +12,10 @@ IMPORTS
 
 import { cn } from "@utils";
 import { useMediaStore } from "@vidstack/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { feature } from "topojson-client";
 import "vidstack/styles/base.css";
+import { resolveCorpusTab } from "@lib/corpus-tabs";
 import { CarbonIcon } from "./carbon-icons";
 
 // COMPONENTS
@@ -58,11 +59,44 @@ import type { MapGeography } from "react-simple-maps";
 
 export { Button, ButtonLink };
 
-const LazyGenealogy = React.lazy(() =>
-  import("./saibai-genealogy").then((module) => ({
-    default: module.Genealogy,
-  })),
-);
+/** Loads the genealogy page chunk and adapts it for React.lazy.
+ *
+ * @returns The genealogy component in React.lazy's expected module shape.
+ */
+async function loadGenealogy(): Promise<{
+  default: typeof import("./saibai-genealogy").Genealogy;
+}> {
+  return { default: (await import("./saibai-genealogy")).Genealogy };
+}
+
+const LazyGenealogy = React.lazy(loadGenealogy);
+
+/** Footer identity and optional profile URL for a corpus contributor. */
+type Contributor = readonly [name: string, href?: string];
+const CONTRIBUTORS: Contributor[] = [
+  ["Kai Macann", "https://www.linkedin.com/in/kaimacann/"],
+  [
+    "Friendcis Meeko Estores",
+    "https://www.linkedin.com/in/meeko-estores-78444822b",
+  ],
+  ["Jack Linz", "https://www.linkedin.com/in/jack-linz-942a33358"],
+  ["Jake Salamon"],
+  ["Nathan Kam"],
+  ["Benjamin Li"],
+];
+
+/** Renders a contributor's name and optional profile destination in the footer.
+ * @param c - Display name and optional external profile URL.
+ * @returns A footer link for the contributor.
+ */
+function renderContributor(c: Contributor): React.JSX.Element {
+  const [name, href] = c;
+  return (
+    <ButtonLink key={name} href={href} target="_blank">
+      {name}
+    </ButtonLink>
+  );
+}
 
 /*//////////////////////////////////////////////////
 COMPONENTS
@@ -100,24 +134,7 @@ export function Saibai(): JSX.Element {
               <span>© {new Date().getFullYear()}</span>
             </span>
             <ul className="flex flex-col gap-2">
-              {[
-                ["Kai Macann", "https://www.linkedin.com/in/kaimacann/"],
-                [
-                  "Friendcis Meeko Estores",
-                  "https://www.linkedin.com/in/meeko-estores-78444822b",
-                ],
-                [
-                  "Jack Linz",
-                  "https://www.linkedin.com/in/jack-linz-942a33358",
-                ],
-                ["Jake Salamon"],
-                ["Nathan Kam"],
-                ["Benjamin Li"],
-              ].map(([n, h]) => (
-                <ButtonLink key={n} href={h} target="_blank">
-                  {n}
-                </ButtonLink>
-              ))}
+              {CONTRIBUTORS.map(renderContributor)}
             </ul>
           </nav>
         </footer>
@@ -151,6 +168,11 @@ export const MEDIA_BUTTON_CLASSES =
  */
 export function Acknowledgment(): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(true);
+  /** Closes the warning after the visitor acknowledges it. */
+  function closeWarning(): void {
+    setIsOpen(false);
+  }
+
   return (
     <ErrorBoundary name="Acknowledgment">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -168,7 +190,7 @@ export function Acknowledgment(): React.JSX.Element {
             Aboriginal and Torres Strait Islander people should be aware that
             this website contains images, sounds and names of deceased persons.
           </p>
-          <Button onClick={() => setIsOpen(false)} className="mt-4">
+          <Button onClick={closeWarning} className="mt-4">
             Continue
           </Button>
         </DialogContent>
@@ -181,109 +203,104 @@ export function Acknowledgment(): React.JSX.Element {
 MEDIA COMPONENTS
 //////////////////////////////////////////////////*/
 
-/**
- * Renders the slider track component.
- *
- * @remarks Vidstack-based slider track base layer.
- *
- * @param className - Value passed to the helper.
- *
- *
- * @returns Track div element.
+/** Draws the neutral base beneath the audio slider's buffered and played ranges.
+ * @param className - Extra classes merged with the slider track styles.
+ * @returns The base track element.
  */
-const SliderTrack = ({ className }: { className?: string }) => (
-  <div
-    className={cn("absolute left-0 top-0 z-0 size-full bg-gray-100", className)}
-  />
-);
+function SliderTrack({ className }: { className?: string }): React.JSX.Element {
+  return (
+    <div
+      className={cn(
+        "absolute left-0 top-0 z-0 size-full bg-gray-100",
+        className,
+      )}
+    />
+  );
+}
 
-/**
- * Renders the slider track fill component.
- *
- * @remarks Vidstack-based slider fill layer representing current playback.
- *
- * @param className - Value passed to the helper.
- *
- *
- * @returns Track fill div element.
+/** Draws the portion of the audio slider that has already played.
+ * @param className - Extra classes merged with the played-range styles.
+ * @returns The played-range element.
  */
-const SliderTrackFill = ({ className }: { className?: string }) => (
-  <div
-    className={cn(
-      "absolute left-0 top-0 z-20 size-full scale-x-[var(--slider-fill-rate)] bg-black will-change-transform live:bg-red-500",
-      className,
-    )}
-    style={{ transformOrigin: "left center" }}
-  />
-);
+function SliderTrackFill({
+  className,
+}: {
+  className?: string;
+}): React.JSX.Element {
+  return (
+    <div
+      className={cn(
+        "absolute left-0 top-0 z-20 size-full scale-x-[var(--slider-fill-rate)] bg-black will-change-transform live:bg-red-500",
+        className,
+      )}
+      style={{ transformOrigin: "left center" }}
+    />
+  );
+}
 
-/**
- * Renders the slider track progress component.
- *
- * @remarks Vidstack-based slider progress layer representing buffered media.
- *
- * @param className - Value passed to the helper.
- *
- *
- * @returns Progress div element.
+/** Draws the buffered range behind the played portion of the audio slider.
+ * @param className - Extra classes merged with the buffered-range styles.
+ * @returns The buffered-range element.
  */
-const SliderTrackProgress = ({ className }: { className?: string }) => (
-  <div
-    className={cn(
-      "absolute left-0 top-0 z-10 size-full scale-x-[calc(var(--media-buffered)/var(--media-duration))] bg-black opacity-10 will-change-transform",
-      className,
-    )}
-    style={{ transformOrigin: "left center" }}
-  />
-);
+function SliderTrackProgress({
+  className,
+}: {
+  className?: string;
+}): React.JSX.Element {
+  return (
+    <div
+      className={cn(
+        "absolute left-0 top-0 z-10 size-full scale-x-[calc(var(--media-buffered)/var(--media-duration))] bg-black opacity-10 will-change-transform",
+        className,
+      )}
+      style={{ transformOrigin: "left center" }}
+    />
+  );
+}
 
-/**
- * Renders the slider thumb component.
- *
- * @remarks Vidstack-based slider thumb indicator.
- *
- * @param className - Value passed to the helper.
- *
- *
- * @returns Thumb indicator div element.
+/** Marks the current playback position and follows the pointer while dragging.
+ * @param className - Extra classes merged with the slider thumb styles.
+ * @returns The playback-position indicator.
  */
-const SliderThumb = ({ className }: { className?: string }) => (
-  <div
-    className={cn(
-      "absolute left-[var(--slider-fill-percent)] top-0 z-20 h-full w-0.5 -translate-x-1/2 scale-200 group-data-[dragging]:left-[var(--slider-pointer-percent)]",
-      className,
-    )}
-  >
-    <div className="size-full rounded-full bg-black outline outline-1 outline-white group-data-[focus]:ring-2 group-data-[focus]:ring-blue-400" />
-  </div>
-);
+function SliderThumb({ className }: { className?: string }): React.JSX.Element {
+  return (
+    <div
+      className={cn(
+        "absolute left-[var(--slider-fill-percent)] top-0 z-20 h-full w-0.5 -translate-x-1/2 scale-200 group-data-[dragging]:left-[var(--slider-pointer-percent)]",
+        className,
+      )}
+    >
+      <div className="size-full rounded-full bg-black outline outline-1 outline-white group-data-[focus]:ring-2 group-data-[focus]:ring-blue-400" />
+    </div>
+  );
+}
 
-/**
- * Renders the slider preview component.
- *
- * @remarks Hover preview container for the Vidstack slider.
- *
- * @param children - Preview components (thumbnails, timestamps).
- *
- *
- * @returns Preview container element.
+/** Positions thumbnail and time content at the slider's current hover point.
+ * @param children - Thumbnail and time components shown in the preview.
+ * @returns Vidstack's slider preview slot.
  */
-const SliderPreview = ({ children }: { children: ReactNode }) => (
-  <div
-    className="absolute left-[var(--preview-left)] top-[var(--preview-top)] flex -translate-x-1/2 translate-y-1 flex-col items-center justify-center gap-1 opacity-0 transition-opacity duration-200 ease-out group-data-[interactive]:opacity-100 group-data-[interactive]:ease-in"
-    slot="preview"
-  >
-    {children}
-  </div>
-);
+function SliderPreview({
+  children,
+}: {
+  children: ReactNode;
+}): React.JSX.Element {
+  return (
+    <div
+      className="absolute left-[var(--preview-left)] top-[var(--preview-top)] flex -translate-x-1/2 translate-y-1 flex-col items-center justify-center gap-1 opacity-0 transition-opacity duration-200 ease-out group-data-[interactive]:opacity-100 group-data-[interactive]:ease-in"
+      slot="preview"
+    >
+      {children}
+    </div>
+  );
+}
 
 /**
  * Renders the media slider component.
  *
  * @remarks Vidstack Media Slider containing track, thumb, and preview.
  *
- * @param props Media source and optional CSS classes for the slider.
  * @param className - Additional CSS classes merged into media slider.
+ * @param src - Optional media source used to find a matching preview thumbnail.
  *
  * @returns Media time slider component.
  */
@@ -324,18 +341,17 @@ export function MediaSlider({
  *
  * @remarks Vidstack Play/Pause button wrapper handling iconography.
  *
- * @param props - Native attributes forwarded to the media play control.
- *
+ * @param attrs - Additional attributes forwarded to the media play control.
  * @returns Vidstack's accessible play/pause button.
  */
-function PlayButton(props: React.ComponentProps<typeof MediaPlayButton>) {
+function PlayButton(attrs: React.ComponentProps<typeof MediaPlayButton>) {
   const { paused } = useMediaStore();
   const playbackLabel = paused ? "Play" : "Pause";
   return (
     <MediaPlayButton
       className={MEDIA_BUTTON_CLASSES}
       aria-label={playbackLabel}
-      {...props}
+      {...attrs}
     >
       {paused ? (
         <CarbonIcon name="play-filled" className="block size-full scale-150" />
@@ -354,7 +370,6 @@ function PlayButton(props: React.ComponentProps<typeof MediaPlayButton>) {
  *
  * @remarks Consolidated media controls handling play, seek, volume, and timeline.
  *
- * @param props - AudioCtrlsProps.
  * @param className - Additional CSS classes merged into audio controls.
  * @param attrs - Additional HTML attributes passed through audio controls.
  *
@@ -430,15 +445,14 @@ function AudioControls({
  *
  * @remarks Core audio player component rendering artwork, metadata, and controls via Vidstack.
  *
- * @param props - PlayerProps containing media source and metadata.
- * @param src - Src input supplied to player's operation.
- * @param poster - Poster input supplied to player's operation.
- * @param title - Heading text shown in player.
- * @param author - Author input supplied to player's operation.
- * @param meta - Meta input supplied to player's operation.
- * @param className - Additional CSS classes merged into player.
- * @param alt - Alt input supplied to player's operation.
- * @param attrs - Additional HTML attributes passed through player.
+ * @param src - Audio URL loaded by the Vidstack media player.
+ * @param poster - Optional artwork displayed beside the recording details.
+ * @param title - Optional recording title; omitting it hides the details row.
+ * @param author - Optional speaker or singer credit displayed below the title.
+ * @param meta - Optional secondary recording information.
+ * @param className - Extra classes merged with the player container styles.
+ * @param alt - Alternative text for the artwork when a poster is supplied.
+ * @param attrs - Other Vidstack media-player options forwarded to the player.
  *
  * @returns Fully constructed MediaPlayer component.
  */
@@ -451,7 +465,10 @@ export function Player({
   className,
   alt,
   ...attrs
-}: {
+}: Omit<
+  React.ComponentProps<typeof MediaPlayer>,
+  "src" | "poster" | "title" | "className"
+> & {
   src: string;
   poster?: string;
   className?: string;
@@ -510,6 +527,29 @@ export function Player({
 MAP COMPONENT
 //////////////////////////////////////////////////*/
 
+/** Converts the configured Saibai Topology object into map-ready GeoJSON.
+ *
+ * @return The selected GeoJSON collection, or null when it is absent.
+ */
+function buildGeoJsonData() {
+  const objectKey = "export (1)1";
+  return SAIBAI.objects[objectKey]
+    ? feature(SAIBAI as never, SAIBAI.objects[objectKey] as never)
+    : null;
+}
+
+/** Provides the map-specific fallback while keeping the rest of the corpus usable.
+ * @returns An alert explaining that the map is unavailable.
+ */
+function renderMapFailureFallback(): React.JSX.Element {
+  return (
+    <AlertError
+      title="Map Display Error"
+      description="The geographic map of Saibai Island could not be displayed. The rest of the page remains fully accessible."
+    />
+  );
+}
+
 /**
  * Renders the geographic map component.
  *
@@ -520,24 +560,116 @@ MAP COMPONENT
 export function GeographicMap(): React.JSX.Element {
   const [selectedGeo, setSelectedGeo] = useState<MapGeography | null>(null);
 
-  const geoJsonData = useMemo(() => {
-    const objectKey = "export (1)1";
-    return SAIBAI.objects[objectKey]
-      ? feature(SAIBAI as never, SAIBAI.objects[objectKey] as never)
-      : null;
-  }, []);
+  const geoJsonData = useMemo(buildGeoJsonData, []);
+
+  /** Selects one map feature when its geography shape can open details.
+   * @param g - Geography feature rendered by react-simple-maps.
+   * @returns The feature element and optional selection handler.
+   */
+  function renderGeography(g: MapGeography): React.JSX.Element {
+    const properties = g.properties || {};
+    const isLine =
+      typeof g.geometry?.type === "string" &&
+      ["LineString", "MultiLineString"].includes(g.geometry.type);
+    let className = "pointer-events-none fill-transparent stroke-none";
+    if (properties.building === "house") className = "fill-amber-500";
+    else if (properties.building) className = "fill-red-950";
+    else if (properties.highway || properties.aeroway)
+      className = "fill-none stroke-gray-500 stroke-[0.05]";
+    else if (properties.natural === "coastline")
+      className = isLine
+        ? "stroke-emerald-800 stroke-[0.05] fill-none"
+        : "fill-emerald-800";
+    else if (properties.waterway)
+      className = isLine
+        ? "stroke-cyan-950 stroke-[0.05] fill-none"
+        : "fill-cyan-950";
+    else if (
+      properties.natural === "water" ||
+      properties.landuse === "reservoir"
+    )
+      className = "fill-cyan-950";
+    else if (properties.name && properties.name !== "Saibai Island" && !isLine)
+      className = "fill-amber-300 hover:fill-amber-400 hover:cursor-pointer";
+
+    const isInteractive =
+      !isLine &&
+      ((properties.landuse && properties.landuse !== "residential") ||
+        (properties.name && properties.name !== "Saibai Island"));
+    /** Opens the feature details dialog for the selected geography. */
+    function selectGeography(): void {
+      setSelectedGeo(g);
+    }
+    const handleClick = isInteractive ? selectGeography : undefined;
+    if (isInteractive) {
+      className = cn(
+        className,
+        "pointer-events-auto fill-yellow-300 hover:cursor-pointer hover:fill-yellow-400",
+      );
+    }
+
+    return (
+      <Geography
+        key={g.rsmKey}
+        geography={g}
+        onClick={handleClick}
+        className={cn(
+          "pointer-events-auto outline-none focus:outline-none active:outline-none",
+          g.rsmKey,
+          className,
+        )}
+      />
+    );
+  }
+
+  /** Renders every geography in the current GeoJSON collection.
+   * @param collection - Geography values supplied by react-simple-maps.
+   * @returns The map feature elements.
+   */
+  function renderGeographies(collection: {
+    geographies: MapGeography[];
+  }): ReactNode {
+    return collection.geographies.map(renderGeography);
+  }
+
+  /** Closes the selected feature dialog when Radix reports a close event.
+   * @param o - Whether the dialog should remain open.
+   */
+  function handleDialogOpenChange(o: boolean): void {
+    if (!o) setSelectedGeo(null);
+  }
+
+  /** Renders one video listed on the selected map feature.
+   * @param v - Video URL and optional title from the map properties.
+   * @param i - Video position used for the fallback title and React key.
+   * @returns The embedded video frame.
+   */
+  function renderSelectedVideo(
+    v: NonNullable<NonNullable<MapGeography["properties"]>["videos"]>[number],
+    i: number,
+  ): React.JSX.Element {
+    return (
+      <div
+        key={i}
+        className="relative mb-4 aspect-video w-full max-w-md overflow-hidden rounded"
+      >
+        <div className="absolute inset-0 z-0 animate-pulse rounded bg-gray-500" />
+        <iframe
+          src={`${v.src}?badge=0&autopause=0&player_id=0&app_id=58479`}
+          allow="autoplay; fullscreen; picture-in-picture"
+          className="relative z-10 size-full"
+          title={v.title || `Video ${i + 1}`}
+        />
+      </div>
+    );
+  }
 
   if (!geoJsonData) return <div>Loading map data or data is invalid...</div>;
 
   return (
     <ErrorBoundary
       name="SaibaiGeographicMap"
-      fallback={() => (
-        <AlertError
-          title="Map Display Error"
-          description="The geographic map of Saibai Island could not be displayed. The rest of the page remains fully accessible."
-        />
-      )}
+      fallback={renderMapFailureFallback}
     >
       <div className={PANEL_CLASSES}>
         <ComposableMap projection="geoMercator" className="size-full">
@@ -548,79 +680,13 @@ export function GeographicMap(): React.JSX.Element {
             maxZoom={500}
           >
             <Geographies geography={geoJsonData}>
-              {({ geographies }) =>
-                geographies.map((g) => {
-                  const properties = g.properties || {};
-                  const isLine =
-                    typeof g.geometry?.type === "string" &&
-                    ["LineString", "MultiLineString"].includes(g.geometry.type);
-                  let className =
-                    "pointer-events-none fill-transparent stroke-none";
-                  if (properties.building === "house")
-                    className = "fill-amber-500";
-                  else if (properties.building) className = "fill-red-950";
-                  else if (properties.highway || properties.aeroway)
-                    className = "fill-none stroke-gray-500 stroke-[0.05]";
-                  else if (properties.natural === "coastline")
-                    className = isLine
-                      ? "stroke-emerald-800 stroke-[0.05] fill-none"
-                      : "fill-emerald-800";
-                  else if (properties.waterway)
-                    className = isLine
-                      ? "stroke-cyan-950 stroke-[0.05] fill-none"
-                      : "fill-cyan-950";
-                  else if (
-                    properties.natural === "water" ||
-                    properties.landuse === "reservoir"
-                  )
-                    className = "fill-cyan-950";
-                  else if (
-                    properties.name &&
-                    properties.name !== "Saibai Island" &&
-                    !isLine
-                  )
-                    className =
-                      "fill-amber-300 hover:fill-amber-400 hover:cursor-pointer";
-                  /**
-                   * Handles click.
-                   */
-                  const isInteractive =
-                    !isLine &&
-                    ((properties.landuse &&
-                      properties.landuse !== "residential") ||
-                      (properties.name && properties.name !== "Saibai Island"));
-                  const handleClick = isInteractive
-                    ? () => setSelectedGeo(g)
-                    : undefined;
-                  if (isInteractive) {
-                    className = cn(
-                      className,
-                      "pointer-events-auto fill-yellow-300 hover:cursor-pointer hover:fill-yellow-400",
-                    );
-                  }
-                  return (
-                    <Geography
-                      key={g.rsmKey}
-                      geography={g}
-                      onClick={handleClick}
-                      className={cn(
-                        "pointer-events-auto outline-none focus:outline-none active:outline-none",
-                        g.rsmKey,
-                        className,
-                      )}
-                    />
-                  );
-                })
-              }
+              {renderGeographies}
             </Geographies>
           </ZoomableGroup>
         </ComposableMap>
 
         {selectedGeo && (
-          <Dialog
-            open={!!selectedGeo}
-            onOpenChange={(o) => !o && setSelectedGeo(null)}
-          >
+          <Dialog open={!!selectedGeo} onOpenChange={handleDialogOpenChange}>
             <DialogContent
               aria-describedby={undefined}
               className="text-clip text-left"
@@ -644,20 +710,7 @@ export function GeographicMap(): React.JSX.Element {
                   </DialogDescription>
                 )}
               </DialogHeader>
-              {selectedGeo.properties?.videos?.map((v, i) => (
-                <div
-                  key={i}
-                  className="relative mb-4 aspect-video w-full max-w-md overflow-hidden rounded"
-                >
-                  <div className="absolute inset-0 z-0 animate-pulse rounded bg-gray-500" />
-                  <iframe
-                    src={`${v.src}?badge=0&autopause=0&player_id=0&app_id=58479`}
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    className="relative z-10 size-full"
-                    title={v.title || `Video ${i + 1}`}
-                  />
-                </div>
-              ))}
+              {selectedGeo.properties?.videos?.map(renderSelectedVideo)}
               {(!selectedGeo.properties?.videos ||
                 selectedGeo.properties.videos.length === 0) && (
                 <p className="mb-6 text-sm text-cyan-900 opacity-50">
@@ -685,17 +738,18 @@ MAIN CORPUS DASHBOARD
  * @param children - Button label/content.
  * @returns A tabs trigger that updates the URL and scrolls to the history panel when selected.
  */
-const TabsTrigger = ({
+function TabsTrigger({
   value,
   children,
 }: {
   value: string;
   children: React.ReactNode;
-}) => {
+}): React.JSX.Element {
   /**
    * Handles click.
    */
-  const handleClick = () => {
+  /** Updates the selected view in the URL and scrolls to its content. */
+  function handleClick(): void {
     if (typeof window !== "undefined") {
       const newUrl = `${window.location.pathname}?tab=${encodeURIComponent(value)}#history`;
       window.history.replaceState({}, "", newUrl);
@@ -703,7 +757,7 @@ const TabsTrigger = ({
         .getElementById("history")
         ?.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }
   return (
     <Tabs.Trigger
       value={value}
@@ -716,7 +770,7 @@ const TabsTrigger = ({
       {children}
     </Tabs.Trigger>
   );
-};
+}
 
 // Abstracted Tab Configs for Corpus
 const CORPUS_TABS = [
@@ -740,29 +794,183 @@ const CORPUS_TABS = [
   },
 ];
 
+/** Identifier, label, style, and optional component for a corpus view. */
+type CorpusTab = (typeof CORPUS_TABS)[number];
+
+/** Keeps a corpus rendering error from removing the rest of the page.
+ * @returns A message that the corpus dashboard could not be rendered.
+ */
+function renderCorpusFailureFallback(): React.JSX.Element {
+  return (
+    <AlertError
+      title="Saibai Corpus Crashed"
+      description="An unexpected error occurred while rendering the Saibai Corpus dashboard. The rest of the page remains fully accessible."
+    />
+  );
+}
+
 /**
  * Renders the corpus component.
  *
  * @remarks The primary dashboard interface organizing Timeline, Map, and Genealogy views into tabs.
  *
  * @param defaultTab - Initializes the view (e.g., 'Chronological', 'Geographic', 'Genealogical').
- * @param props The initial tab selection for the corpus dashboard.
- *
  * @returns Fully composed layout with integrated sub-components.
  */
 function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
+  const [selectedTab, setSelectedTab] = useState(
+    resolveCorpusTab("", defaultTab),
+  );
+  /** Restores a shared tab selection after the browser exposes the current URL. */
+  function hydrateSelectedTabFromLocation(): void {
+    setSelectedTab(resolveCorpusTab(window.location.search, defaultTab));
+  }
+  useEffect(hydrateSelectedTabFromLocation, [defaultTab]);
+
+  /** Renders one navigation control for a configured corpus view.
+   * @param t - View identifier and visible label.
+   * @returns The view's Radix tab trigger.
+   */
+  function renderTabButton(t: CorpusTab): React.JSX.Element {
+    return (
+      <TabsTrigger key={t.id} value={t.id}>
+        {t.label}
+      </TabsTrigger>
+    );
+  }
+
+  /** Renders one audio entry in the chronological corpus view.
+   * @param i - Recording metadata and audio source from the archive.
+   * @returns The audio player for the entry.
+   */
+  function renderTimelineItem(i: {
+    title: string;
+    author: string;
+    audio: string;
+  }): React.JSX.Element {
+    return (
+      <Player key={i.audio} title={i.title} author={i.author} src={i.audio} />
+    );
+  }
+
+  /** Renders a titled set of recordings in the chronological archive.
+   * @param s - Section heading and its description and recordings.
+   * @returns The sticky heading and its audio players.
+   */
+  function renderTimelineSection(
+    s: [string, TimelineGroup],
+  ): React.JSX.Element {
+    const [section, group] = s;
+    return (
+      <div key={section}>
+        <div className="sticky top-0 z-20 -mx-2 -mt-4">
+          <h2 className="bg-cyan-950 px-2 py-4 text-xl font-semibold">
+            {section}
+          </h2>
+          <div className="h-2 scrim-cyan-950 scrim-t-2" />
+        </div>
+        {group.description && <p className="mb-8">{group.description}</p>}
+        <div className="flex flex-col gap-y-4 pb-8">
+          {group.items.map(renderTimelineItem)}
+        </div>
+      </div>
+    );
+  }
+
+  /** Renders one tab panel and its selected view.
+   * @param t - View identifier, style, and optional component.
+   * @returns The tab panel and its view contents.
+   */
+  function renderCorpusPanel(t: CorpusTab): React.JSX.Element {
+    return (
+      <Tabs.Content key={t.id} value={t.id} className={t.className}>
+        {t.Component ? (
+          <React.Suspense
+            fallback={<div className="p-6">Loading corpus view…</div>}
+          >
+            <t.Component />
+          </React.Suspense>
+        ) : (
+          <div className="max-w-prose">
+            {Object.entries({
+              "Wax Cylinders": {
+                description:
+                  "During the 1898 Alfred Cort Haddon Expedition, Haddon, Ray, and Jack were on Saibai Island from 22 to 25 October and recorded a series of wax cylinders.",
+                date: "",
+                items: [
+                  {
+                    title: "Na puidam purda",
+                    author: "Wap (singer, male)",
+                    audio:
+                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1076XX-0100M0.mp3",
+                  },
+                  {
+                    title: "Maduba na puidam",
+                    author: "Gemetu (singer, male)",
+                    audio:
+                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3",
+                  },
+                  {
+                    title: "Mawa na puidam",
+                    author: "Kinaur (singer, male)",
+                    audio:
+                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1078XX-0100M0.mp3",
+                  },
+                  {
+                    title: "Mawau na puidam",
+                    author: "Gemetu (singer, male)",
+                    audio:
+                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3",
+                  },
+                  {
+                    title: "Nau poida",
+                    author: "Aimab (singer, male)",
+                    audio:
+                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1080XX-0100M0.mp3",
+                  },
+                  {
+                    title: "About Saibai",
+                    author: "Jack Assaii (speaker, male)",
+                    audio:
+                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1045XX-0100M0.mp3",
+                  },
+                ],
+              },
+              "Learn KKY": {
+                date: "",
+                items: [
+                  {
+                    title: "PART 01 - Oral history podcast",
+                    author: "Jeffrey Aniba Waia",
+                    audio:
+                      "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-1.mp3?_=2",
+                  },
+                  {
+                    title: "PART 02 - Oral history podcast",
+                    author: "Jeffrey Aniba Waia",
+                    audio:
+                      "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-2.mp3?_=2",
+                  },
+                  {
+                    title: "PART 03 - Oral history podcast",
+                    author: "Jeffrey Aniba Waia",
+                    audio:
+                      "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-3.mp3?_=2",
+                  },
+                ],
+              },
+            }).map(renderTimelineSection)}
+          </div>
+        )}
+      </Tabs.Content>
+    );
+  }
+
   return (
-    <ErrorBoundary
-      name="SaibaiCorpus"
-      fallback={() => (
-        <AlertError
-          title="Saibai Corpus Crashed"
-          description="An unexpected error occurred while rendering the Saibai Corpus dashboard. The rest of the page remains fully accessible."
-        />
-      )}
-    >
+    <ErrorBoundary name="SaibaiCorpus" fallback={renderCorpusFailureFallback}>
       <Tabs.Root
-        defaultValue={defaultTab || "Chronological"}
+        value={selectedTab}
+        onValueChange={setSelectedTab}
         className="grid-cols-[1fr_3fr] sm:grid"
       >
         <div className="col-span-2 grid min-h-screen grid-cols-[3rem_1fr] grid-rows-[auto_1fr_auto] bg-cyan-50 sm:grid-cols-[1fr_3fr] dark:bg-cyan-800">
@@ -796,11 +1004,7 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
             aria-label="Corpus view modes"
           >
             <h3 className="font-bold">Content</h3>
-            {CORPUS_TABS.map(({ id, label }) => (
-              <TabsTrigger key={id} value={id}>
-                {label}
-              </TabsTrigger>
-            ))}
+            {CORPUS_TABS.map(renderTabButton)}
           </Tabs.List>
         </div>
 
@@ -808,105 +1012,7 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
           id="history"
           className="relative z-20 row-start-2 min-h-screen bg-cyan-950 text-cyan-200"
         >
-          {CORPUS_TABS.map((r) => (
-            <Tabs.Content key={r.id} value={r.id} className={r.className}>
-              {r.Component ? (
-                <React.Suspense
-                  fallback={<div className="p-6">Loading corpus view…</div>}
-                >
-                  <r.Component />
-                </React.Suspense>
-              ) : (
-                <div className="max-w-prose">
-                  {Object.entries({
-                    "Wax Cylinders": {
-                      description:
-                        "During the 1898 Alfred Cort Haddon Expedition, Haddon, Ray, and Jack were on Saibai Island from 22 to 25 October and recorded a series of wax cylinders.",
-                      date: "",
-                      items: [
-                        {
-                          title: "Na puidam purda",
-                          author: "Wap (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1076XX-0100M0.mp3",
-                        },
-                        {
-                          title: "Maduba na puidam",
-                          author: "Gemetu (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3",
-                        },
-                        {
-                          title: "Mawa na puidam",
-                          author: "Kinaur (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1078XX-0100M0.mp3",
-                        },
-                        {
-                          title: "Mawau na puidam",
-                          author: "Gemetu (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3",
-                        },
-                        {
-                          title: "Nau poida",
-                          author: "Aimab (singer, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1080XX-0100M0.mp3",
-                        },
-                        {
-                          title: "About Saibai",
-                          author: "Jack Assaii (speaker, male)",
-                          audio:
-                            "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1045XX-0100M0.mp3",
-                        },
-                      ],
-                    },
-                    "Learn KKY": {
-                      date: "",
-                      items: [
-                        {
-                          title: "PART 01 - Oral history podcast",
-                          author: "Jeffrey Aniba Waia",
-                          audio:
-                            "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-1.mp3?_=2",
-                        },
-                        {
-                          title: "PART 02 - Oral history podcast",
-                          author: "Jeffrey Aniba Waia",
-                          audio:
-                            "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-2.mp3?_=2",
-                        },
-                        {
-                          title: "PART 03 - Oral history podcast",
-                          author: "Jeffrey Aniba Waia",
-                          audio:
-                            "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-3.mp3?_=2",
-                        },
-                      ],
-                    },
-                  }).map(([s, d]) => (
-                    <div key={s}>
-                      <div className="sticky top-0 z-20 -mx-2 -mt-4">
-                        <h2 className="bg-cyan-950 px-2 py-4 text-xl font-semibold">
-                          {s}
-                        </h2>
-                        <div className="h-2 scrim-cyan-950 scrim-t-2" />
-                      </div>
-                      {"description" in d && d.description && (
-                        <p className="mb-8">{d.description}</p>
-                      )}
-                      <div className="flex flex-col gap-y-4 pb-8">
-                        {d.items.map(({ title: t, author: a, audio: v }) => (
-                          <Player key={v} title={t} author={a} src={v} />
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </Tabs.Content>
-          ))}
+          {CORPUS_TABS.map(renderCorpusPanel)}
         </div>
       </Tabs.Root>
     </ErrorBoundary>
