@@ -1,17 +1,35 @@
 {
   "$schema": "../node_modules/@terra-symposium/standards-quality/quality.schema.json",
-  "root": "..",
-  "sourceRoots": [
-    "src"
-  ],
+  "root": ".",
+  "sourceRoots": ["."],
   "extensions": [
     ".astro",
+    ".c",
+    ".cjs",
+    ".cpp",
+    ".cts",
+    ".css",
+    ".h",
+    ".html",
+    ".java",
     ".js",
     ".jsx",
+    ".json",
+    ".jsonc",
+    ".md",
+    ".mdx",
+    ".mjs",
+    ".mts",
+    ".py",
+    ".pyi",
+    ".rs",
+    ".sh",
+    ".sql",
+    ".toml",
     ".ts",
     ".tsx",
-    ".mjs",
-    ".cjs"
+    ".yaml",
+    ".yml"
   ],
   "aliases": {
     "@components/": "src/components/",
@@ -20,130 +38,47 @@
   },
   "tsconfig": "config/tsconfig.json",
   "enabledChecks": {
+    "error-boundaries": true,
+    "document": true,
     "format": true,
-    "lint": false,
-    "knip": false,
+    "import": true,
+    "name": true,
+    "forward": true,
+    "accessibility": true,
+    "display-name": true,
+    "performance-patterns": true,
+    "documented-commands": true,
+    "lint": true,
+    "knip": true,
+    "dead-code": true,
     "type": true,
     "recommend": true,
-    "name": true,
-    "alias": true
+    "command": true,
+    "diff": true,
+    "alias": true,
+    "security": true,
+    "repeated-classes": true,
+    "tailwind-canonical": true,
+    "regex-dedup": true,
+    "ui-patterns": true,
+    "ui-recommendations": true,
+    "github": true
   },
   "qualityCommands": [
     {
       "name": "check",
       "command": "pnpm",
-      "args": [
-        "run",
-        "check"
-      ]
-    },
-    {
-      "name": "test",
-      "command": "pnpm",
-      "args": [
-        "run",
-        "test"
-      ]
-    },
-    {
-      "name": "build",
-      "command": "pnpm",
-      "args": [
-        "run",
-        "build"
-      ]
+      "args": ["run", "check"]
     }
   ],
   "documentation": {
     "required": {
       "types": true,
       "functions": true,
-      "exportedFunctions": true,
-      "noInlineFunctions": false
+      "exportedFunctions": true
     }
   },
-  "protectedIdentifiers": [
-    "current",
-    "value",
-    "previous",
-    "symptom",
-    "score",
-    "id",
-    "item",
-    "field",
-    "label",
-    "event",
-    "index",
-    "error",
-    "nextCopies",
-    "DashboardRecord",
-    "shareMessage",
-    "setShareMessage",
-    "currentDashboard",
-    "board",
-    "records",
-    "requestedId",
-    "response",
-    "message",
-    "imageTheme",
-    "channel",
-    "left",
-    "right",
-    "errors",
-    "values",
-    "name",
-    "props",
-    "children",
-    "duration",
-    "delay",
-    "reverse",
-    "rows",
-    "className",
-    "src",
-    "poster",
-    "title",
-    "author",
-    "meta",
-    "alt",
-    "origin",
-    "terminus",
-    "nodeData",
-    "setSelectedNode",
-    "PlayerProps",
-    "AudioTrack",
-    "MarqueeComponentProps",
-    "Person",
-    "SaibaiFlowNode",
-    "SaibaiButtonProps",
-    "AudioCtrlsProps",
-    "CarbonIconName",
-    "MapGeography",
-    "Props",
-    "State",
-    "ButtonProps",
-    "PersonNodeData",
-    "PersonGraphNode",
-    "MarriageGraphNode",
-    "GenealogyNode",
-    "PatientFormData",
-    "PatientRec",
-    "variant",
-    "size",
-    "asChild",
-    "ref",
-    "direction"
-  ],
-  "autofix": {
-    "document": false,
-    "knip": false,
-    "lint": false,
-    "name": true
-  },
-  "singleUse": {
-    "skippedDirectories": [
-      "src/components"
-    ]
-  },
+  "autofix": { "document": false },
   "repeatedClasses": {
     "minimumCount": 3
   },
@@ -152,9 +87,13 @@
   },
   "tools": {
     "prettier": "prettier",
-    "eslint": "eslint",
-    "knip": "knip",
-    "tsc": "tsc"
-}
-
+    "eslint": "node_modules/.bin/eslint",
+    "knip": "node_modules/.bin/knip",
+    "tsc": "node_modules/.bin/tsc"
+  },
+  "security": {
+    "runtimeRoots": [],
+    "clientRoots": ["src/components"]
+  },
+  "languageProfiles": ["c", "java", "python"]
 }

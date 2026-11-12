@@ -1,5 +1,4 @@
 {
-  "ignoreExportsUsedInFile": true,
   "workspaces": {
     ".": {
       "entry": [
@@ -14,12 +13,6 @@
         "test/**/*.mjs",
         "scripts/**/*.mjs"
       ],
-      "ignoreDependencies": [
-        "@astrojs/check",
-        "@astrojs/react",
-        "astro",
-        "prettier"
-      ],
       "astro": {
         "config": "config/astro.config.mjs"
       },
@@ -31,16 +24,8 @@
       }
     },
     "config": {
-      "entry": [
-        "knip.json",
-        "package.json",
-        "quality.json",
-        "tailwind.preset.ts",
-        "tsconfig.json"
-      ],
-      "project": [
-        "*.{js,mjs,cjs,jsx,ts,tsx}"
-      ]
+      "entry": ["*.{js,mjs,cjs,jsx,ts,tsx}"],
+      "project": ["**/*.{js,mjs,cjs,jsx,ts,tsx}"]
     }
   }
 }
