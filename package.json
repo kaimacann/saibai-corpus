@@ -8,6 +8,7 @@
     "check": "pnpm --dir config run check",
     "format:check": "prettier --check 'src/**/*.{astro,js,jsx,ts,tsx,mjs,cjs}' 'config/**/*.{js,jsx,ts,tsx,mjs,cjs}' 'scripts/**/*.mjs'",
     "quality": "pnpm --dir config run quality",
+    "quality:all": "pnpm --dir config run quality",
     "lint": "pnpm --dir config run lint",
     "knip": "pnpm --dir config run knip",
     "test": "pnpm --dir config run test"
