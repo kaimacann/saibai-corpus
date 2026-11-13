@@ -6,6 +6,13 @@ settings:
 
 overrides:
   d3-color: 3.1.0
+  fast-uri@>=3.0.0 <3.1.9: 3.1.9
+  minimatch@>=7.0.0 <11.0.1: 11.0.1
+  postcss-selector-parser@>=6.0.0 <6.1.5: 6.1.5
+  source-map-js@>=1.0.0 <1.2.2: 1.2.2
+  undici@>=8.0.0 <8.12.2: 8.12.2
+  vite@>=8.3.0 <=8.3.2: 8.3.3
+  zod@>=4.0.0 <4.6.6: 4.6.6
 
 importers:
   .: {}
@@ -1372,6 +1379,12 @@ packages:
     engines: { node: ">=20.9.0" }
     cpu: [x64]
     os: [win32]
+
+  "@isaacs/nonrecursive-glob-match@1.1.0":
+    resolution:
+      {
+        integrity: sha512-GPm/Dbvk5RLmhRnxXIa7nTpK0xtl4E0wj0MslsuNiJ1FIROU+2+9lgUC/dgF7Ey4QCWhfEsgxilMRMCdHPfDfw==,
+      }
 
   "@jridgewell/gen-mapping@0.3.13":
     resolution:
@@ -2810,7 +2823,7 @@ packages:
       }
     engines: { node: ^20.19.0 || >=22.12.0 }
     peerDependencies:
-      vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+      vite: 8.3.3
 
   "@volar/kit@2.4.28":
     resolution:
@@ -3905,10 +3918,10 @@ packages:
         integrity: sha512-gX8LrtNEI5hq8DVUfRQMbr5lpaS4nMIWV+7XEbXk2b8kiQIizgnlr12B4dA3ZEx3308ze0O4Q1R+cHts8kyUJg==,
       }
 
-  fast-uri@3.1.8:
+  fast-uri@3.1.9:
     resolution:
       {
-        integrity: sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg==,
+        integrity: sha512-hS/0Wt3Ya043oKXs0sIxrMpKQITXhMLIrVAKKXi4gozGC9v7YRWVnXIZzjNPTO02M9BdxLCWqK1yRXgNziVyJQ==,
       }
 
   fast-wrap-ansi@0.2.2:
@@ -4616,10 +4629,10 @@ packages:
       }
     engines: { node: ">=8.6" }
 
-  minimatch@10.2.6:
+  minimatch@11.0.1:
     resolution:
       {
-        integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==,
+        integrity: sha512-t+Vn6DX4wPCxS23y03C0uhF7S1jpi1GfqPrnlEipCJaA2ykiNbMkVlDutZtmvLfRcUN6R8AYVlzTsQrT4RZoLQ==,
       }
     engines: { node: 18 || 20 || >=22 }
 
@@ -4946,17 +4959,10 @@ packages:
     peerDependencies:
       postcss: ^8.2.14
 
-  postcss-selector-parser@6.0.10:
+  postcss-selector-parser@6.1.5:
     resolution:
       {
-        integrity: sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w==,
-      }
-    engines: { node: ">=4" }
-
-  postcss-selector-parser@6.1.4:
-    resolution:
-      {
-        integrity: sha512-bIoJLOmjCO1S9XdY/DcnR5hJxvrDir1PbGChrzXG3vw0/FOliy/fA3dmdhQ441kah4gKv+TwckGzex6wNS5cnQ==,
+        integrity: sha512-TEHFzb5KRDKaOgJ4TYE+0jyJtFbjLvkdVOu0fZ2b6MTWzoqZd4Le+61aEppWkvTlYePgOX4ATL1wsAIPMLTw6Q==,
       }
     engines: { node: ">=4" }
 
@@ -5338,10 +5344,10 @@ packages:
       }
     engines: { node: ">= 18" }
 
-  source-map-js@1.2.1:
+  source-map-js@1.2.2:
     resolution:
       {
-        integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==,
+        integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==,
       }
     engines: { node: ">=0.10.0" }
 
@@ -5646,10 +5652,10 @@ packages:
         integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==,
       }
 
-  undici@8.11.2:
+  undici@8.12.2:
     resolution:
       {
-        integrity: sha512-u4UB2/IrKdU6lFxumHmmo1a3fCQO5tzQllRorfoRS63txhrB7xTpSn1PftwC4qEHkOaqP95fCWW4lJzwErwzhQ==,
+        integrity: sha512-XtuDWVdqTLr3NAxm2ly9/hU6kUsJOgGh1RASzMBbsw6aWCOaQzHdW+QQDfdERjfJ2V5vL5pRPa4RetO9UfivDg==,
       }
     engines: { node: ">=22.19.0" }
 
@@ -5848,10 +5854,10 @@ packages:
     engines: { node: ">=16" }
     deprecated: "Vidstack is deprecated and gets security fixes only until January 2028. Use Video.js 10: https://videojs.org/docs/framework/html/guides/migrate-from-vidstack?utm_source=vidstack (coding agents: run npx @videojs/cli agents skills, then follow the guide's AI Quickstart)"
 
-  vite@8.3.1:
+  vite@8.3.3:
     resolution:
       {
-        integrity: sha512-/bvH9E9tmCXRGp2uXY3WbOldqpTwFkbha/8ANaEQ6VkxhH60KyqLwgZq6lG2y+4uT55x9+9eUHMpQ7uGnOCKjA==,
+        integrity: sha512-cTAldKPImjg6c+gk48U19POPn3GCBzZwpdsN8ZMEEcbpes+6/wvfqUd0C2y3qYY4wsj8PwgFwrZ/1jBPVttMSg==,
       }
     engines: { node: ^20.19.0 || >=22.12.0 }
     hasBin: true
@@ -5900,7 +5906,7 @@ packages:
         integrity: sha512-ub4okH7Z5KLjb6hDyjqrGXqWtWvoYdU3IGm/NorpgHncKoLTCfRIbvlhBm7r0YstIaQRYlp4yEbFqDcKSzXSSg==,
       }
     peerDependencies:
-      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+      vite: 8.3.3
     peerDependenciesMeta:
       vite:
         optional: true
@@ -6172,10 +6178,10 @@ packages:
       }
     engines: { node: ">=12.20" }
 
-  zod@4.6.5:
+  zod@4.6.6:
     resolution:
       {
-        integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==,
+        integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==,
       }
 
   zustand@4.5.7:
@@ -6381,12 +6387,12 @@ snapshots:
       "@astrojs/internal-helpers": 0.11.0
       "@types/react": 19.3.0
       "@types/react-dom": 19.3.0(@types/react@19.3.0)
-      "@vitejs/plugin-react": 5.2.0(vite@8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1))
+      "@vitejs/plugin-react": 5.2.0(vite@8.3.3(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1))
       devalue: 5.9.4
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       ultrahtml: 1.7.0
-      vite: 8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)
     transitivePeerDependencies:
       - "@types/node"
       - "@vitejs/devtools"
@@ -6900,6 +6906,8 @@ snapshots:
 
   "@img/sharp-win32-x64@0.35.5":
     optional: true
+
+  "@isaacs/nonrecursive-glob-match@1.1.0": {}
 
   "@jridgewell/gen-mapping@0.3.13":
     dependencies:
@@ -7484,7 +7492,7 @@ snapshots:
 
   "@tailwindcss/typography@0.5.20(tailwindcss@3.4.19(yaml@2.9.1))":
     dependencies:
-      postcss-selector-parser: 6.0.10
+      postcss-selector-parser: 6.1.5
       tailwindcss: 3.4.19(yaml@2.9.1)
 
   "@terra-symposium/standards-documentation@0.2.0":
@@ -7724,7 +7732,7 @@ snapshots:
       "@typescript-eslint/types": 8.71.1
       "@typescript-eslint/visitor-keys": 8.71.1
       debug: 4.4.3
-      minimatch: 10.2.6
+      minimatch: 11.0.1
       semver: 7.8.5
       tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@5.9.3)
@@ -7758,7 +7766,7 @@ snapshots:
       react: 19.2.7
       vidstack: 0.4.5
 
-  "@vitejs/plugin-react@5.2.0(vite@8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1))":
+  "@vitejs/plugin-react@5.2.0(vite@8.3.3(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1))":
     dependencies:
       "@babel/core": 7.29.7
       "@babel/plugin-transform-react-jsx-self": 7.29.7(@babel/core@7.29.7)
@@ -7766,7 +7774,7 @@ snapshots:
       "@rolldown/pluginutils": 1.0.0-rc.3
       "@types/babel__core": 7.20.5
       react-refresh: 0.18.0
-      vite: 8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -7903,7 +7911,7 @@ snapshots:
   ajv@8.20.0:
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-uri: 3.1.8
+      fast-uri: 3.1.9
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
@@ -8006,11 +8014,11 @@ snapshots:
       unifont: 0.7.5
       unstorage: 1.17.5(@netlify/blobs@10.7.13)
       verkit: 0.4.1
-      vite: 8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)
-      vitefu: 1.1.3(vite@8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1))
+      vite: 8.3.3(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)
+      vitefu: 1.1.3(vite@8.3.3(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
-      zod: 4.6.5
+      zod: 4.6.6
     optionalDependencies:
       sharp: 0.35.5(@types/node@22.20.4)
     transitivePeerDependencies:
@@ -8204,12 +8212,12 @@ snapshots:
   css-tree@2.2.1:
     dependencies:
       mdn-data: 2.0.28
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   css-tree@3.2.1:
     dependencies:
       mdn-data: 2.27.1
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   css-what@7.0.0: {}
 
@@ -8538,7 +8546,7 @@ snapshots:
     dependencies:
       fast-string-truncated-width: 3.0.3
 
-  fast-uri@3.1.8: {}
+  fast-uri@3.1.9: {}
 
   fast-wrap-ansi@0.2.2:
     dependencies:
@@ -8762,7 +8770,7 @@ snapshots:
       tinyglobby: 0.2.17
       unbash: 4.0.12
       yaml: 2.9.1
-      zod: 4.6.5
+      zod: 4.6.6
 
   levn@0.4.1:
     dependencies:
@@ -8846,7 +8854,7 @@ snapshots:
     dependencies:
       "@babel/parser": 7.29.9
       "@babel/types": 7.29.8
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   maverick.js@0.33.1:
     dependencies:
@@ -8897,8 +8905,9 @@ snapshots:
       braces: 3.0.3
       picomatch: 2.3.2
 
-  minimatch@10.2.6:
+  minimatch@11.0.1:
     dependencies:
+      "@isaacs/nonrecursive-glob-match": 1.1.0
       brace-expansion: 5.0.12
 
   minimatch@3.1.5:
@@ -9088,14 +9097,9 @@ snapshots:
   postcss-nested@6.2.0(postcss@8.5.28):
     dependencies:
       postcss: 8.5.28
-      postcss-selector-parser: 6.1.4
+      postcss-selector-parser: 6.1.5
 
-  postcss-selector-parser@6.0.10:
-    dependencies:
-      cssesc: 3.0.0
-      util-deprecate: 1.0.2
-
-  postcss-selector-parser@6.1.4:
+  postcss-selector-parser@6.1.5:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
@@ -9111,7 +9115,7 @@ snapshots:
     dependencies:
       nanoid: 3.3.19
       picocolors: 1.1.1
-      source-map-js: 1.2.1
+      source-map-js: 1.2.2
 
   prelude-ls@1.2.1: {}
 
@@ -9354,7 +9358,7 @@ snapshots:
 
   smol-toml@1.9.0: {}
 
-  source-map-js@1.2.1: {}
+  source-map-js@1.2.2: {}
 
   space-separated-tokens@2.0.2: {}
 
@@ -9455,7 +9459,7 @@ snapshots:
       postcss-js: 4.1.0(postcss@8.5.28)
       postcss-load-config: 6.0.1(jiti@1.21.7)(postcss@8.5.28)(yaml@2.9.1)
       postcss-nested: 6.2.0(postcss@8.5.28)
-      postcss-selector-parser: 6.1.4
+      postcss-selector-parser: 6.1.5
       resolve: 1.22.12
       sucrase: 3.35.1
     transitivePeerDependencies:
@@ -9540,7 +9544,7 @@ snapshots:
   undici-types@6.21.0:
     optional: true
 
-  undici@8.11.2: {}
+  undici@8.12.2: {}
 
   unified@11.0.5:
     dependencies:
@@ -9556,7 +9560,7 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
       ohash: 2.0.12
-      undici: 8.11.2
+      undici: 8.12.2
 
   unist-util-is@6.0.1:
     dependencies:
@@ -9647,7 +9651,7 @@ snapshots:
       media-icons: 0.4.2
       type-fest: 3.13.1
 
-  vite@8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1):
+  vite@8.3.3(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -9661,9 +9665,9 @@ snapshots:
       jiti: 1.21.7
       yaml: 2.9.1
 
-  vitefu@1.1.3(vite@8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)):
+  vitefu@1.1.3(vite@8.3.3(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)):
     optionalDependencies:
-      vite: 8.3.1(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@22.20.4)(esbuild@0.28.2)(jiti@1.21.7)(yaml@2.9.1)
 
   volar-service-css@0.0.71(@volar/language-service@2.4.28):
     dependencies:
@@ -9828,7 +9832,7 @@ snapshots:
 
   yocto-queue@1.2.2: {}
 
-  zod@4.6.5: {}
+  zod@4.6.6: {}
 
   zustand@4.5.7(@types/react@19.3.0)(react@19.2.7):
     dependencies:
