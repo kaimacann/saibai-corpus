@@ -8,4 +8,4 @@ updates:
       security-dependencies:
         applies-to: security-updates
         patterns:
-          - "*"
+          - '*'
