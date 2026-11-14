@@ -10,92 +10,53 @@ IMPORTS
 
 // API
 
-import { cn } from "@utils";
-import { useMediaStore } from "@vidstack/react";
-import { useEffect, useMemo, useState } from "react";
-import { feature } from "topojson-client";
-import "vidstack/styles/base.css";
-import { resolveCorpusTab } from "@lib/corpus-tabs";
-import { CarbonIcon } from "./carbon-icons";
+import { cn } from '@utils';
+import { useMediaStore } from '@vidstack/react';
+import { useEffect, useMemo, useState } from 'react';
+import { feature } from 'topojson-client';
+import 'vidstack/styles/base.css';
+import { resolveCorpusTab } from '@lib/corpus-tabs';
+import { CarbonIcon } from './carbon-icons';
 
 // COMPONENTS
 
-import { ErrorBoundary } from "@components/ErrorBoundary";
-import { Button, ButtonLink } from "@components/ui/button";
-import { CONTROL_VARIANTS } from "@components/ui/variants";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@components/ui/dialog";
-import { AlertError } from "@ui/alert";
-import * as Tabs from "@radix-ui/react-tabs";
-import {
-  MediaMuteButton,
-  MediaOutlet,
-  MediaPlayButton,
-  MediaPlayer,
-  MediaSeekButton,
-  MediaSliderThumbnail,
-  MediaSliderValue,
-  MediaTime,
-  MediaTimeSlider,
-} from "@vidstack/react";
-import React from "react";
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  ZoomableGroup,
-} from "react-simple-maps";
+import { ErrorBoundary } from '@components/ErrorBoundary';
+import { Button, ButtonLink } from '@components/ui/button';
+import { CONTROL_VARIANTS } from '@components/ui/variants';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@components/ui/dialog';
+import { AlertError } from '@ui/alert';
+import * as Tabs from '@radix-ui/react-tabs';
+import { MediaMuteButton, MediaOutlet, MediaPlayButton, MediaPlayer, MediaSeekButton, MediaSliderThumbnail, MediaSliderValue, MediaTime, MediaTimeSlider } from '@vidstack/react';
+import React from 'react';
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 
 // TYPES
 
-import type { JSX } from "react";
-import type { ReactNode } from "react";
-import type { MapGeography } from "react-simple-maps";
+import type { JSX } from 'react';
+import type { ReactNode } from 'react';
+import type { MapGeography } from 'react-simple-maps';
 
 export { Button, ButtonLink };
 
-/** Loads the genealogy page chunk and adapts it for React.lazy.
- *
- * @returns The genealogy component in React.lazy's expected module shape.
- */
-async function loadGenealogy(): Promise<{
-  default: typeof import("./saibai-genealogy").Genealogy;
-}> {
-  return { default: (await import("./saibai-genealogy")).Genealogy };
-}
-
-const LazyGenealogy = React.lazy(loadGenealogy);
+// terra-quality-ignore single-use -- React.lazy must retain the same component type across dashboard renders.
+const LazyGenealogy = React.lazy(async (): Promise<{ default: typeof import('./saibai-genealogy').Genealogy }> => ({
+	default: (await import('./saibai-genealogy')).Genealogy,
+}));
 
 /** Footer identity and optional profile URL for a corpus contributor. */
 type Contributor = readonly [name: string, href?: string];
-const CONTRIBUTORS: Contributor[] = [
-  ["Kai Macann", "https://www.linkedin.com/in/kaimacann/"],
-  [
-    "Friendcis Meeko Estores",
-    "https://www.linkedin.com/in/meeko-estores-78444822b",
-  ],
-  ["Jack Linz", "https://www.linkedin.com/in/jack-linz-942a33358"],
-  ["Jake Salamon"],
-  ["Nathan Kam"],
-  ["Benjamin Li"],
-];
 
 /** Renders a contributor's name and optional profile destination in the footer.
  * @param c - Display name and optional external profile URL.
  * @returns A footer link for the contributor.
  */
 function renderContributor(c: Contributor): React.JSX.Element {
-  const [name, href] = c;
-  return (
-    <ButtonLink key={name} href={href} target="_blank">
-      {name}
-    </ButtonLink>
-  );
+	const [name, href] = c;
+	return (
+		<ButtonLink key={name} href={href} target='_blank'>
+			{name}
+		</ButtonLink>
+	);
 }
 
 /*//////////////////////////////////////////////////
@@ -107,40 +68,42 @@ COMPONENTS
  * @returns The Saibai landing page.
  */
 export function Saibai(): JSX.Element {
-  return (
-    <ErrorBoundary name="Saibai">
-      <div className="grain bg-cyan-50 text-cyan-900 dark:bg-cyan-800 dark:text-cyan-50">
-        <main className="relative min-h-screen">
-          <Acknowledgment />
-          {/* corpus */}
-          <Corpus defaultTab="Chronological" />
-        </main>
-        {/* footer */}
-        <footer
-          id="footer"
-          className="grain relative z-20 bg-cyan-50 text-cyan-900 sm:grid-cols-1 md:grid-cols-2 lg:grid dark:bg-cyan-800 dark:text-cyan-50 print:hidden"
-        >
-          <div className="col-start-1 p-12 lg:pr-32">
-            Saibai Corpus acknowledges the Aboriginal and Torres Strait Islander
-            peoples as the Traditional Custodians of Country, and recognises
-            their enduring connection to land, sea, and community. We pay our
-            respects to the Koeybuway and Moegibuway peoples of Saibai Island,
-            whose rich storytelling traditions we seek to honour and help
-            preserve.
-          </div>
-          <nav className="col-start-2 grid gap-10 p-12 text-2xl sm:grid-cols-2">
-            <span className="mb-6">
-              <p className="mb-2 font-mono leading-tight">saibai corpus</p>
-              <span>© {new Date().getFullYear()}</span>
-            </span>
-            <ul className="flex flex-col gap-2">
-              {CONTRIBUTORS.map(renderContributor)}
-            </ul>
-          </nav>
-        </footer>
-      </div>
-    </ErrorBoundary>
-  );
+	return (
+		<ErrorBoundary name='Saibai'>
+			<div className='grain bg-cyan-50 text-cyan-900 dark:bg-cyan-800 dark:text-cyan-50'>
+				<main className='relative min-h-screen'>
+					<Acknowledgment />
+					{/* corpus */}
+					<Corpus defaultTab='Chronological' />
+				</main>
+				{/* footer */}
+				<footer id='footer' className='grain relative z-20 bg-cyan-50 text-cyan-900 sm:grid-cols-1 md:grid-cols-2 lg:grid dark:bg-cyan-800 dark:text-cyan-50 print:hidden'>
+					<div className='col-start-1 p-12 lg:pr-32'>
+						Saibai Corpus acknowledges the Aboriginal and Torres Strait Islander peoples as the Traditional Custodians of Country, and recognises their enduring connection to land, sea, and community.
+						We pay our respects to the Koeybuway and Moegibuway peoples of Saibai Island, whose rich storytelling traditions we seek to honour and help preserve.
+					</div>
+					<nav className='col-start-2 grid gap-10 p-12 text-2xl sm:grid-cols-2'>
+						<span className='mb-6'>
+							<p className='mb-2 font-mono leading-tight'>saibai corpus</p>
+							<span>© {new Date().getFullYear()}</span>
+						</span>
+						<ul className='flex flex-col gap-2'>
+							{(
+								[
+									['Kai Macann', 'https://www.linkedin.com/in/kaimacann/'],
+									['Friendcis Meeko Estores', 'https://www.linkedin.com/in/meeko-estores-78444822b'],
+									['Jack Linz', 'https://www.linkedin.com/in/jack-linz-942a33358'],
+									['Jake Salamon'],
+									['Nathan Kam'],
+									['Benjamin Li'],
+								] satisfies Contributor[]
+							).map(renderContributor)}
+						</ul>
+					</nav>
+				</footer>
+			</div>
+		</ErrorBoundary>
+	);
 }
 
 /*//////////////////////////////////////////////////
@@ -150,15 +113,13 @@ CONFIG
 REGEX
 //////////////////////////////////////////////////*/
 /** Shared wrapper styles for corpus panels. */
-export const PANEL_CLASSES =
-  "relative size-full overflow-clip rounded border border-cyan-800 scrim-cyan-900 scrim-14";
+export const PANEL_CLASSES = 'relative size-full overflow-clip rounded border border-cyan-800 scrim-cyan-900 scrim-14';
 /** Shared layout styles for corpus tab panels. */
-export const TAB_VIEW_CLASSES =
-  "relative data-[state=active]:flex data-[state=inactive]:hidden h-screen w-full grow flex-col p-10";
+export const TAB_VIEW_CLASSES = 'relative data-[state=active]:flex data-[state=inactive]:hidden h-screen w-full grow flex-col p-10';
 /** Shared control styles for Vidstack media buttons. */
-export const MEDIA_BUTTON_CLASSES =
-  "flex size-12 items-center justify-center rounded-full outline-none ring-inset ring-offset-4 data-[focus]:ring-2 data-[focus]:ring-blue-400";
+export const MEDIA_BUTTON_CLASSES = 'flex size-12 items-center justify-center rounded-full outline-none ring-inset ring-offset-4 data-[focus]:ring-2 data-[focus]:ring-blue-400';
 
+// terra-quality-ignore single-use -- This stateful dialog needs its own React component boundary when rendered by the page.
 /**
  * Renders the acknowledgment component.
  *
@@ -167,133 +128,96 @@ export const MEDIA_BUTTON_CLASSES =
  * @returns Dialog modal component.
  */
 export function Acknowledgment(): React.JSX.Element {
-  const [isOpen, setIsOpen] = useState(true);
-  /** Closes the warning after the visitor acknowledges it. */
-  function closeWarning(): void {
-    setIsOpen(false);
-  }
+	const [isOpen, setIsOpen] = useState(true);
 
-  return (
-    <ErrorBoundary name="Acknowledgment">
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent
-          aria-describedby={undefined}
-          className="light text-clip text-left"
-        >
-          <DialogHeader>
-            <DialogTitle>Sensitivity Warning</DialogTitle>
-            <DialogDescription className="sr-only">
-              Aboriginal and Torres Strait Islander people sensitivity warning.
-            </DialogDescription>
-          </DialogHeader>
-          <p className="text-sm text-cyan-900">
-            Aboriginal and Torres Strait Islander people should be aware that
-            this website contains images, sounds and names of deceased persons.
-          </p>
-          <Button onClick={closeWarning} className="mt-4">
-            Continue
-          </Button>
-        </DialogContent>
-      </Dialog>
-    </ErrorBoundary>
-  );
+	return (
+		<ErrorBoundary name='Acknowledgment'>
+			<Dialog open={isOpen} onOpenChange={setIsOpen}>
+				<DialogContent aria-describedby={undefined} className='light text-clip text-left'>
+					<DialogHeader>
+						<DialogTitle>Sensitivity Warning</DialogTitle>
+						<DialogDescription className='sr-only'>Aboriginal and Torres Strait Islander people sensitivity warning.</DialogDescription>
+					</DialogHeader>
+					<p className='text-sm text-cyan-900'>Aboriginal and Torres Strait Islander people should be aware that this website contains images, sounds and names of deceased persons.</p>
+					<Button onClick={() => setIsOpen(false)} className='mt-4'>
+						Continue
+					</Button>
+				</DialogContent>
+			</Dialog>
+		</ErrorBoundary>
+	);
 }
 
 /*//////////////////////////////////////////////////
 MEDIA COMPONENTS
 //////////////////////////////////////////////////*/
 
+// terra-quality-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /** Draws the neutral base beneath the audio slider's buffered and played ranges.
  * @param className - Extra classes merged with the slider track styles.
  * @returns The base track element.
  */
 function SliderTrack({ className }: { className?: string }): React.JSX.Element {
-  return (
-    <div
-      className={cn(
-        "absolute left-0 top-0 z-0 size-full bg-gray-100",
-        className,
-      )}
-    />
-  );
+	return <div className={cn('absolute left-0 top-0 z-0 size-full bg-gray-100', className)} />;
 }
 
+// terra-quality-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /** Draws the portion of the audio slider that has already played.
  * @param className - Extra classes merged with the played-range styles.
  * @returns The played-range element.
  */
-function SliderTrackFill({
-  className,
-}: {
-  className?: string;
-}): React.JSX.Element {
-  return (
-    <div
-      className={cn(
-        "absolute left-0 top-0 z-20 size-full scale-x-[var(--slider-fill-rate)] bg-black will-change-transform live:bg-red-500",
-        className,
-      )}
-      style={{ transformOrigin: "left center" }}
-    />
-  );
+function SliderTrackFill({ className }: { className?: string }): React.JSX.Element {
+	return (
+		<div
+			className={cn('absolute left-0 top-0 z-20 size-full scale-x-[var(--slider-fill-rate)] bg-black will-change-transform live:bg-red-500', className)}
+			style={{ transformOrigin: 'left center' }}
+		/>
+	);
 }
 
+// terra-quality-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /** Draws the buffered range behind the played portion of the audio slider.
  * @param className - Extra classes merged with the buffered-range styles.
  * @returns The buffered-range element.
  */
-function SliderTrackProgress({
-  className,
-}: {
-  className?: string;
-}): React.JSX.Element {
-  return (
-    <div
-      className={cn(
-        "absolute left-0 top-0 z-10 size-full scale-x-[calc(var(--media-buffered)/var(--media-duration))] bg-black opacity-10 will-change-transform",
-        className,
-      )}
-      style={{ transformOrigin: "left center" }}
-    />
-  );
+function SliderTrackProgress({ className }: { className?: string }): React.JSX.Element {
+	return (
+		<div
+			className={cn('absolute left-0 top-0 z-10 size-full scale-x-[calc(var(--media-buffered)/var(--media-duration))] bg-black opacity-10 will-change-transform', className)}
+			style={{ transformOrigin: 'left center' }}
+		/>
+	);
 }
 
+// terra-quality-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /** Marks the current playback position and follows the pointer while dragging.
  * @param className - Extra classes merged with the slider thumb styles.
  * @returns The playback-position indicator.
  */
 function SliderThumb({ className }: { className?: string }): React.JSX.Element {
-  return (
-    <div
-      className={cn(
-        "absolute left-[var(--slider-fill-percent)] top-0 z-20 h-full w-0.5 -translate-x-1/2 scale-200 group-data-[dragging]:left-[var(--slider-pointer-percent)]",
-        className,
-      )}
-    >
-      <div className="size-full rounded-full bg-black outline outline-1 outline-white group-data-[focus]:ring-2 group-data-[focus]:ring-blue-400" />
-    </div>
-  );
+	return (
+		<div className={cn('absolute left-[var(--slider-fill-percent)] top-0 z-20 h-full w-0.5 -translate-x-1/2 scale-200 group-data-[dragging]:left-[var(--slider-pointer-percent)]', className)}>
+			<div className='size-full rounded-full bg-black outline outline-1 outline-white group-data-[focus]:ring-2 group-data-[focus]:ring-blue-400' />
+		</div>
+	);
 }
 
 /** Positions thumbnail and time content at the slider's current hover point.
  * @param children - Thumbnail and time components shown in the preview.
  * @returns Vidstack's slider preview slot.
  */
-function SliderPreview({
-  children,
-}: {
-  children: ReactNode;
-}): React.JSX.Element {
-  return (
-    <div
-      className="absolute left-[var(--preview-left)] top-[var(--preview-top)] flex -translate-x-1/2 translate-y-1 flex-col items-center justify-center gap-1 opacity-0 transition-opacity duration-200 ease-out group-data-[interactive]:opacity-100 group-data-[interactive]:ease-in"
-      slot="preview"
-    >
-      {children}
-    </div>
-  );
+function SliderPreview({ children }: { children: ReactNode }): React.JSX.Element {
+	return (
+		<div
+			className='absolute left-[var(--preview-left)] top-[var(--preview-top)] flex -translate-x-1/2 translate-y-1 flex-col items-center justify-center gap-1 opacity-0 transition-opacity duration-200 ease-out group-data-[interactive]:opacity-100 group-data-[interactive]:ease-in'
+			slot='preview'
+		>
+			{children}
+		</div>
+	);
 }
 
+// terra-quality-ignore single-use -- This slider keeps a distinct React component boundary for Vidstack composition.
 /**
  * Renders the media slider component.
  *
@@ -304,38 +228,26 @@ function SliderPreview({
  *
  * @returns Media time slider component.
  */
-export function MediaSlider({
-  className,
-  src,
-}: {
-  className?: string;
-  src?: string;
-}): React.JSX.Element {
-  return (
-    <ErrorBoundary name="MediaSlider">
-      <MediaTimeSlider
-        className={cn("group h-6 py-2 focus:outline-none", className)}
-        aria-label="Audio progress slider"
-      >
-        <div className="relative size-full focus:ring-0">
-          <SliderTrack />
-          <SliderTrackFill />
-          <SliderTrackProgress />
-          <SliderThumb />
-        </div>
-        <SliderPreview>
-          <MediaSliderThumbnail src={src} />
-          <MediaSliderValue
-            type="pointer"
-            format="time"
-            className="w-max max-w-xs animate-fade-in rounded border bg-white px-2 py-1 shadow delay-75"
-          />
-        </SliderPreview>
-      </MediaTimeSlider>
-    </ErrorBoundary>
-  );
+export function MediaSlider({ className, src }: { className?: string; src?: string }): React.JSX.Element {
+	return (
+		<ErrorBoundary name='MediaSlider'>
+			<MediaTimeSlider className={cn('group h-6 py-2 focus:outline-none', className)} aria-label='Audio progress slider'>
+				<div className='relative size-full focus:ring-0'>
+					<SliderTrack />
+					<SliderTrackFill />
+					<SliderTrackProgress />
+					<SliderThumb />
+				</div>
+				<SliderPreview>
+					<MediaSliderThumbnail src={src} />
+					<MediaSliderValue type='pointer' format='time' className='w-max max-w-xs animate-fade-in rounded border bg-white px-2 py-1 shadow delay-75' />
+				</SliderPreview>
+			</MediaTimeSlider>
+		</ErrorBoundary>
+	);
 }
 
+// terra-quality-ignore single-use -- This Vidstack control keeps a stable React component boundary in the audio toolbar.
 /**
  * Renders Vidstack's play/pause control with an accessible label.
  *
@@ -345,26 +257,15 @@ export function MediaSlider({
  * @returns Vidstack's accessible play/pause button.
  */
 function PlayButton(attrs: React.ComponentProps<typeof MediaPlayButton>) {
-  const { paused } = useMediaStore();
-  const playbackLabel = paused ? "Play" : "Pause";
-  return (
-    <MediaPlayButton
-      className={MEDIA_BUTTON_CLASSES}
-      aria-label={playbackLabel}
-      {...attrs}
-    >
-      {paused ? (
-        <CarbonIcon name="play-filled" className="block size-full scale-150" />
-      ) : (
-        <CarbonIcon
-          name="pause-outline-filled"
-          className="block size-full scale-150"
-        />
-      )}
-    </MediaPlayButton>
-  );
+	const { paused } = useMediaStore();
+	return (
+		<MediaPlayButton className={MEDIA_BUTTON_CLASSES} aria-label={paused ? 'Play' : 'Pause'} {...attrs}>
+			{paused ? <CarbonIcon name='play-filled' className='block size-full scale-150' /> : <CarbonIcon name='pause-outline-filled' className='block size-full scale-150' />}
+		</MediaPlayButton>
+	);
 }
 
+// terra-quality-ignore single-use -- This hook-owning audio toolbar keeps its own React component boundary.
 /**
  * Renders the audio controls component.
  *
@@ -375,69 +276,32 @@ function PlayButton(attrs: React.ComponentProps<typeof MediaPlayButton>) {
  *
  * @returns Media controls layout component.
  */
-function AudioControls({
-  className,
-  ...attrs
-}: React.ComponentPropsWithoutRef<"div"> & { className?: string }) {
-  const { paused, muted } = useMediaStore();
-  const BUTTON_WRAPPER = "flex gap-4 *:-mx-3 *:p-3 items-center";
-  return (
-    <div
-      className={cn("pointer-events-none", className)}
-      role="group"
-      aria-label="Media Controls"
-      {...attrs}
-    >
-      <div
-        className={cn(
-          "pointer-events-none min-h-[48px] w-full can-control:pointer-events-auto",
-          BUTTON_WRAPPER,
-        )}
-      >
-        <div className={"py-0 " + BUTTON_WRAPPER}>
-          <MediaSeekButton
-            className={MEDIA_BUTTON_CLASSES}
-            seconds={-30}
-            aria-label="Seek back 30 seconds"
-            data-tooltip="Jump back"
-          >
-            <CarbonIcon name="rewind-30" className="size-full" />
-          </MediaSeekButton>
-          <PlayButton data-tooltip={paused ? "Play" : "Pause"} />
-          <MediaSeekButton
-            className={MEDIA_BUTTON_CLASSES}
-            seconds={30}
-            aria-label="Seek forward 30 seconds"
-            data-tooltip="Jump forward"
-          >
-            <CarbonIcon name="forward-30" className="size-full" />
-          </MediaSeekButton>
-        </div>
-        <div className="m-0 flex grow items-center gap-4 self-stretch border-l p-0 pl-4">
-          <MediaTime type="current" className="text-sm" />
-          <MediaSlider />
-          <MediaTime type="duration" className="text-sm" />
-        </div>
-        <MediaMuteButton
-          className={MEDIA_BUTTON_CLASSES}
-          aria-label={muted ? "Unmute" : "Mute"}
-          data-tooltip={muted ? "Unmute" : "Mute"}
-        >
-          {muted ? (
-            <CarbonIcon
-              name="volume-mute-filled"
-              className="block size-full scale-75"
-            />
-          ) : (
-            <CarbonIcon
-              name="volume-up-filled"
-              className="block size-full scale-75"
-            />
-          )}
-        </MediaMuteButton>
-      </div>
-    </div>
-  );
+function AudioControls({ className, ...attrs }: React.ComponentPropsWithoutRef<'div'> & { className?: string }) {
+	const { paused, muted } = useMediaStore();
+	const BUTTON_WRAPPER = 'flex gap-4 *:-mx-3 *:p-3 items-center';
+	return (
+		<div className={cn('pointer-events-none', className)} role='group' aria-label='Media Controls' {...attrs}>
+			<div className={cn('pointer-events-none min-h-[48px] w-full can-control:pointer-events-auto', BUTTON_WRAPPER)}>
+				<div className={'py-0 ' + BUTTON_WRAPPER}>
+					<MediaSeekButton className={MEDIA_BUTTON_CLASSES} seconds={-30} aria-label='Seek back 30 seconds' data-tooltip='Jump back'>
+						<CarbonIcon name='rewind-30' className='size-full' />
+					</MediaSeekButton>
+					<PlayButton data-tooltip={paused ? 'Play' : 'Pause'} />
+					<MediaSeekButton className={MEDIA_BUTTON_CLASSES} seconds={30} aria-label='Seek forward 30 seconds' data-tooltip='Jump forward'>
+						<CarbonIcon name='forward-30' className='size-full' />
+					</MediaSeekButton>
+				</div>
+				<div className='m-0 flex grow items-center gap-4 self-stretch border-l p-0 pl-4'>
+					<MediaTime type='current' className='text-sm' />
+					<MediaSlider />
+					<MediaTime type='duration' className='text-sm' />
+				</div>
+				<MediaMuteButton className={MEDIA_BUTTON_CLASSES} aria-label={muted ? 'Unmute' : 'Mute'} data-tooltip={muted ? 'Unmute' : 'Mute'}>
+					{muted ? <CarbonIcon name='volume-mute-filled' className='block size-full scale-75' /> : <CarbonIcon name='volume-up-filled' className='block size-full scale-75' />}
+				</MediaMuteButton>
+			</div>
+		</div>
+	);
 }
 
 /**
@@ -457,99 +321,56 @@ function AudioControls({
  * @returns Fully constructed MediaPlayer component.
  */
 export function Player({
-  src,
-  poster,
-  title,
-  author,
-  meta,
-  className,
-  alt,
-  ...attrs
-}: Omit<
-  React.ComponentProps<typeof MediaPlayer>,
-  "src" | "poster" | "title" | "className"
-> & {
-  src: string;
-  poster?: string;
-  className?: string;
-  title?: string;
-  author?: string;
-  meta?: string;
-  alt?: string;
+	src,
+	poster,
+	title,
+	author,
+	meta,
+	className,
+	alt,
+	...attrs
+}: Omit<React.ComponentProps<typeof MediaPlayer>, 'src' | 'poster' | 'title' | 'className'> & {
+	src: string;
+	poster?: string;
+	className?: string;
+	title?: string;
+	author?: string;
+	meta?: string;
+	alt?: string;
 }): React.JSX.Element {
-  return (
-    <ErrorBoundary name="Player">
-      <MediaPlayer
-        src={src}
-        className={cn(
-          "inline-block rounded-md border bg-white text-black shadow",
-          className,
-        )}
-        {...attrs}
-      >
-        <MediaOutlet />
-        {title && (
-          <div className="flex flex-row items-center border-b px-5 py-4">
-            {poster && (
-              <img
-                className="mr-6 size-20 shrink-0 basis-20 rounded-md border bg-gray-100 text-transparent"
-                alt={alt || `Media art for '${title}'`}
-                src={poster}
-              />
-            )}
-            <div className="-mx-1 basis-full overflow-hidden px-1">
-              <span className="mb-2 inline-block text-lg font-bold">
-                {title}
-              </span>
-              {author && (
-                <p className="mb-1 mt-0 pt-0 leading-snug text-gray-500">
-                  {author}
-                </p>
-              )}
-              {meta && (
-                <p className="mb-1 leading-snug text-gray-500">{meta}</p>
-              )}
-            </div>
-          </div>
-        )}
-        <AudioControls
-          className={cn(
-            "transition-all buffering:animate-pulse",
-            title ? "px-5" : "px-3",
-          )}
-        />
-      </MediaPlayer>
-    </ErrorBoundary>
-  );
+	return (
+		<ErrorBoundary name='Player'>
+			<MediaPlayer src={src} className={cn('inline-block rounded-md border bg-white text-black shadow', className)} {...attrs}>
+				<MediaOutlet />
+				{title && (
+					<div className='flex flex-row items-center border-b px-5 py-4'>
+						{poster && <img className='mr-6 size-20 shrink-0 basis-20 rounded-md border bg-gray-100 text-transparent' alt={alt || `Media art for '${title}'`} src={poster} />}
+						<div className='-mx-1 basis-full overflow-hidden px-1'>
+							<span className='mb-2 inline-block text-lg font-bold'>{title}</span>
+							{author && <p className='mb-1 mt-0 pt-0 leading-snug text-gray-500'>{author}</p>}
+							{meta && <p className='mb-1 leading-snug text-gray-500'>{meta}</p>}
+						</div>
+					</div>
+				)}
+				<AudioControls className={cn('transition-all buffering:animate-pulse', title ? 'px-5' : 'px-3')} />
+			</MediaPlayer>
+		</ErrorBoundary>
+	);
 }
 
 /*//////////////////////////////////////////////////
 MAP COMPONENT
 //////////////////////////////////////////////////*/
 
-/** Converts the configured Saibai Topology object into map-ready GeoJSON.
- *
- * @return The selected GeoJSON collection, or null when it is absent.
- */
-function buildGeoJsonData() {
-  const objectKey = "export (1)1";
-  return SAIBAI.objects[objectKey]
-    ? feature(SAIBAI as never, SAIBAI.objects[objectKey] as never)
-    : null;
-}
-
+// terra-quality-ignore single-use -- This module-level fallback retains a stable function identity across map renders.
 /** Provides the map-specific fallback while keeping the rest of the corpus usable.
  * @returns An alert explaining that the map is unavailable.
  */
 function renderMapFailureFallback(): React.JSX.Element {
-  return (
-    <AlertError
-      title="Map Display Error"
-      description="The geographic map of Saibai Island could not be displayed. The rest of the page remains fully accessible."
-    />
-  );
+	return <AlertError title='Map Display Error' description='The geographic map of Saibai Island could not be displayed. The rest of the page remains fully accessible.' />;
 }
 
+// terra-quality-ignore single-use -- This stateful map keeps its own React component boundary inside the selected tab.
 /**
  * Renders the geographic map component.
  *
@@ -558,171 +379,99 @@ function renderMapFailureFallback(): React.JSX.Element {
  * @returns Geographic Map.
  */
 export function GeographicMap(): React.JSX.Element {
-  const [selectedGeo, setSelectedGeo] = useState<MapGeography | null>(null);
+	const [selectedGeo, setSelectedGeo] = useState<MapGeography | null>(null);
 
-  const geoJsonData = useMemo(buildGeoJsonData, []);
+	const geoJsonData = useMemo(() => {
+		const objectKey = 'export (1)1';
+		return SAIBAI.objects[objectKey] ? feature(SAIBAI as never, SAIBAI.objects[objectKey] as never) : null;
+	}, []);
 
-  /** Selects one map feature when its geography shape can open details.
-   * @param g - Geography feature rendered by react-simple-maps.
-   * @returns The feature element and optional selection handler.
-   */
-  function renderGeography(g: MapGeography): React.JSX.Element {
-    const properties = g.properties || {};
-    const isLine =
-      typeof g.geometry?.type === "string" &&
-      ["LineString", "MultiLineString"].includes(g.geometry.type);
-    let className = "pointer-events-none fill-transparent stroke-none";
-    if (properties.building === "house") className = "fill-amber-500";
-    else if (properties.building) className = "fill-red-950";
-    else if (properties.highway || properties.aeroway)
-      className = "fill-none stroke-gray-500 stroke-[0.05]";
-    else if (properties.natural === "coastline")
-      className = isLine
-        ? "stroke-emerald-800 stroke-[0.05] fill-none"
-        : "fill-emerald-800";
-    else if (properties.waterway)
-      className = isLine
-        ? "stroke-cyan-950 stroke-[0.05] fill-none"
-        : "fill-cyan-950";
-    else if (
-      properties.natural === "water" ||
-      properties.landuse === "reservoir"
-    )
-      className = "fill-cyan-950";
-    else if (properties.name && properties.name !== "Saibai Island" && !isLine)
-      className = "fill-amber-300 hover:fill-amber-400 hover:cursor-pointer";
+	/** Selects one map feature when its geography shape can open details.
+	 * @param g - Geography feature rendered by react-simple-maps.
+	 * @returns The feature element and optional selection handler.
+	 */
+	function renderGeography(g: MapGeography): React.JSX.Element {
+		const properties = g.properties || {};
+		const isLine = typeof g.geometry?.type === 'string' && ['LineString', 'MultiLineString'].includes(g.geometry.type);
+		let className = 'pointer-events-none fill-transparent stroke-none';
+		if (properties.building === 'house') className = 'fill-amber-500';
+		else if (properties.building) className = 'fill-red-950';
+		else if (properties.highway || properties.aeroway) className = 'fill-none stroke-gray-500 stroke-[0.05]';
+		else if (properties.natural === 'coastline') className = isLine ? 'stroke-emerald-800 stroke-[0.05] fill-none' : 'fill-emerald-800';
+		else if (properties.waterway) className = isLine ? 'stroke-cyan-950 stroke-[0.05] fill-none' : 'fill-cyan-950';
+		else if (properties.natural === 'water' || properties.landuse === 'reservoir') className = 'fill-cyan-950';
+		else if (properties.name && properties.name !== 'Saibai Island' && !isLine) className = 'fill-amber-300 hover:fill-amber-400 hover:cursor-pointer';
 
-    const isInteractive =
-      !isLine &&
-      ((properties.landuse && properties.landuse !== "residential") ||
-        (properties.name && properties.name !== "Saibai Island"));
-    /** Opens the feature details dialog for the selected geography. */
-    function selectGeography(): void {
-      setSelectedGeo(g);
-    }
-    const handleClick = isInteractive ? selectGeography : undefined;
-    if (isInteractive) {
-      className = cn(
-        className,
-        "pointer-events-auto fill-yellow-300 hover:cursor-pointer hover:fill-yellow-400",
-      );
-    }
+		const isInteractive = !isLine && ((properties.landuse && properties.landuse !== 'residential') || (properties.name && properties.name !== 'Saibai Island'));
+		if (isInteractive) {
+			className = cn(className, 'pointer-events-auto fill-yellow-300 hover:cursor-pointer hover:fill-yellow-400');
+		}
 
-    return (
-      <Geography
-        key={g.rsmKey}
-        geography={g}
-        onClick={handleClick}
-        className={cn(
-          "pointer-events-auto outline-none focus:outline-none active:outline-none",
-          g.rsmKey,
-          className,
-        )}
-      />
-    );
-  }
+		return (
+			<Geography
+				key={g.rsmKey}
+				geography={g}
+				onClick={isInteractive ? () => setSelectedGeo(g) : undefined}
+				className={cn('pointer-events-auto outline-none focus:outline-none active:outline-none', g.rsmKey, className)}
+			/>
+		);
+	}
 
-  /** Renders every geography in the current GeoJSON collection.
-   * @param collection - Geography values supplied by react-simple-maps.
-   * @returns The map feature elements.
-   */
-  function renderGeographies(collection: {
-    geographies: MapGeography[];
-  }): ReactNode {
-    return collection.geographies.map(renderGeography);
-  }
+	/** Renders one video listed on the selected map feature.
+	 * @param v - Video URL and optional title from the map properties.
+	 * @param i - Video position used for the fallback title and React key.
+	 * @returns The embedded video frame.
+	 */
+	function renderSelectedVideo(v: NonNullable<NonNullable<MapGeography['properties']>['videos']>[number], i: number): React.JSX.Element {
+		return (
+			<div key={i} className='relative mb-4 aspect-video w-full max-w-md overflow-hidden rounded'>
+				<div className='absolute inset-0 z-0 animate-pulse rounded bg-gray-500' />
+				<iframe
+					src={`${v.src}?badge=0&autopause=0&player_id=0&app_id=58479`}
+					allow='autoplay; fullscreen; picture-in-picture'
+					className='relative z-10 size-full'
+					title={v.title || `Video ${i + 1}`}
+				/>
+			</div>
+		);
+	}
 
-  /** Closes the selected feature dialog when Radix reports a close event.
-   * @param o - Whether the dialog should remain open.
-   */
-  function handleDialogOpenChange(o: boolean): void {
-    if (!o) setSelectedGeo(null);
-  }
+	if (!geoJsonData) return <div>Loading map data or data is invalid...</div>;
 
-  /** Renders one video listed on the selected map feature.
-   * @param v - Video URL and optional title from the map properties.
-   * @param i - Video position used for the fallback title and React key.
-   * @returns The embedded video frame.
-   */
-  function renderSelectedVideo(
-    v: NonNullable<NonNullable<MapGeography["properties"]>["videos"]>[number],
-    i: number,
-  ): React.JSX.Element {
-    return (
-      <div
-        key={i}
-        className="relative mb-4 aspect-video w-full max-w-md overflow-hidden rounded"
-      >
-        <div className="absolute inset-0 z-0 animate-pulse rounded bg-gray-500" />
-        <iframe
-          src={`${v.src}?badge=0&autopause=0&player_id=0&app_id=58479`}
-          allow="autoplay; fullscreen; picture-in-picture"
-          className="relative z-10 size-full"
-          title={v.title || `Video ${i + 1}`}
-        />
-      </div>
-    );
-  }
+	return (
+		<ErrorBoundary name='SaibaiGeographicMap' fallback={renderMapFailureFallback}>
+			<div className={PANEL_CLASSES}>
+				<ComposableMap projection='geoMercator' className='size-full'>
+					<ZoomableGroup center={[142.62, -9.38]} zoom={50} minZoom={10} maxZoom={500}>
+						<Geographies geography={geoJsonData}>{(collection: { geographies: MapGeography[] }): ReactNode => collection.geographies.map(renderGeography)}</Geographies>
+					</ZoomableGroup>
+				</ComposableMap>
 
-  if (!geoJsonData) return <div>Loading map data or data is invalid...</div>;
-
-  return (
-    <ErrorBoundary
-      name="SaibaiGeographicMap"
-      fallback={renderMapFailureFallback}
-    >
-      <div className={PANEL_CLASSES}>
-        <ComposableMap projection="geoMercator" className="size-full">
-          <ZoomableGroup
-            center={[142.62, -9.38]}
-            zoom={50}
-            minZoom={10}
-            maxZoom={500}
-          >
-            <Geographies geography={geoJsonData}>
-              {renderGeographies}
-            </Geographies>
-          </ZoomableGroup>
-        </ComposableMap>
-
-        {selectedGeo && (
-          <Dialog open={!!selectedGeo} onOpenChange={handleDialogOpenChange}>
-            <DialogContent
-              aria-describedby={undefined}
-              className="text-clip text-left"
-            >
-              <DialogHeader>
-                <DialogTitle className="font-mono text-4xl font-bold">
-                  {selectedGeo.properties?.name ||
-                    (selectedGeo.properties?.landuse &&
-                      selectedGeo.properties.landuse.charAt(0).toUpperCase() +
-                        selectedGeo.properties.landuse.slice(1)) ||
-                    "Feature Details"}
-                </DialogTitle>
-                {selectedGeo.properties?.description && (
-                  <DialogDescription className="text-cyan-900/50">
-                    {selectedGeo.properties.description}
-                  </DialogDescription>
-                )}
-                {!selectedGeo.properties?.description && (
-                  <DialogDescription className="sr-only">
-                    Details for {selectedGeo.properties?.name || "feature"}.
-                  </DialogDescription>
-                )}
-              </DialogHeader>
-              {selectedGeo.properties?.videos?.map(renderSelectedVideo)}
-              {(!selectedGeo.properties?.videos ||
-                selectedGeo.properties.videos.length === 0) && (
-                <p className="mb-6 text-sm text-cyan-900 opacity-50">
-                  No videos available for this feature.
-                </p>
-              )}
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
-    </ErrorBoundary>
-  );
+				{selectedGeo && (
+					<Dialog
+						open={!!selectedGeo}
+						onOpenChange={open => {
+							if (!open) setSelectedGeo(null);
+						}}
+					>
+						<DialogContent aria-describedby={undefined} className='text-clip text-left'>
+							<DialogHeader>
+								<DialogTitle className='font-mono text-4xl font-bold'>
+									{selectedGeo.properties?.name ||
+										(selectedGeo.properties?.landuse && selectedGeo.properties.landuse.charAt(0).toUpperCase() + selectedGeo.properties.landuse.slice(1)) ||
+										'Feature Details'}
+								</DialogTitle>
+								{selectedGeo.properties?.description && <DialogDescription className='text-cyan-900/50'>{selectedGeo.properties.description}</DialogDescription>}
+								{!selectedGeo.properties?.description && <DialogDescription className='sr-only'>Details for {selectedGeo.properties?.name || 'feature'}.</DialogDescription>}
+							</DialogHeader>
+							{selectedGeo.properties?.videos?.map(renderSelectedVideo)}
+							{(!selectedGeo.properties?.videos || selectedGeo.properties.videos.length === 0) && <p className='mb-6 text-sm text-cyan-900 opacity-50'>No videos available for this feature.</p>}
+						</DialogContent>
+					</Dialog>
+				)}
+			</div>
+		</ErrorBoundary>
+	);
 }
 
 /*//////////////////////////////////////////////////
@@ -738,77 +487,57 @@ MAIN CORPUS DASHBOARD
  * @param children - Button label/content.
  * @returns A tabs trigger that updates the URL and scrolls to the history panel when selected.
  */
-function TabsTrigger({
-  value,
-  children,
-}: {
-  value: string;
-  children: React.ReactNode;
-}): React.JSX.Element {
-  /**
-   * Handles click.
-   */
-  /** Updates the selected view in the URL and scrolls to its content. */
-  function handleClick(): void {
-    if (typeof window !== "undefined") {
-      const newUrl = `${window.location.pathname}?tab=${encodeURIComponent(value)}#history`;
-      window.history.replaceState({}, "", newUrl);
-      document
-        .getElementById("history")
-        ?.scrollIntoView({ behavior: "smooth" });
-    }
-  }
-  return (
-    <Tabs.Trigger
-      value={value}
-      onClick={handleClick}
-      className={cn(
-        CONTROL_VARIANTS({ variant: "primary-ghost", size: "xs" }),
-        "-mx-2 rounded text-left",
-      )}
-    >
-      {children}
-    </Tabs.Trigger>
-  );
+function TabsTrigger({ value, children }: { value: string; children: React.ReactNode }): React.JSX.Element {
+	return (
+		<Tabs.Trigger
+			value={value}
+			onClick={() => {
+				if (typeof window !== 'undefined') {
+					window.history.replaceState({}, '', `${window.location.pathname}?tab=${encodeURIComponent(value)}#history`);
+					document.getElementById('history')?.scrollIntoView({ behavior: 'smooth' });
+				}
+			}}
+			className={cn(CONTROL_VARIANTS({ variant: 'primary-ghost', size: 'xs' }), '-mx-2 rounded text-left')}
+		>
+			{children}
+		</Tabs.Trigger>
+	);
 }
 
 // Abstracted Tab Configs for Corpus
 const CORPUS_TABS = [
-  {
-    id: "Chronological",
-    label: "Chronological",
-    className: "p-10",
-    Component: null,
-  },
-  {
-    id: "Geographic",
-    label: "Geographic",
-    className: TAB_VIEW_CLASSES,
-    Component: GeographicMap,
-  },
-  {
-    id: "Genealogical",
-    label: "Genealogical",
-    className: TAB_VIEW_CLASSES,
-    Component: LazyGenealogy,
-  },
+	{
+		id: 'Chronological',
+		label: 'Chronological',
+		className: 'p-10',
+		Component: null,
+	},
+	{
+		id: 'Geographic',
+		label: 'Geographic',
+		className: TAB_VIEW_CLASSES,
+		Component: GeographicMap,
+	},
+	{
+		id: 'Genealogical',
+		label: 'Genealogical',
+		className: TAB_VIEW_CLASSES,
+		Component: LazyGenealogy,
+	},
 ];
 
 /** Identifier, label, style, and optional component for a corpus view. */
 type CorpusTab = (typeof CORPUS_TABS)[number];
 
+// terra-quality-ignore single-use -- This module-level fallback retains a stable function identity across dashboard renders.
 /** Keeps a corpus rendering error from removing the rest of the page.
  * @returns A message that the corpus dashboard could not be rendered.
  */
 function renderCorpusFailureFallback(): React.JSX.Element {
-  return (
-    <AlertError
-      title="Saibai Corpus Crashed"
-      description="An unexpected error occurred while rendering the Saibai Corpus dashboard. The rest of the page remains fully accessible."
-    />
-  );
+	return <AlertError title='Saibai Corpus Crashed' description='An unexpected error occurred while rendering the Saibai Corpus dashboard. The rest of the page remains fully accessible.' />;
 }
 
+// terra-quality-ignore single-use -- This stateful dashboard keeps its own React component boundary inside the page.
 /**
  * Renders the corpus component.
  *
@@ -818,205 +547,158 @@ function renderCorpusFailureFallback(): React.JSX.Element {
  * @returns Fully composed layout with integrated sub-components.
  */
 function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
-  const [selectedTab, setSelectedTab] = useState(
-    resolveCorpusTab("", defaultTab),
-  );
-  /** Restores a shared tab selection after the browser exposes the current URL. */
-  function hydrateSelectedTabFromLocation(): void {
-    setSelectedTab(resolveCorpusTab(window.location.search, defaultTab));
-  }
-  useEffect(hydrateSelectedTabFromLocation, [defaultTab]);
+	const [selectedTab, setSelectedTab] = useState(resolveCorpusTab('', defaultTab));
+	useEffect(() => setSelectedTab(resolveCorpusTab(window.location.search, defaultTab)), [defaultTab]);
 
-  /** Renders one navigation control for a configured corpus view.
-   * @param t - View identifier and visible label.
-   * @returns The view's Radix tab trigger.
-   */
-  function renderTabButton(t: CorpusTab): React.JSX.Element {
-    return (
-      <TabsTrigger key={t.id} value={t.id}>
-        {t.label}
-      </TabsTrigger>
-    );
-  }
+	/** Renders one navigation control for a configured corpus view.
+	 * @param t - View identifier and visible label.
+	 * @returns The view's Radix tab trigger.
+	 */
+	function renderTabButton(t: CorpusTab): React.JSX.Element {
+		return (
+			<TabsTrigger key={t.id} value={t.id}>
+				{t.label}
+			</TabsTrigger>
+		);
+	}
 
-  /** Renders one audio entry in the chronological corpus view.
-   * @param i - Recording metadata and audio source from the archive.
-   * @returns The audio player for the entry.
-   */
-  function renderTimelineItem(i: {
-    title: string;
-    author: string;
-    audio: string;
-  }): React.JSX.Element {
-    return (
-      <Player key={i.audio} title={i.title} author={i.author} src={i.audio} />
-    );
-  }
+	/** Renders one audio entry in the chronological corpus view.
+	 * @param i - Recording metadata and audio source from the archive.
+	 * @returns The audio player for the entry.
+	 */
+	function renderTimelineItem(i: { title: string; author: string; audio: string }): React.JSX.Element {
+		return <Player key={i.audio} title={i.title} author={i.author} src={i.audio} />;
+	}
 
-  /** Renders a titled set of recordings in the chronological archive.
-   * @param s - Section heading and its description and recordings.
-   * @returns The sticky heading and its audio players.
-   */
-  function renderTimelineSection(
-    s: [string, TimelineGroup],
-  ): React.JSX.Element {
-    const [section, group] = s;
-    return (
-      <div key={section}>
-        <div className="sticky top-0 z-20 -mx-2 -mt-4">
-          <h2 className="bg-cyan-950 px-2 py-4 text-xl font-semibold">
-            {section}
-          </h2>
-          <div className="h-2 scrim-cyan-950 scrim-t-2" />
-        </div>
-        {group.description && <p className="mb-8">{group.description}</p>}
-        <div className="flex flex-col gap-y-4 pb-8">
-          {group.items.map(renderTimelineItem)}
-        </div>
-      </div>
-    );
-  }
+	/** Renders a titled set of recordings in the chronological archive.
+	 * @param s - Section heading and its description and recordings.
+	 * @returns The sticky heading and its audio players.
+	 */
+	function renderTimelineSection(s: [string, TimelineGroup]): React.JSX.Element {
+		const [section, group] = s;
+		return (
+			<div key={section}>
+				<div className='sticky top-0 z-20 -mx-2 -mt-4'>
+					<h2 className='bg-cyan-950 px-2 py-4 text-xl font-semibold'>{section}</h2>
+					<div className='h-2 scrim-cyan-950 scrim-t-2' />
+				</div>
+				{group.description && <p className='mb-8'>{group.description}</p>}
+				<div className='flex flex-col gap-y-4 pb-8'>{group.items.map(renderTimelineItem)}</div>
+			</div>
+		);
+	}
 
-  /** Renders one tab panel and its selected view.
-   * @param t - View identifier, style, and optional component.
-   * @returns The tab panel and its view contents.
-   */
-  function renderCorpusPanel(t: CorpusTab): React.JSX.Element {
-    return (
-      <Tabs.Content key={t.id} value={t.id} className={t.className}>
-        {t.Component ? (
-          <React.Suspense
-            fallback={<div className="p-6">Loading corpus view…</div>}
-          >
-            <t.Component />
-          </React.Suspense>
-        ) : (
-          <div className="max-w-prose">
-            {Object.entries({
-              "Wax Cylinders": {
-                description:
-                  "During the 1898 Alfred Cort Haddon Expedition, Haddon, Ray, and Jack were on Saibai Island from 22 to 25 October and recorded a series of wax cylinders.",
-                date: "",
-                items: [
-                  {
-                    title: "Na puidam purda",
-                    author: "Wap (singer, male)",
-                    audio:
-                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1076XX-0100M0.mp3",
-                  },
-                  {
-                    title: "Maduba na puidam",
-                    author: "Gemetu (singer, male)",
-                    audio:
-                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3",
-                  },
-                  {
-                    title: "Mawa na puidam",
-                    author: "Kinaur (singer, male)",
-                    audio:
-                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1078XX-0100M0.mp3",
-                  },
-                  {
-                    title: "Mawau na puidam",
-                    author: "Gemetu (singer, male)",
-                    audio:
-                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3",
-                  },
-                  {
-                    title: "Nau poida",
-                    author: "Aimab (singer, male)",
-                    audio:
-                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1080XX-0100M0.mp3",
-                  },
-                  {
-                    title: "About Saibai",
-                    author: "Jack Assaii (speaker, male)",
-                    audio:
-                      "https://www.true-echoes.com/wp-content/uploads/025A-C0080X1045XX-0100M0.mp3",
-                  },
-                ],
-              },
-              "Learn KKY": {
-                date: "",
-                items: [
-                  {
-                    title: "PART 01 - Oral history podcast",
-                    author: "Jeffrey Aniba Waia",
-                    audio:
-                      "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-1.mp3?_=2",
-                  },
-                  {
-                    title: "PART 02 - Oral history podcast",
-                    author: "Jeffrey Aniba Waia",
-                    audio:
-                      "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-2.mp3?_=2",
-                  },
-                  {
-                    title: "PART 03 - Oral history podcast",
-                    author: "Jeffrey Aniba Waia",
-                    audio:
-                      "https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-3.mp3?_=2",
-                  },
-                ],
-              },
-            }).map(renderTimelineSection)}
-          </div>
-        )}
-      </Tabs.Content>
-    );
-  }
+	/** Renders one tab panel and its selected view.
+	 * @param t - View identifier, style, and optional component.
+	 * @returns The tab panel and its view contents.
+	 */
+	function renderCorpusPanel(t: CorpusTab): React.JSX.Element {
+		return (
+			<Tabs.Content key={t.id} value={t.id} className={t.className}>
+				{t.Component ? (
+					<React.Suspense fallback={<div className='p-6'>Loading corpus view…</div>}>
+						<t.Component />
+					</React.Suspense>
+				) : (
+					<div className='max-w-prose'>
+						{Object.entries({
+							'Wax Cylinders': {
+								description: 'During the 1898 Alfred Cort Haddon Expedition, Haddon, Ray, and Jack were on Saibai Island from 22 to 25 October and recorded a series of wax cylinders.',
+								date: '',
+								items: [
+									{
+										title: 'Na puidam purda',
+										author: 'Wap (singer, male)',
+										audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1076XX-0100M0.mp3',
+									},
+									{
+										title: 'Maduba na puidam',
+										author: 'Gemetu (singer, male)',
+										audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1077XX-0100M0.mp3',
+									},
+									{
+										title: 'Mawa na puidam',
+										author: 'Kinaur (singer, male)',
+										audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1078XX-0100M0.mp3',
+									},
+									{
+										title: 'Mawau na puidam',
+										author: 'Gemetu (singer, male)',
+										audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1079XX-0100M0.mp3',
+									},
+									{
+										title: 'Nau poida',
+										author: 'Aimab (singer, male)',
+										audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1080XX-0100M0.mp3',
+									},
+									{
+										title: 'About Saibai',
+										author: 'Jack Assaii (speaker, male)',
+										audio: 'https://www.true-echoes.com/wp-content/uploads/025A-C0080X1045XX-0100M0.mp3',
+									},
+								],
+							},
+							'Learn KKY': {
+								date: '',
+								items: [
+									{
+										title: 'PART 01 - Oral history podcast',
+										author: 'Jeffrey Aniba Waia',
+										audio: 'https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-1.mp3?_=2',
+									},
+									{
+										title: 'PART 02 - Oral history podcast',
+										author: 'Jeffrey Aniba Waia',
+										audio: 'https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-2.mp3?_=2',
+									},
+									{
+										title: 'PART 03 - Oral history podcast',
+										author: 'Jeffrey Aniba Waia',
+										audio: 'https://learnkky.com/wp-content/uploads/2023/08/JEFFREY-ANIBA-WAIA-ORAL-HISTORY-PART-3.mp3?_=2',
+									},
+								],
+							},
+						}).map(renderTimelineSection)}
+					</div>
+				)}
+			</Tabs.Content>
+		);
+	}
 
-  return (
-    <ErrorBoundary name="SaibaiCorpus" fallback={renderCorpusFailureFallback}>
-      <Tabs.Root
-        value={selectedTab}
-        onValueChange={setSelectedTab}
-        className="grid-cols-[1fr_3fr] sm:grid"
-      >
-        <div className="col-span-2 grid min-h-screen grid-cols-[3rem_1fr] grid-rows-[auto_1fr_auto] bg-cyan-50 sm:grid-cols-[1fr_3fr] dark:bg-cyan-800">
-          <div className="h-10 sm:h-20" />
-          <div className="h-10 border-l border-teal-400 sm:h-20 dark:border-teal-500" />
-          <div className="col-start-1 row-start-2 w-full border-t border-teal-400 dark:border-teal-500" />
-          <section className="prose flex max-w-none flex-col justify-center text-clip border-l border-t border-teal-400 px-6 py-20 text-cyan-900 sm:ml-0 dark:border-teal-500 dark:text-cyan-50">
-            <h2 className="my-0 mb-8 font-mono text-6xl sm:text-8xl">
-              Saibai Corpus
-            </h2>
-            <p className="text-xl opacity-60 sm:text-3xl">
-              Carrying island stories, wherever the journey leads
-            </p>
-            <div className="max-w-3xl">
-              <p className="sm:text-xl">
-                As rising seas threaten homes, sacred sites, and connection to
-                country, this living archive holds space for memory, identity,
-                and belonging. Every scrap of Saibai—language, story, place, and
-                kin—has been gathered and collated into one site, with multiple
-                ways to explore: a timeline, an audio archive, maps, and more.
-              </p>
-            </div>
-          </section>
-          <div className="h-10 border-t border-teal-400 sm:h-20 dark:border-teal-500" />
-          <div className="border-l border-t border-teal-400 dark:border-teal-500" />
-        </div>
+	return (
+		<ErrorBoundary name='SaibaiCorpus' fallback={renderCorpusFailureFallback}>
+			<Tabs.Root value={selectedTab} onValueChange={setSelectedTab} className='grid-cols-[1fr_3fr] sm:grid'>
+				<div className='col-span-2 grid min-h-screen grid-cols-[3rem_1fr] grid-rows-[auto_1fr_auto] bg-cyan-50 sm:grid-cols-[1fr_3fr] dark:bg-cyan-800'>
+					<div className='h-10 sm:h-20' />
+					<div className='h-10 border-l border-teal-400 sm:h-20 dark:border-teal-500' />
+					<div className='col-start-1 row-start-2 w-full border-t border-teal-400 dark:border-teal-500' />
+					<section className='prose flex max-w-none flex-col justify-center text-clip border-l border-t border-teal-400 px-6 py-20 text-cyan-900 sm:ml-0 dark:border-teal-500 dark:text-cyan-50'>
+						<h2 className='my-0 mb-8 font-mono text-6xl sm:text-8xl'>Saibai Corpus</h2>
+						<p className='text-xl opacity-60 sm:text-3xl'>Carrying island stories, wherever the journey leads</p>
+						<div className='max-w-3xl'>
+							<p className='sm:text-xl'>
+								As rising seas threaten homes, sacred sites, and connection to country, this living archive holds space for memory, identity, and belonging. Every scrap of Saibai—language, story,
+								place, and kin—has been gathered and collated into one site, with multiple ways to explore: a timeline, an audio archive, maps, and more.
+							</p>
+						</div>
+					</section>
+					<div className='h-10 border-t border-teal-400 sm:h-20 dark:border-teal-500' />
+					<div className='border-l border-t border-teal-400 dark:border-teal-500' />
+				</div>
 
-        <div className="relative z-20 row-start-2 bg-cyan-950 p-10 pb-0 text-cyan-200 sm:pb-10">
-          <Tabs.List
-            className="flex flex-col gap-y-2 rounded border border-cyan-800 px-6 py-5 text-sm leading-tight shadow md:sticky md:top-16 [&>*]:py-1"
-            aria-label="Corpus view modes"
-          >
-            <h3 className="font-bold">Content</h3>
-            {CORPUS_TABS.map(renderTabButton)}
-          </Tabs.List>
-        </div>
+				<div className='relative z-20 row-start-2 bg-cyan-950 p-10 pb-0 text-cyan-200 sm:pb-10'>
+					<Tabs.List className='flex flex-col gap-y-2 rounded border border-cyan-800 px-6 py-5 text-sm leading-tight shadow md:sticky md:top-16 [&>*]:py-1' aria-label='Corpus view modes'>
+						<h3 className='font-bold'>Content</h3>
+						{CORPUS_TABS.map(renderTabButton)}
+					</Tabs.List>
+				</div>
 
-        <div
-          id="history"
-          className="relative z-20 row-start-2 min-h-screen bg-cyan-950 text-cyan-200"
-        >
-          {CORPUS_TABS.map(renderCorpusPanel)}
-        </div>
-      </Tabs.Root>
-    </ErrorBoundary>
-  );
+				<div id='history' className='relative z-20 row-start-2 min-h-screen bg-cyan-950 text-cyan-200'>
+					{CORPUS_TABS.map(renderCorpusPanel)}
+				</div>
+			</Tabs.Root>
+		</ErrorBoundary>
+	);
 }
 
 /*//////////////////////////////////////////////////

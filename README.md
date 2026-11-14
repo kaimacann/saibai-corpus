@@ -24,12 +24,12 @@ pnpm install --frozen-lockfile
 pnpm run dev
 ```
 
-The development server prints the local URL when it starts. The production build is written to `dist/`.
+The development server prints the local URL when it starts. The production build is written to `dist/site/`.
 
 ## Checks
 
 ```sh
-pnpm check
+pnpm quality:all
 pnpm run build
 ```
 
@@ -43,7 +43,7 @@ The project’s MIT license applies to software source authored for the site; it
 
 ## Deployment
 
-The Netlify project is [saibai-corpus](https://app.netlify.com/projects/saibai-corpus), with the intended public URL [saibai-corpus.netlify.app](https://saibai-corpus.netlify.app). Connect this repository using its root as the base directory. [`netlify.toml`](netlify.toml) sets `pnpm run build` as the build command, `dist` as the publish directory, and Node.js 22.19. The site does not require runtime secrets.
+The Netlify project is [saibai-corpus](https://app.netlify.com/projects/saibai-corpus), with the intended public URL [saibai-corpus.netlify.app](https://saibai-corpus.netlify.app). Connect this repository using its root as the base directory. [`netlify.toml`](netlify.toml) sets `pnpm run build` as the build command, `dist/site` as the publish directory, and Node.js 22.19. The site does not require runtime secrets.
 
 ## References
 

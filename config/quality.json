@@ -1,99 +1,101 @@
 {
-  "$schema": "../node_modules/@terra-symposium/standards-quality/quality.schema.json",
-  "root": ".",
-  "sourceRoots": ["."],
-  "extensions": [
-    ".astro",
-    ".c",
-    ".cjs",
-    ".cpp",
-    ".cts",
-    ".css",
-    ".h",
-    ".html",
-    ".java",
-    ".js",
-    ".jsx",
-    ".json",
-    ".jsonc",
-    ".md",
-    ".mdx",
-    ".mjs",
-    ".mts",
-    ".py",
-    ".pyi",
-    ".rs",
-    ".sh",
-    ".sql",
-    ".toml",
-    ".ts",
-    ".tsx",
-    ".yaml",
-    ".yml"
-  ],
-  "aliases": {
-    "@components/": "src/components/",
-    "@lib/": "src/lib/",
-    "@utils": "src/lib/utils"
-  },
-  "tsconfig": "config/tsconfig.json",
-  "enabledChecks": {
-    "error-boundaries": true,
-    "document": true,
-    "format": true,
-    "import": true,
-    "name": true,
-    "forward": true,
-    "accessibility": true,
-    "display-name": true,
-    "performance-patterns": true,
-    "documented-commands": true,
-    "lint": true,
-    "knip": true,
-    "dead-code": true,
-    "type": true,
-    "recommend": true,
-    "command": true,
-    "diff": true,
-    "alias": true,
-    "security": true,
-    "repeated-classes": true,
-    "tailwind-canonical": true,
-    "regex-dedup": true,
-    "ui-patterns": true,
-    "ui-recommendations": true,
-    "github": true
-  },
-  "qualityCommands": [
-    {
-      "name": "check",
-      "command": "pnpm",
-      "args": ["run", "check"]
-    }
-  ],
-  "documentation": {
-    "required": {
-      "types": true,
-      "functions": true,
-      "exportedFunctions": true
-    }
-  },
-  "autofix": { "document": false },
-  "repeatedClasses": {
-    "minimumCount": 3
-  },
-  "regexDedup": {
-    "minimumCount": 2
-  },
-  "tools": {
-    "prettier": "prettier",
-    "eslint": "node_modules/.bin/eslint",
-    "knip": "node_modules/.bin/knip",
-    "tsc": "node_modules/.bin/tsc"
-  },
-  "security": {
-    "runtimeRoots": [],
-    "clientRoots": ["src/components"]
-  },
-  "languageProfiles": ["c", "java", "python"]
+	"$schema": "../node_modules/@terra-symposium/standards-quality/quality.schema.json",
+	"root": ".",
+	"sourceRoots": ["."],
+	"extensions": [
+		".astro",
+		".c",
+		".cjs",
+		".cpp",
+		".cts",
+		".css",
+		".h",
+		".html",
+		".java",
+		".js",
+		".jsx",
+		".json",
+		".jsonc",
+		".md",
+		".mdx",
+		".mjs",
+		".mts",
+		".py",
+		".pyi",
+		".rs",
+		".sh",
+		".sql",
+		".toml",
+		".ts",
+		".tsx",
+		".yaml",
+		".yml"
+	],
+	"aliases": {
+		"@components/": "src/components/",
+		"@lib/": "src/lib/",
+		"@utils": "src/lib/utils"
+	},
+	"tsconfig": "config/tsconfig.json",
+	"enabledChecks": {
+		"error-boundaries": true,
+		"document": true,
+		"format": true,
+		"import": true,
+		"name": true,
+		"forward": true,
+		"accessibility": true,
+		"display-name": true,
+		"performance-patterns": true,
+		"documented-commands": true,
+		"lint": true,
+		"knip": true,
+		"dead-code": true,
+		"type": true,
+		"recommend": true,
+		"command": true,
+		"diff": true,
+		"alias": true,
+		"security": true,
+		"repeated-classes": true,
+		"tailwind-canonical": true,
+		"regex-dedup": true,
+		"ui-patterns": true,
+		"ui-recommendations": true,
+		"github": true
+	},
+	"qualityCommands": [
+		{
+			"name": "Astro type check",
+			"command": "pnpm",
+			"args": ["exec", "astro", "check", "--config", "config/astro.config.mjs", "--tsconfig", "config/tsconfig.json"]
+		}
+	],
+	"documentation": {
+		"required": {
+			"types": true,
+			"functions": true,
+			"exportedFunctions": true
+		}
+	},
+	"autofix": {
+		"document": false
+	},
+	"repeatedClasses": {
+		"minimumCount": 3
+	},
+	"regexDedup": {
+		"minimumCount": 2
+	},
+	"tools": {
+		"prettier": "prettier",
+		"eslint": "node_modules/.bin/eslint",
+		"knip": "node_modules/.bin/knip",
+		"tsc": "node_modules/.bin/tsc"
+	},
+	"security": {
+		"runtimeRoots": [],
+		"clientRoots": ["src/components"]
+	},
+	"languageProfiles": ["c", "java", "python"]
 }
