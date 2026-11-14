@@ -1,160 +1,101 @@
 {
-  "$schema": "../node_modules/@terra-symposium/standards-quality/quality.schema.json",
-  "root": "..",
-  "sourceRoots": [
-    "src"
-  ],
-  "extensions": [
-    ".astro",
-    ".js",
-    ".jsx",
-    ".ts",
-    ".tsx",
-    ".mjs",
-    ".cjs"
-  ],
-  "aliases": {
-    "@components/": "src/components/",
-    "@lib/": "src/lib/",
-    "@utils": "src/lib/utils"
-  },
-  "tsconfig": "config/tsconfig.json",
-  "enabledChecks": {
-    "format": true,
-    "lint": false,
-    "knip": false,
-    "type": true,
-    "recommend": true,
-    "name": true,
-    "alias": true
-  },
-  "qualityCommands": [
-    {
-      "name": "check",
-      "command": "pnpm",
-      "args": [
-        "run",
-        "check"
-      ]
-    },
-    {
-      "name": "test",
-      "command": "pnpm",
-      "args": [
-        "run",
-        "test"
-      ]
-    },
-    {
-      "name": "build",
-      "command": "pnpm",
-      "args": [
-        "run",
-        "build"
-      ]
-    }
-  ],
-  "documentation": {
-    "required": {
-      "types": true,
-      "functions": true,
-      "exportedFunctions": true,
-      "noInlineFunctions": false
-    }
-  },
-  "protectedIdentifiers": [
-    "current",
-    "value",
-    "previous",
-    "symptom",
-    "score",
-    "id",
-    "item",
-    "field",
-    "label",
-    "event",
-    "index",
-    "error",
-    "nextCopies",
-    "DashboardRecord",
-    "shareMessage",
-    "setShareMessage",
-    "currentDashboard",
-    "board",
-    "records",
-    "requestedId",
-    "response",
-    "message",
-    "imageTheme",
-    "channel",
-    "left",
-    "right",
-    "errors",
-    "values",
-    "name",
-    "props",
-    "children",
-    "duration",
-    "delay",
-    "reverse",
-    "rows",
-    "className",
-    "src",
-    "poster",
-    "title",
-    "author",
-    "meta",
-    "alt",
-    "origin",
-    "terminus",
-    "nodeData",
-    "setSelectedNode",
-    "PlayerProps",
-    "AudioTrack",
-    "MarqueeComponentProps",
-    "Person",
-    "SaibaiFlowNode",
-    "SaibaiButtonProps",
-    "AudioCtrlsProps",
-    "CarbonIconName",
-    "MapGeography",
-    "Props",
-    "State",
-    "ButtonProps",
-    "PersonNodeData",
-    "PersonGraphNode",
-    "MarriageGraphNode",
-    "GenealogyNode",
-    "PatientFormData",
-    "PatientRec",
-    "variant",
-    "size",
-    "asChild",
-    "ref",
-    "direction"
-  ],
-  "autofix": {
-    "document": false,
-    "knip": false,
-    "lint": false,
-    "name": true
-  },
-  "singleUse": {
-    "skippedDirectories": [
-      "src/components"
-    ]
-  },
-  "repeatedClasses": {
-    "minimumCount": 3
-  },
-  "regexDedup": {
-    "minimumCount": 2
-  },
-  "tools": {
-    "prettier": "prettier",
-    "eslint": "eslint",
-    "knip": "knip",
-    "tsc": "tsc"
-}
-
+	"$schema": "../node_modules/@terra-symposium/standards-quality/quality.schema.json",
+	"root": ".",
+	"sourceRoots": ["."],
+	"extensions": [
+		".astro",
+		".c",
+		".cjs",
+		".cpp",
+		".cts",
+		".css",
+		".h",
+		".html",
+		".java",
+		".js",
+		".jsx",
+		".json",
+		".jsonc",
+		".md",
+		".mdx",
+		".mjs",
+		".mts",
+		".py",
+		".pyi",
+		".rs",
+		".sh",
+		".sql",
+		".toml",
+		".ts",
+		".tsx",
+		".yaml",
+		".yml"
+	],
+	"aliases": {
+		"@components/": "src/components/",
+		"@lib/": "src/lib/",
+		"@utils": "src/lib/utils"
+	},
+	"tsconfig": "config/tsconfig.json",
+	"enabledChecks": {
+		"error-boundaries": true,
+		"document": true,
+		"format": true,
+		"import": true,
+		"name": true,
+		"forward": true,
+		"accessibility": true,
+		"display-name": true,
+		"performance-patterns": true,
+		"documented-commands": true,
+		"lint": true,
+		"knip": true,
+		"dead-code": true,
+		"type": true,
+		"recommend": true,
+		"command": true,
+		"diff": true,
+		"alias": true,
+		"security": true,
+		"repeated-classes": true,
+		"tailwind-canonical": true,
+		"regex-dedup": true,
+		"ui-patterns": true,
+		"ui-recommendations": true,
+		"github": true
+	},
+	"qualityCommands": [
+		{
+			"name": "Astro type check",
+			"command": "pnpm",
+			"args": ["exec", "astro", "check", "--config", "config/astro.config.mjs", "--tsconfig", "config/tsconfig.json"]
+		}
+	],
+	"documentation": {
+		"required": {
+			"types": true,
+			"functions": true,
+			"exportedFunctions": true
+		}
+	},
+	"autofix": {
+		"document": false
+	},
+	"repeatedClasses": {
+		"minimumCount": 3
+	},
+	"regexDedup": {
+		"minimumCount": 2
+	},
+	"tools": {
+		"prettier": "prettier",
+		"eslint": "node_modules/.bin/eslint",
+		"knip": "node_modules/.bin/knip",
+		"tsc": "node_modules/.bin/tsc"
+	},
+	"security": {
+		"runtimeRoots": [],
+		"clientRoots": ["src/components"]
+	},
+	"languageProfiles": ["c", "java", "python"]
 }

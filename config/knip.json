@@ -1,46 +1,21 @@
 {
-  "ignoreExportsUsedInFile": true,
-  "workspaces": {
-    ".": {
-      "entry": [
-        "src/pages/**/*.astro",
-        "src/components/saibai.tsx",
-        "src/styles.css",
-        "test/**/*.mjs",
-        "scripts/**/*.mjs"
-      ],
-      "project": [
-        "src/**/*.{js,mjs,cjs,jsx,ts,tsx,astro,css}",
-        "test/**/*.mjs",
-        "scripts/**/*.mjs"
-      ],
-      "ignoreDependencies": [
-        "@astrojs/check",
-        "@astrojs/react",
-        "astro",
-        "prettier"
-      ],
-      "astro": {
-        "config": "config/astro.config.mjs"
-      },
-      "paths": {
-        "@components/*": ["src/components/*"],
-        "@lib/*": ["src/lib/*"],
-        "@ui/*": ["src/components/ui/*"],
-        "@utils": ["src/lib/utils.ts"]
-      }
-    },
-    "config": {
-      "entry": [
-        "knip.json",
-        "package.json",
-        "quality.json",
-        "tailwind.preset.ts",
-        "tsconfig.json"
-      ],
-      "project": [
-        "*.{js,mjs,cjs,jsx,ts,tsx}"
-      ]
-    }
-  }
+	"workspaces": {
+		".": {
+			"entry": ["src/pages/**/*.astro", "src/components/saibai.tsx", "src/styles.css", "tests/**/*.mjs", "scripts/**/*.mjs"],
+			"project": ["src/**/*.{js,mjs,cjs,jsx,ts,tsx,astro,css}", "tests/**/*.mjs", "scripts/**/*.mjs"],
+			"astro": {
+				"config": "config/astro.config.mjs"
+			},
+			"paths": {
+				"@components/*": ["src/components/*"],
+				"@lib/*": ["src/lib/*"],
+				"@ui/*": ["src/components/ui/*"],
+				"@utils": ["src/lib/utils.ts"]
+			}
+		},
+		"config": {
+			"entry": ["*.{js,mjs,cjs,jsx,ts,tsx}"],
+			"project": ["**/*.{js,mjs,cjs,jsx,ts,tsx}"]
+		}
+	}
 }

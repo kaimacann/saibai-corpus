@@ -13,6 +13,8 @@ The site brings together several ways to explore the corpus:
 
 The site displays a sensitivity notice because its collection includes images, sounds, and names of deceased people. It acknowledges Aboriginal and Torres Strait Islander peoples as Traditional Custodians and pays respect to the Koeybuway and Moegibuway peoples of Saibai Island. Please approach the material with care and respect.
 
+The project’s MIT license applies to software source authored for the site; it does not grant a blanket license to corpus or third-party content. Read [`CONTENT-NOTICE.md`](CONTENT-NOTICE.md) before reusing material.
+
 ## Get started
 
 Use Node.js 22.19 or later and pnpm 10.30.3.
@@ -22,12 +24,12 @@ pnpm install --frozen-lockfile
 pnpm run dev
 ```
 
-The development server prints the local URL when it starts. The production build is written to `dist/`.
+The development server prints the local URL when it starts. The production build is written to `dist/site/`.
 
 ## Checks
 
 ```sh
-pnpm check
+pnpm quality:all
 pnpm run build
 ```
 
@@ -41,7 +43,7 @@ The project’s MIT license applies to software source authored for the site; it
 
 ## Deployment
 
-The Netlify project is [saibai-corpus](https://app.netlify.com/projects/saibai-corpus), with the intended public URL [saibai-corpus.netlify.app](https://saibai-corpus.netlify.app). Connect this repository using its root as the base directory. [`netlify.toml`](netlify.toml) sets `pnpm run build` as the build command, `dist` as the publish directory, and Node.js 22.19. The site does not require runtime secrets.
+The Netlify project is [saibai-corpus](https://app.netlify.com/projects/saibai-corpus), with the intended public URL [saibai-corpus.netlify.app](https://saibai-corpus.netlify.app). Connect this repository using its root as the base directory. [`netlify.toml`](netlify.toml) sets `pnpm run build` as the build command, `dist/site` as the publish directory, and Node.js 22.19. The site does not require runtime secrets.
 
 ## References
 

@@ -1,19 +1,22 @@
 {
-  "name": "saibai-corpus-config",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "packageManager": "pnpm@10.30.3",
-  "engines": {
-    "node": ">=22.19.0"
-  },
-  "scripts": {
-    "dev": "cd .. && astro dev --config config/astro.config.mjs",
-    "build": "cd .. && astro build --config config/astro.config.mjs",
-    "check": "cd .. && astro check --config config/astro.config.mjs --tsconfig config/tsconfig.json",
-    "quality": "cd .. && astro sync --config config/astro.config.mjs && pnpm run lint && pnpm run knip && node scripts/terra-quality.mjs quality --all",
-    "lint": "cd .. && eslint --config config/eslint.config.mjs .",
-    "knip": "cd .. && knip --config config/knip.json --tsConfig config/tsconfig.json",
-    "test": "cd .. && node --test test/*.test.mjs"
-  }
+	"name": "saibai-corpus-config",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@10.30.3",
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"scripts": {
+		"verify": "pnpm run quality:all && pnpm run test && pnpm run build",
+		"quality:all": "node \"$(git rev-parse --show-toplevel)/scripts/quality-runner.mjs\" quality --all",
+		"dev": "cd .. && mkdir -p dist/cache/astro-types && astro dev --config config/astro.config.mjs",
+		"build": "cd .. && mkdir -p dist/cache/astro-types && astro build --config config/astro.config.mjs",
+		"check": "cd .. && astro check --config config/astro.config.mjs --tsconfig config/tsconfig.json",
+		"quality": "node \"$(git rev-parse --show-toplevel)/scripts/quality-runner.mjs\" quality",
+		"test": "cd .. && mkdir -p tests/results && node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=tests/results/junit.xml tests/*.test.mjs"
+	},
+	"devDependencies": {
+		"prettier": "3.9.10"
+	}
 }
