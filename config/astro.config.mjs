@@ -1,4 +1,4 @@
-import { terraErrorBoundaryIntegration as __terraErrorBoundaryIntegration } from '@terra-symposium/standards-error-boundaries/astro-integration';
+import { terraErrorBoundaryIntegration as __terraErrorBoundaryIntegration } from '@terra-symposium/boundaries/astro-integration';
 import react from '@astrojs/react';
 import { defineConfig } from 'astro/config';
 import { fileURLToPath } from 'node:url';

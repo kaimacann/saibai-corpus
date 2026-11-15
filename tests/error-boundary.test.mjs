@@ -17,7 +17,7 @@ const { outputText } = ts.transpileModule(await readFile(new URL('../src/compone
 const { ErrorBoundary: ErrBoundary } = await import(
 	`data:text/javascript;base64,${Buffer.from(
 		outputText
-			.replaceAll(/(['"])@terra-symposium\/standards-error-boundaries\/react\1/g, JSON.stringify(pathToFileURL(require.resolve('@terra-symposium/standards-error-boundaries/react')).href))
+			.replaceAll(/(['"])@terra-symposium\/boundaries\/react\1/g, JSON.stringify(pathToFileURL(require.resolve('@terra-symposium/boundaries/react')).href))
 			.replaceAll(/(['"])react\/jsx-runtime\1/g, JSON.stringify(pathToFileURL(require.resolve('react/jsx-runtime')).href))
 			.replaceAll(/(['"])react\1/g, JSON.stringify(pathToFileURL(require.resolve('react')).href)),
 	).toString('base64')}`
