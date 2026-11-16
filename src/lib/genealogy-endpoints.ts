@@ -1,6 +1,6 @@
 import type { Person } from '@lib/types';
 
-// terra-quality-ignore single-use -- This exported graph operation is exercised directly by genealogy endpoint tests and used by the renderer.
+// hygiene-ignore single-use -- This exported graph operation is exercised directly by genealogy endpoint tests and used by the renderer.
 /** Returns distinct child IDs recorded by either person in a spouse pair.
  * @param people - Source records for the corpus graph.
  * @param personId - ID of the current person's record.
@@ -17,7 +17,7 @@ export function getSpousePairChildren(people: Person[], personId: string, spouse
 	return [...childIds];
 }
 
-// terra-quality-ignore single-use -- This exported endpoint mutation is exercised directly by genealogy endpoint tests and used by the renderer.
+// hygiene-ignore single-use -- This exported endpoint mutation is exercised directly by genealogy endpoint tests and used by the renderer.
 /**
  * Assigns incoming and outgoing edge markers after the relationship graph is complete.
  *

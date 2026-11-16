@@ -47,7 +47,7 @@ export const ACTION_VARIANTS = cva('', {
 	defaultVariants: { variant: 'primary' },
 });
 
-// terra-quality-ignore single-use -- Compile these control variants once at module load, rather than during each component render.
+// hygiene-ignore single-use -- Compile these control variants once at module load, rather than during each component render.
 export const CONTROL_VARIANTS = cva('inline-flex items-center justify-center', {
 	variants: {
 		variant: {
@@ -79,7 +79,7 @@ export const CONTROL_VARIANTS = cva('inline-flex items-center justify-center', {
 	defaultVariants: { variant: 'primary', size: 'md' },
 });
 
-// terra-quality-ignore single-use -- Compile these surface variants once at module load, rather than during each component render.
+// hygiene-ignore single-use -- Compile these surface variants once at module load, rather than during each component render.
 export const SURFACE_VARIANTS = cva('', {
 	variants: {
 		variant: {

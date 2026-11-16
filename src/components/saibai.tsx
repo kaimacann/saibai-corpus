@@ -38,7 +38,7 @@ import type { MapGeography } from 'react-simple-maps';
 
 export { Button, ButtonLink };
 
-// terra-quality-ignore single-use -- React.lazy must retain the same component type across dashboard renders.
+// hygiene-ignore single-use -- React.lazy must retain the same component type across dashboard renders.
 const LazyGenealogy = React.lazy(async (): Promise<{ default: typeof import('./saibai-genealogy').Genealogy }> => ({
 	default: (await import('./saibai-genealogy')).Genealogy,
 }));
@@ -119,7 +119,7 @@ export const TAB_VIEW_CLASSES = 'relative data-[state=active]:flex data-[state=i
 /** Shared control styles for Vidstack media buttons. */
 export const MEDIA_BUTTON_CLASSES = 'flex size-12 items-center justify-center rounded-full outline-none ring-inset ring-offset-4 data-[focus]:ring-2 data-[focus]:ring-blue-400';
 
-// terra-quality-ignore single-use -- This stateful dialog needs its own React component boundary when rendered by the page.
+// hygiene-ignore single-use -- This stateful dialog needs its own React component boundary when rendered by the page.
 /**
  * Renders the acknowledgment component.
  *
@@ -152,7 +152,7 @@ export function Acknowledgment(): React.JSX.Element {
 MEDIA COMPONENTS
 //////////////////////////////////////////////////*/
 
-// terra-quality-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
+// hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /** Draws the neutral base beneath the audio slider's buffered and played ranges.
  * @param className - Extra classes merged with the slider track styles.
  * @returns The base track element.
@@ -161,7 +161,7 @@ function SliderTrack({ className }: { className?: string }): React.JSX.Element {
 	return <div className={cn('absolute left-0 top-0 z-0 size-full bg-gray-100', className)} />;
 }
 
-// terra-quality-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
+// hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /** Draws the portion of the audio slider that has already played.
  * @param className - Extra classes merged with the played-range styles.
  * @returns The played-range element.
@@ -175,7 +175,7 @@ function SliderTrackFill({ className }: { className?: string }): React.JSX.Eleme
 	);
 }
 
-// terra-quality-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
+// hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /** Draws the buffered range behind the played portion of the audio slider.
  * @param className - Extra classes merged with the buffered-range styles.
  * @returns The buffered-range element.
@@ -189,7 +189,7 @@ function SliderTrackProgress({ className }: { className?: string }): React.JSX.E
 	);
 }
 
-// terra-quality-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
+// hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /** Marks the current playback position and follows the pointer while dragging.
  * @param className - Extra classes merged with the slider thumb styles.
  * @returns The playback-position indicator.
@@ -217,7 +217,7 @@ function SliderPreview({ children }: { children: ReactNode }): React.JSX.Element
 	);
 }
 
-// terra-quality-ignore single-use -- This slider keeps a distinct React component boundary for Vidstack composition.
+// hygiene-ignore single-use -- This slider keeps a distinct React component boundary for Vidstack composition.
 /**
  * Renders the media slider component.
  *
@@ -247,7 +247,7 @@ export function MediaSlider({ className, src }: { className?: string; src?: stri
 	);
 }
 
-// terra-quality-ignore single-use -- This Vidstack control keeps a stable React component boundary in the audio toolbar.
+// hygiene-ignore single-use -- This Vidstack control keeps a stable React component boundary in the audio toolbar.
 /**
  * Renders Vidstack's play/pause control with an accessible label.
  *
@@ -265,7 +265,7 @@ function PlayButton(attrs: React.ComponentProps<typeof MediaPlayButton>) {
 	);
 }
 
-// terra-quality-ignore single-use -- This hook-owning audio toolbar keeps its own React component boundary.
+// hygiene-ignore single-use -- This hook-owning audio toolbar keeps its own React component boundary.
 /**
  * Renders the audio controls component.
  *
@@ -362,7 +362,7 @@ export function Player({
 MAP COMPONENT
 //////////////////////////////////////////////////*/
 
-// terra-quality-ignore single-use -- This module-level fallback retains a stable function identity across map renders.
+// hygiene-ignore single-use -- This module-level fallback retains a stable function identity across map renders.
 /** Provides the map-specific fallback while keeping the rest of the corpus usable.
  * @returns An alert explaining that the map is unavailable.
  */
@@ -370,7 +370,7 @@ function renderMapFailureFallback(): React.JSX.Element {
 	return <AlertError title='Map Display Error' description='The geographic map of Saibai Island could not be displayed. The rest of the page remains fully accessible.' />;
 }
 
-// terra-quality-ignore single-use -- This stateful map keeps its own React component boundary inside the selected tab.
+// hygiene-ignore single-use -- This stateful map keeps its own React component boundary inside the selected tab.
 /**
  * Renders the geographic map component.
  *
@@ -529,7 +529,7 @@ const CORPUS_TABS = [
 /** Identifier, label, style, and optional component for a corpus view. */
 type CorpusTab = (typeof CORPUS_TABS)[number];
 
-// terra-quality-ignore single-use -- This module-level fallback retains a stable function identity across dashboard renders.
+// hygiene-ignore single-use -- This module-level fallback retains a stable function identity across dashboard renders.
 /** Keeps a corpus rendering error from removing the rest of the page.
  * @returns A message that the corpus dashboard could not be rendered.
  */
@@ -537,7 +537,7 @@ function renderCorpusFailureFallback(): React.JSX.Element {
 	return <AlertError title='Saibai Corpus Crashed' description='An unexpected error occurred while rendering the Saibai Corpus dashboard. The rest of the page remains fully accessible.' />;
 }
 
-// terra-quality-ignore single-use -- This stateful dashboard keeps its own React component boundary inside the page.
+// hygiene-ignore single-use -- This stateful dashboard keeps its own React component boundary inside the page.
 /**
  * Renders the corpus component.
  *

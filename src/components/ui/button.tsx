@@ -22,7 +22,7 @@ export const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttrib
 	{ className, variant, size = 'md', asChild = false, ...attrs },
 	ref,
 ): React.ReactElement {
-	// terra-quality-ignore single-use -- The selected element type keeps Slot and native button prop forwarding identical within this render.
+	// hygiene-ignore single-use -- The selected element type keeps Slot and native button prop forwarding identical within this render.
 	const Comp = asChild ? Slot : 'button';
 	return (
 		<Comp

@@ -300,7 +300,7 @@ function getLayoutedEls<TNode extends Node>(nodes: TNode[], edges: ReactFlowEdge
 	};
 }
 
-// terra-quality-ignore single-use -- React Flow requires a stable custom node component identity to preserve node state and handles.
+// hygiene-ignore single-use -- React Flow requires a stable custom node component identity to preserve node state and handles.
 /**
  * Renders a person node in the React Flow genealogy graph.
  *
@@ -341,7 +341,7 @@ function PersonNode({ data }: NodeProps<PersonGraphNode>) {
 	);
 }
 
-// terra-quality-ignore single-use -- React Flow requires a stable connector component identity for its node registry.
+// hygiene-ignore single-use -- React Flow requires a stable connector component identity for its node registry.
 /**
  * Renders the marriage connector node component.
  *
@@ -389,13 +389,13 @@ function MarriageConnectorNode() {
 	);
 }
 
-// terra-quality-ignore single-use -- React Flow requires a stable nodeTypes object so custom node instances do not remount on each layout render.
+// hygiene-ignore single-use -- React Flow requires a stable nodeTypes object so custom node instances do not remount on each layout render.
 const nodeTypes = {
 	custom: PersonNode,
 	marriageConnector: MarriageConnectorNode,
 };
 
-// terra-quality-ignore single-use -- This hook-owning child must keep its component boundary inside ReactFlowProvider.
+// hygiene-ignore single-use -- This hook-owning child must keep its component boundary inside ReactFlowProvider.
 /**
  * Renders the layout flow component.
  *
