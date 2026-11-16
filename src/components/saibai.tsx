@@ -391,18 +391,18 @@ export function GeographicMap(): React.JSX.Element {
 	 * @returns The feature element and optional selection handler.
 	 */
 	function renderGeography(g: MapGeography): React.JSX.Element {
-		const properties = g.properties || {};
+		const props = g.properties || {};
 		const isLine = typeof g.geometry?.type === 'string' && ['LineString', 'MultiLineString'].includes(g.geometry.type);
 		let className = 'pointer-events-none fill-transparent stroke-none';
-		if (properties.building === 'house') className = 'fill-amber-500';
-		else if (properties.building) className = 'fill-red-950';
-		else if (properties.highway || properties.aeroway) className = 'fill-none stroke-gray-500 stroke-[0.05]';
-		else if (properties.natural === 'coastline') className = isLine ? 'stroke-emerald-800 stroke-[0.05] fill-none' : 'fill-emerald-800';
-		else if (properties.waterway) className = isLine ? 'stroke-cyan-950 stroke-[0.05] fill-none' : 'fill-cyan-950';
-		else if (properties.natural === 'water' || properties.landuse === 'reservoir') className = 'fill-cyan-950';
-		else if (properties.name && properties.name !== 'Saibai Island' && !isLine) className = 'fill-amber-300 hover:fill-amber-400 hover:cursor-pointer';
+		if (props.building === 'house') className = 'fill-amber-500';
+		else if (props.building) className = 'fill-red-950';
+		else if (props.highway || props.aeroway) className = 'fill-none stroke-gray-500 stroke-[0.05]';
+		else if (props.natural === 'coastline') className = isLine ? 'stroke-emerald-800 stroke-[0.05] fill-none' : 'fill-emerald-800';
+		else if (props.waterway) className = isLine ? 'stroke-cyan-950 stroke-[0.05] fill-none' : 'fill-cyan-950';
+		else if (props.natural === 'water' || props.landuse === 'reservoir') className = 'fill-cyan-950';
+		else if (props.name && props.name !== 'Saibai Island' && !isLine) className = 'fill-amber-300 hover:fill-amber-400 hover:cursor-pointer';
 
-		const isInteractive = !isLine && ((properties.landuse && properties.landuse !== 'residential') || (properties.name && properties.name !== 'Saibai Island'));
+		const isInteractive = !isLine && ((props.landuse && props.landuse !== 'residential') || (props.name && props.name !== 'Saibai Island'));
 		if (isInteractive) {
 			className = cn(className, 'pointer-events-auto fill-yellow-300 hover:cursor-pointer hover:fill-yellow-400');
 		}

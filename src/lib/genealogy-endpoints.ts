@@ -28,11 +28,11 @@ export function getSpousePairChildren(people: Person[], personId: string, spouse
  */
 export function markGenealogyNodeEndpoints(nodes: { id: string; type: string; data: object }[], edges: { source: string; target: string }[]): void {
 	const targets = new Set(edges.map(e => e.target));
-	const sources = new Set(edges.map(e => e.source));
+	const srcs = new Set(edges.map(e => e.source));
 	for (const node of nodes) {
 		if (node.type !== 'custom') continue;
 		const data = node.data as { origin?: boolean; terminus?: boolean };
 		data.origin = targets.has(node.id);
-		data.terminus = sources.has(node.id);
+		data.terminus = srcs.has(node.id);
 	}
 }

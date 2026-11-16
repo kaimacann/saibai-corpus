@@ -1,7 +1,7 @@
 ---
 import '../styles.css';
 
-const { title, description = 'Stories, language, recordings, maps, and family connections.' } = Astro.props;
+const { title, desc = 'Stories, language, recordings, maps, and family connections.' } = Astro.props;
 ---
 
 <!doctype html>
@@ -9,7 +9,7 @@ const { title, description = 'Stories, language, recordings, maps, and family co
 	<head>
 		<meta charset='utf-8' />
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
-		<meta name='description' content={description} />
+		<meta name='description' content={desc} />
 		<meta name='theme-color' content='#ecfeff' />
 		<title>{title}</title>
 	</head>

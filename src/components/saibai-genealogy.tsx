@@ -258,7 +258,7 @@ function getNodeDimensions(node: Node): { width: number; height: number } {
  *
  * @returns Object containing nodes with updated positions and unmodified edges.
  */
-function getLayoutedElements<TNode extends Node>(nodes: TNode[], edges: ReactFlowEdge[], opts: { direction: string; nodesep?: number; ranksep?: number }): { edges: ReactFlowEdge[]; nodes: TNode[] } {
+function getLayoutedEls<TNode extends Node>(nodes: TNode[], edges: ReactFlowEdge[], opts: { direction: string; nodesep?: number; ranksep?: number }): { edges: ReactFlowEdge[]; nodes: TNode[] } {
 	const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel((): Record<string, never> => ({}));
 	g.setGraph({
 		rankdir: opts.direction,
@@ -534,7 +534,7 @@ function LayoutFlow({ genealogyData }: { genealogyData: Person[] }): React.JSX.E
 
 	React.useEffect(() => {
 		if (initialNodes.length > 0) {
-			const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(initialNodes, initialEdges, {
+			const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedEls(initialNodes, initialEdges, {
 				direction: 'TB',
 				nodesep: 70,
 				ranksep: 90,
@@ -607,7 +607,7 @@ function LayoutFlow({ genealogyData }: { genealogyData: Person[] }): React.JSX.E
 					<Button
 						type='button'
 						onClick={() => {
-							const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges, { direction: 'TB', nodesep: 70, ranksep: 90 });
+							const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedEls(nodes, edges, { direction: 'TB', nodesep: 70, ranksep: 90 });
 							setNodes([...layoutedNodes]);
 							setEdges([...layoutedEdges]);
 							window.requestAnimationFrame(fitVisibleGraph);
