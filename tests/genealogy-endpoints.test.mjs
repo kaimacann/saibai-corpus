@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
 
 const ts = createRequire(new URL('../config/package.json', import.meta.url))('typescript');
-const component = await readFile(new URL('../src/components/saibai-genealogy.tsx', import.meta.url), 'utf8');
+const comp = await readFile(new URL('../src/components/saibai-genealogy.tsx', import.meta.url), 'utf8');
 const { outputText } = ts.transpileModule(await readFile(new URL('../src/lib/genealogy-endpoints.ts', import.meta.url), 'utf8'), {
 	compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
@@ -39,6 +39,6 @@ test('genealogy endpoint flags reflect completed incoming and outgoing edges', (
 });
 
 test('the graph builder marks endpoints after adding relationships', () => {
-	const edgesReady = component.indexOf('genealogyData.forEach(addDirectRelationships)');
-	assert.ok(edgesReady >= 0 && component.indexOf('markGenealogyNodeEndpoints(nNodes, nEdges)') > edgesReady);
+	const edgesReady = comp.indexOf('genealogyData.forEach(addDirectRelationships)');
+	assert.ok(edgesReady >= 0 && comp.indexOf('markGenealogyNodeEndpoints(nNodes, nEdges)') > edgesReady);
 });

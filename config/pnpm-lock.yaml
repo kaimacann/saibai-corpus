@@ -88,8 +88,8 @@ importers:
         specifier: ^0.5.20
         version: 0.5.20(tailwindcss@3.4.19(yaml@2.9.1))
       '@terra-symposium/quality':
-        specifier: ^2.4.0
-        version: 2.4.0(eslint@9.39.5(jiti@1.21.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^2.4.3
+        version: 2.4.3(eslint@9.39.5(jiti@1.21.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@types/react':
         specifier: ^19.2.18
         version: 19.3.0
@@ -1738,8 +1738,8 @@ packages:
       react: '>=18'
       react-dom: '>=18'
 
-  '@terra-symposium/quality@2.4.0':
-    resolution: { integrity: sha512-qE3U26LKyQcuAmBIpPaDamygpfej2yWwOOedooZK0WkEOqvQhWu/nb2WiQs9wNsb/EIgVV2gDQWBDBtC0VqMJw== }
+  '@terra-symposium/quality@2.4.3':
+    resolution: { integrity: sha512-/gdEMyrzUCHpMeEOrp9uow8ms65sj9U7HDWuJ9VcsAi3J+k0VA9ZMdvdAOtvXH8iLGSkfEgRSQ91Mdlqb7ub0g== }
     engines: { node: '>=18.18' }
     hasBin: true
     peerDependencies:
@@ -5333,7 +5333,7 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@terra-symposium/quality@2.4.0(eslint@9.39.5(jiti@1.21.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@terra-symposium/quality@2.4.3(eslint@9.39.5(jiti@1.21.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@terra-symposium/boundaries': 0.2.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       typescript: 5.9.3
