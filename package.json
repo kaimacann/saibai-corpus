@@ -38,7 +38,7 @@
 		"@eslint/js": "^9",
 		"@headlessui/tailwindcss": "^0.2.2",
 		"@tailwindcss/typography": "^0.5.20",
-		"@terra-symposium/quality": "^2.4.0",
+		"@terra-symposium/quality": "^2.4.3",
 		"@types/react": "^19.2.18",
 		"@types/react-dom": "^19.2.18",
 		"@types/topojson-client": "^3.1.5",
