@@ -1,3 +1,10 @@
+/**
+ * tests/error-boundary.test.mjs
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
@@ -24,6 +31,10 @@ const { ErrorBoundary: ErrBoundary } = await import(
 );
 
 // Confirms the boundary stores descendant render failures for its fallback.
+/*//////////////////////////////////////////////////
+TESTS
+//////////////////////////////////////////////////*/
+
 test('stores a descendant render error for fallback rendering', () => {
 	const err = new Error('render failed');
 

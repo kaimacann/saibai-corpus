@@ -1,16 +1,13 @@
 /**
+ * config/tailwind.preset.ts
  * tailwind.preset.ts
- *
  * @file Tailwind CSS Preset
- *
  * This file defines a reusable Tailwind CSS config preset.
  * It includes a custom theme with color palettes, font families,
  * animations, and other design tokens. It also configures several
  * Tailwind CSS plugins to extend the framework's functionality.
- *
  * This preset is intended to be used in the main `tailwind.config.js`
  * file to ensure a consistent design system across the project.
- *
  * @see https://tailwindcss.com/docs/presets
  */
 
@@ -51,14 +48,16 @@ const colorLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
  * @returns Color step values mapped to Tailwind color callbacks.
  */
 function colorScale(name: string) {
-	/** Builds one callback entry for the legacy Tailwind color scale.
+	/**
+	 * Builds one callback entry for the legacy Tailwind color scale.
 	 * @param l - Legacy scale step used in the CSS variable name.
 	 * @returns The level and its opacity-aware color callback.
 	 */
 	function toLegacyColorEntry(l: (typeof legacyColorLevels)[number]) {
 		return [l, applyOpacityValue(`--${name}${l}`)] as const;
 	}
-	/** Builds one callback entry for the numbered color scale.
+	/**
+	 * Builds one callback entry for the numbered color scale.
 	 * @param l - Numbered scale step used in the CSS variable name.
 	 * @returns The level and its opacity-aware color callback.
 	 */
@@ -101,7 +100,8 @@ function gridLines(start: number, end: number) {
 	);
 }
 
-/** Maps a numbered gray token to the CSS-variable opacity callback.
+/**
+ * Maps a numbered gray token to the CSS-variable opacity callback.
  *
  * @param n - Numbered gray scale step.
  * @returns The scale key and its opacity-aware color callback.

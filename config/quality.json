@@ -1,6 +1,5 @@
 {
 	"$schema": "../node_modules/@terra-symposium/hygiene/quality.schema.json",
-	"root": ".",
 	"sourceRoots": ["."],
 	"extensions": [
 		".astro",
@@ -75,7 +74,10 @@
 		"required": {
 			"types": true,
 			"functions": true,
-			"exportedFunctions": true
+			"exportedFunctions": true,
+			"importSection": true,
+			"fileHeader": true,
+			"multilineTsdoc": true
 		}
 	},
 	"autofix": {
@@ -94,7 +96,7 @@
 		"tsc": "node_modules/.bin/tsc"
 	},
 	"security": {
-		"runtimeRoots": [],
+		"runtimeRoots": ["scripts/quality-runner.mjs"],
 		"clientRoots": ["src/components"]
 	},
 	"languageProfiles": ["c", "java", "python"]

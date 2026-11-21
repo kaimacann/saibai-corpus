@@ -1,15 +1,25 @@
+/**
+ * src/components/ui/button.tsx
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '@utils';
 import { ACTION_VARIANTS, type ActionVariant } from './variants';
 
-/** Visual variant options shared by button and link controls. */
+/**
+ * Visual variant options shared by button and link controls.
+ */
 type ButtonStyleProps = {
 	variant?: ActionVariant;
 	size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'icon';
 };
 
-/** Renders a button or lets Radix Slot compose the action into its child.
+/**
+ * Renders a button or lets Radix Slot compose the action into its child.
  * @param className - Extra classes merged into the variant styles.
  * @param variant - Action color and treatment.
  * @param size - Button dimensions.
@@ -37,7 +47,8 @@ export const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttrib
 });
 Button.displayName = 'Button';
 
-/** Renders an anchor with the shared action treatments.
+/**
+ * Renders an anchor with the shared action treatments.
  * @param className - Extra classes merged into the link treatment.
  * @param variant - Action color and treatment; defaults to primary-underline.
  * @param size - Optional link dimensions.

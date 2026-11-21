@@ -1,6 +1,11 @@
+/**
+ * src/env.d.ts
+ */
 declare module 'react-simple-maps' {
 	import type React from 'react';
-	/** GeoJSON feature fields consumed by the Saibai map views. */
+	/**
+	 * GeoJSON feature fields consumed by the Saibai map views.
+	 */
 	export type MapGeography = {
 		rsmKey: string;
 		geometry?: { type?: string };

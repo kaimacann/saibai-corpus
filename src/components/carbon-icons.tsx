@@ -1,3 +1,10 @@
+/**
+ * src/components/carbon-icons.tsx
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import type { SVGProps } from 'react';
 
 const THIRTY_NUMERAL_PATH =
@@ -23,7 +30,8 @@ const ICON_PATHS = {
 	],
 } as const;
 
-/** Turns one path string into a keyed SVG node.
+/**
+ * Turns one path string into a keyed SVG node.
  * @param p - SVG path description for a single icon layer.
  * @param i - Layer position in the selected icon's path array.
  * @returns The path node used to draw that icon layer.

@@ -1,4 +1,9 @@
-/** A Saibai genealogy entry with family relationships and optional media. */
+/**
+ * src/lib/types.ts
+ */
+/**
+ * A Saibai genealogy entry with family relationships and optional media.
+ */
 export type Person = {
 	id: string;
 	name: string;

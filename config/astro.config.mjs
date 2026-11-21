@@ -1,3 +1,10 @@
+/**
+ * config/astro.config.mjs
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import { terraErrorBoundaryIntegration as __terraErrorBoundaryIntegration } from '@terra-symposium/boundaries/astro-integration';
 import react from '@astrojs/react';
 import { defineConfig } from 'astro/config';

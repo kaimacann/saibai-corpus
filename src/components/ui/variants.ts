@@ -1,16 +1,33 @@
+/**
+ * src/components/ui/variants.ts
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import { cva } from 'class-variance-authority';
 
-/** Semantic palette names available to the shared controls. */
+/**
+ * Semantic palette names available to the shared controls.
+ */
 type UiColor = 'primary' | 'secondary' | 'gray' | 'destructive';
-/** Treatment names used to build a semantic UI variant. */
+/**
+ * Treatment names used to build a semantic UI variant.
+ */
 type UiType = 'default' | 'outline' | 'ghost' | 'tonal' | 'saturated' | 'underline';
-/** Valid color and treatment combinations for action controls. */
+/**
+ * Valid color and treatment combinations for action controls.
+ */
 export type ActionVariant = UiColor | `${UiColor}-${Exclude<UiType, 'default' | 'saturated'>}`;
 
-/** Valid color and treatment combinations for containing surfaces. */
+/**
+ * Valid color and treatment combinations for containing surfaces.
+ */
 export type SurfaceVariant = UiColor | `${UiColor}-${Exclude<UiType, 'default' | 'underline'>}`;
 
-/** Compiles semantic palette and size options into the shared action-button classes. */
+/**
+ * Compiles semantic palette and size options into the shared action-button classes.
+ */
 export const ACTION_VARIANTS = cva('', {
 	variants: {
 		variant: {

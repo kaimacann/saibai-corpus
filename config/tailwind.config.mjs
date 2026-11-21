@@ -1,3 +1,10 @@
+/**
+ * config/tailwind.config.mjs
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import preset from './tailwind.preset.ts';
 import vidstack from 'vidstack/tailwind.cjs';
 

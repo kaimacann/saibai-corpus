@@ -1,3 +1,10 @@
+/**
+ * tests/corpus-tabs.test.mjs
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { test } from 'node:test';
@@ -10,6 +17,10 @@ const { outputText } = ts.transpileModule(await readFile(new URL('../src/lib/cor
 const { resolveCorpusTab } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 
 // Confirms shared URLs select supported tabs and malformed tabs use a safe default.
+/*//////////////////////////////////////////////////
+TESTS
+//////////////////////////////////////////////////*/
+
 test('selected corpus tabs hydrate from validated URL parameters', () => {
 	assert.equal(resolveCorpusTab('?tab=Geographic', 'Chronological'), 'Geographic');
 	assert.equal(resolveCorpusTab('?tab=Genealogical', 'Chronological'), 'Genealogical');

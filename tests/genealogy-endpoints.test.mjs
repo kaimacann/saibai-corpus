@@ -1,3 +1,10 @@
+/**
+ * tests/genealogy-endpoints.test.mjs
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
@@ -9,6 +16,10 @@ const { outputText } = ts.transpileModule(await readFile(new URL('../src/lib/gen
 	compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const { getSpousePairChildren, markGenealogyNodeEndpoints } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
+
+/*//////////////////////////////////////////////////
+TESTS
+//////////////////////////////////////////////////*/
 
 test('spouse pair child lookup includes distinct children from both records', () => {
 	assert.deepEqual(

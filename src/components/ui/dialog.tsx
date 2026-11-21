@@ -1,3 +1,10 @@
+/**
+ * src/components/ui/dialog.tsx
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import React from 'react';
 import * as Primitive from '@radix-ui/react-dialog';
 import { cn } from '@utils';

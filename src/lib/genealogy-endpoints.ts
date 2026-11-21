@@ -1,7 +1,15 @@
+/**
+ * src/lib/genealogy-endpoints.ts
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import type { Person } from '@lib/types';
 
 // hygiene-ignore single-use -- This exported graph operation is exercised directly by genealogy endpoint tests and used by the renderer.
-/** Returns distinct child IDs recorded by either person in a spouse pair.
+/**
+ * Returns distinct child IDs recorded by either person in a spouse pair.
  * @param people - Source records for the corpus graph.
  * @param personId - ID of the current person's record.
  * @param spouseId - ID of the current person's spouse record.

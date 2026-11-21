@@ -1,3 +1,10 @@
+/**
+ * config/eslint.config.mjs
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
 import js from '@eslint/js';
 import astro from 'eslint-plugin-astro';
 import unusedImports from 'eslint-plugin-unused-imports';

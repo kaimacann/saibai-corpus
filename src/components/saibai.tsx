@@ -1,4 +1,5 @@
 /**
+ * src/components/saibai.tsx
  * astro/src/pages/docs/_custom/saibai.tsx
  * React-only entry point for the Saibai corpus docs family.
  * Folder boundary: Saibai-specific authorable content; generic Docs components remain outside `_custom`.
@@ -43,10 +44,13 @@ const LazyGenealogy = React.lazy(async (): Promise<{ default: typeof import('./s
 	default: (await import('./saibai-genealogy')).Genealogy,
 }));
 
-/** Footer identity and optional profile URL for a corpus contributor. */
+/**
+ * Footer identity and optional profile URL for a corpus contributor.
+ */
 type Contributor = readonly [name: string, href?: string];
 
-/** Renders a contributor's name and optional profile destination in the footer.
+/**
+ * Renders a contributor's name and optional profile destination in the footer.
  * @param c - Display name and optional external profile URL.
  * @returns A footer link for the contributor.
  */
@@ -107,16 +111,19 @@ export function Saibai(): JSX.Element {
 }
 
 /*//////////////////////////////////////////////////
-CONFIG
-//////////////////////////////////////////////////*/
-/*//////////////////////////////////////////////////
 REGEX
 //////////////////////////////////////////////////*/
-/** Shared wrapper styles for corpus panels. */
+/**
+ * Shared wrapper styles for corpus panels.
+ */
 export const PANEL_CLASSES = 'relative size-full overflow-clip rounded border border-cyan-800 scrim-cyan-900 scrim-14';
-/** Shared layout styles for corpus tab panels. */
+/**
+ * Shared layout styles for corpus tab panels.
+ */
 export const TAB_VIEW_CLASSES = 'relative data-[state=active]:flex data-[state=inactive]:hidden h-screen w-full grow flex-col p-10';
-/** Shared control styles for Vidstack media buttons. */
+/**
+ * Shared control styles for Vidstack media buttons.
+ */
 export const MEDIA_BUTTON_CLASSES = 'flex size-12 items-center justify-center rounded-full outline-none ring-inset ring-offset-4 data-[focus]:ring-2 data-[focus]:ring-blue-400';
 
 // hygiene-ignore single-use -- This stateful dialog needs its own React component boundary when rendered by the page.
@@ -153,7 +160,8 @@ MEDIA COMPONENTS
 //////////////////////////////////////////////////*/
 
 // hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
-/** Draws the neutral base beneath the audio slider's buffered and played ranges.
+/**
+ * Draws the neutral base beneath the audio slider's buffered and played ranges.
  * @param className - Extra classes merged with the slider track styles.
  * @returns The base track element.
  */
@@ -162,7 +170,8 @@ function SliderTrack({ className }: { className?: string }): React.JSX.Element {
 }
 
 // hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
-/** Draws the portion of the audio slider that has already played.
+/**
+ * Draws the portion of the audio slider that has already played.
  * @param className - Extra classes merged with the played-range styles.
  * @returns The played-range element.
  */
@@ -176,7 +185,8 @@ function SliderTrackFill({ className }: { className?: string }): React.JSX.Eleme
 }
 
 // hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
-/** Draws the buffered range behind the played portion of the audio slider.
+/**
+ * Draws the buffered range behind the played portion of the audio slider.
  * @param className - Extra classes merged with the buffered-range styles.
  * @returns The buffered-range element.
  */
@@ -190,7 +200,8 @@ function SliderTrackProgress({ className }: { className?: string }): React.JSX.E
 }
 
 // hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
-/** Marks the current playback position and follows the pointer while dragging.
+/**
+ * Marks the current playback position and follows the pointer while dragging.
  * @param className - Extra classes merged with the slider thumb styles.
  * @returns The playback-position indicator.
  */
@@ -202,7 +213,8 @@ function SliderThumb({ className }: { className?: string }): React.JSX.Element {
 	);
 }
 
-/** Positions thumbnail and time content at the slider's current hover point.
+/**
+ * Positions thumbnail and time content at the slider's current hover point.
  * @param children - Thumbnail and time components shown in the preview.
  * @returns Vidstack's slider preview slot.
  */
@@ -363,7 +375,8 @@ MAP COMPONENT
 //////////////////////////////////////////////////*/
 
 // hygiene-ignore single-use -- This module-level fallback retains a stable function identity across map renders.
-/** Provides the map-specific fallback while keeping the rest of the corpus usable.
+/**
+ * Provides the map-specific fallback while keeping the rest of the corpus usable.
  * @returns An alert explaining that the map is unavailable.
  */
 function renderMapFailureFallback(): React.JSX.Element {
@@ -386,7 +399,8 @@ export function GeographicMap(): React.JSX.Element {
 		return SAIBAI.objects[objectKey] ? feature(SAIBAI as never, SAIBAI.objects[objectKey] as never) : null;
 	}, []);
 
-	/** Selects one map feature when its geography shape can open details.
+	/**
+	 * Selects one map feature when its geography shape can open details.
 	 * @param g - Geography feature rendered by react-simple-maps.
 	 * @returns The feature element and optional selection handler.
 	 */
@@ -417,7 +431,8 @@ export function GeographicMap(): React.JSX.Element {
 		);
 	}
 
-	/** Renders one video listed on the selected map feature.
+	/**
+	 * Renders one video listed on the selected map feature.
 	 * @param v - Video URL and optional title from the map properties.
 	 * @param i - Video position used for the fallback title and React key.
 	 * @returns The embedded video frame.
@@ -526,11 +541,14 @@ const CORPUS_TABS = [
 	},
 ];
 
-/** Identifier, label, style, and optional component for a corpus view. */
+/**
+ * Identifier, label, style, and optional component for a corpus view.
+ */
 type CorpusTab = (typeof CORPUS_TABS)[number];
 
 // hygiene-ignore single-use -- This module-level fallback retains a stable function identity across dashboard renders.
-/** Keeps a corpus rendering error from removing the rest of the page.
+/**
+ * Keeps a corpus rendering error from removing the rest of the page.
  * @returns A message that the corpus dashboard could not be rendered.
  */
 function renderCorpusFailureFallback(): React.JSX.Element {
@@ -550,7 +568,8 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 	const [selectedTab, setSelectedTab] = useState(resolveCorpusTab('', defaultTab));
 	useEffect(() => setSelectedTab(resolveCorpusTab(window.location.search, defaultTab)), [defaultTab]);
 
-	/** Renders one navigation control for a configured corpus view.
+	/**
+	 * Renders one navigation control for a configured corpus view.
 	 * @param t - View identifier and visible label.
 	 * @returns The view's Radix tab trigger.
 	 */
@@ -562,7 +581,8 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 		);
 	}
 
-	/** Renders one audio entry in the chronological corpus view.
+	/**
+	 * Renders one audio entry in the chronological corpus view.
 	 * @param i - Recording metadata and audio source from the archive.
 	 * @returns The audio player for the entry.
 	 */
@@ -570,7 +590,8 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 		return <Player key={i.audio} title={i.title} author={i.author} src={i.audio} />;
 	}
 
-	/** Renders a titled set of recordings in the chronological archive.
+	/**
+	 * Renders a titled set of recordings in the chronological archive.
 	 * @param s - Section heading and its description and recordings.
 	 * @returns The sticky heading and its audio players.
 	 */
@@ -588,7 +609,8 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 		);
 	}
 
-	/** Renders one tab panel and its selected view.
+	/**
+	 * Renders one tab panel and its selected view.
 	 * @param t - View identifier, style, and optional component.
 	 * @returns The tab panel and its view contents.
 	 */

@@ -1,4 +1,4 @@
-@import 'effects.css';
+@import './effects.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
