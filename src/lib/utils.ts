@@ -12,6 +12,7 @@ import { twMerge } from 'tailwind-merge';
  * Combines conditional class names and resolves conflicting Tailwind utilities.
  *
  * @param inputs - Class values accepted by clsx.
+ *
  * @returns A normalized class string with conflicting utilities merged.
  */
 export function cn(...inputs: ClassValue[]): string {

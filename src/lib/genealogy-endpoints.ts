@@ -10,9 +10,11 @@ import type { Person } from '@lib/types';
 // hygiene-ignore single-use -- This exported graph operation is exercised directly by genealogy endpoint tests and used by the renderer.
 /**
  * Returns distinct child IDs recorded by either person in a spouse pair.
+ *
  * @param people - Source records for the corpus graph.
  * @param personId - ID of the current person's record.
  * @param spouseId - ID of the current person's spouse record.
+ *
  * @returns Children listed by either partner, in source order without duplicates.
  */
 export function getSpousePairChildren(people: Person[], personId: string, spouseId: string): string[] {
@@ -35,12 +37,12 @@ export function getSpousePairChildren(people: Person[], personId: string, spouse
  * @return Nothing; custom person-node data receives `origin` and `terminus` flags.
  */
 export function markGenealogyNodeEndpoints(nodes: { id: string; type: string; data: object }[], edges: { source: string; target: string }[]): void {
-	const targets = new Set(edges.map(e => e.target));
+	const tgts = new Set(edges.map(e => e.target));
 	const srcs = new Set(edges.map(e => e.source));
 	for (const node of nodes) {
 		if (node.type !== 'custom') continue;
 		const data = node.data as { origin?: boolean; terminus?: boolean };
-		data.origin = targets.has(node.id);
+		data.origin = tgts.has(node.id);
 		data.terminus = srcs.has(node.id);
 	}
 }

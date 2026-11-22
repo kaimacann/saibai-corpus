@@ -20,12 +20,14 @@ type ButtonStyleProps = {
 
 /**
  * Renders a button or lets Radix Slot compose the action into its child.
+ *
  * @param className - Extra classes merged into the variant styles.
  * @param variant - Action color and treatment.
  * @param size - Button dimensions.
  * @param asChild - Whether the button should clone its child with the styles.
  * @param attrs - Native button attributes forwarded to the rendered element.
  * @param ref - Ref forwarded to the rendered button or slot child.
+ *
  * @returns The configured button action.
  */
 export const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonStyleProps & { asChild?: boolean }>(function (
@@ -49,11 +51,13 @@ Button.displayName = 'Button';
 
 /**
  * Renders an anchor with the shared action treatments.
+ *
  * @param className - Extra classes merged into the link treatment.
  * @param variant - Action color and treatment; defaults to primary-underline.
  * @param size - Optional link dimensions.
  * @param attrs - Native anchor attributes forwarded to the link.
  * @param ref - Ref forwarded to the anchor element.
+ *
  * @returns The styled navigation link.
  */
 export const ButtonLink = React.forwardRef<HTMLAnchorElement, React.AnchorHTMLAttributes<HTMLAnchorElement> & ButtonStyleProps>(function (

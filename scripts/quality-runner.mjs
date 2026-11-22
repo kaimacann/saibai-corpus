@@ -43,7 +43,9 @@ while (scan.length) {
 raw.skippedFiles = [...new Set([...(raw.skippedFiles ?? []), ...genLinks])];
 /**
  * Keeps build and test commands outside the source-hygiene pass so they run in their own gates.
+ *
  * @param entry Configured quality command with a name and arguments.
+ *
  * @return Whether the command belongs to the build or test gate.
  */
 const isBuildOrTest = entry =>

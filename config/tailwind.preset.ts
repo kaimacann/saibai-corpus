@@ -33,6 +33,7 @@ HELPERS
  * Creates a Tailwind color callback backed by an RGB CSS custom property.
  *
  * @param variable - CSS custom property containing the color's RGB channels.
+ *
  * @returns A callback that formats the color with Tailwind's requested opacity.
  */
 function applyOpacityValue(variable: string) {
@@ -45,21 +46,26 @@ const colorLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
  * Builds legacy and numbered color steps for a named CSS variable palette.
  *
  * @param name - Palette prefix used in each CSS custom property name.
+ *
  * @returns Color step values mapped to Tailwind color callbacks.
  */
 function colorScale(name: string) {
 	/**
-	 * Builds one callback entry for the legacy Tailwind color scale.
-	 * @param l - Legacy scale step used in the CSS variable name.
-	 * @returns The level and its opacity-aware color callback.
+ * Builds one callback entry for the legacy Tailwind color scale.
+ *
+ * @param l - Legacy scale step used in the CSS variable name.
+ *
+ * @returns The level and its opacity-aware color callback.
 	 */
 	function toLegacyColorEntry(l: (typeof legacyColorLevels)[number]) {
 		return [l, applyOpacityValue(`--${name}${l}`)] as const;
 	}
 	/**
-	 * Builds one callback entry for the numbered color scale.
-	 * @param l - Numbered scale step used in the CSS variable name.
-	 * @returns The level and its opacity-aware color callback.
+ * Builds one callback entry for the numbered color scale.
+ *
+ * @param l - Numbered scale step used in the CSS variable name.
+ *
+ * @returns The level and its opacity-aware color callback.
 	 */
 	function toNumberedColorEntry(l: (typeof colorLevels)[number]) {
 		return [l, applyOpacityValue(`--${name}-${l}`)] as const;
@@ -74,6 +80,7 @@ const transform =
  *
  * @param start - First span size to include.
  * @param end - Last span size to include.
+ *
  * @returns Grid span classes keyed by their `span-N` utility names.
  */
 function gridSpans(start: number, end: number) {
@@ -89,6 +96,7 @@ function gridSpans(start: number, end: number) {
  *
  * @param start - First grid line number to include.
  * @param end - Last grid line number to include.
+ *
  * @returns Grid line values keyed by their numeric line numbers.
  */
 function gridLines(start: number, end: number) {
@@ -104,6 +112,7 @@ function gridLines(start: number, end: number) {
  * Maps a numbered gray token to the CSS-variable opacity callback.
  *
  * @param n - Numbered gray scale step.
+ *
  * @returns The scale key and its opacity-aware color callback.
  */
 function toGrayColorEntry(n: (typeof colorLevels)[number]) {

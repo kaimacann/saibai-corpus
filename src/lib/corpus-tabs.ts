@@ -13,8 +13,10 @@ export type CorpusTabId = (typeof CORPUS_TAB_IDS)[number];
 
 /**
  * Resolves a shared tab URL while rejecting unknown values and retaining the configured fallback.
+ *
  * @param search - Query string from the current URL.
  * @param defaultTab - Configured tab to use when the URL has no valid selection.
+ *
  * @returns A supported corpus tab identifier.
  */
 export function resolveCorpusTab(search: string, defaultTab: string): CorpusTabId {
@@ -26,7 +28,9 @@ export function resolveCorpusTab(search: string, defaultTab: string): CorpusTabI
 
 /**
  * Narrows a query or configuration value to a supported corpus tab identifier.
+ *
  * @param value Candidate tab value, including `null` when the URL omits it.
+ *
  * @returns Whether the candidate is one of the configured tab identifiers.
  */
 function isCorpusTabId(value: string | null): value is CorpusTabId {

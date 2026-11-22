@@ -14,6 +14,7 @@ import { cn } from '@utils';
  * @param className - Additional CSS classes merged into the alert.
  * @param variant - Visual treatment for the message.
  * @param attributes - Remaining HTML attributes forwarded to the alert element.
+ *
  * @returns The styled status message.
  */
 function Alert({
@@ -30,6 +31,7 @@ function Alert({
  *
  * @param className - Additional CSS classes merged into the heading.
  * @param attributes - Remaining HTML attributes forwarded to the heading.
+ *
  * @returns The styled alert heading.
  */
 function AlertTitle({ className, ...attributes }: React.HTMLAttributes<HTMLHeadingElement>): React.JSX.Element {
@@ -40,6 +42,7 @@ function AlertTitle({ className, ...attributes }: React.HTMLAttributes<HTMLHeadi
  *
  * @param className - Additional CSS classes merged into the description.
  * @param attributes - Remaining HTML attributes forwarded to the paragraph.
+ *
  * @returns The styled alert description.
  */
 function AlertDescription({ className, ...attributes }: React.HTMLAttributes<HTMLParagraphElement>): React.JSX.Element {
@@ -50,6 +53,7 @@ function AlertDescription({ className, ...attributes }: React.HTMLAttributes<HTM
  *
  * @param title - Heading displayed above the error description.
  * @param description - Explanation shown to the user.
+ *
  * @returns The composed destructive alert.
  */
 export function AlertError({ title, description }: { title: string; description: string }): React.JSX.Element {

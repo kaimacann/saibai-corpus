@@ -51,7 +51,9 @@ type Contributor = readonly [name: string, href?: string];
 
 /**
  * Renders a contributor's name and optional profile destination in the footer.
+ *
  * @param c - Display name and optional external profile URL.
+ *
  * @returns A footer link for the contributor.
  */
 function renderContributor(c: Contributor): React.JSX.Element {
@@ -69,6 +71,7 @@ COMPONENTS
 
 /**
  * Renders the Saibai corpus landing page without an Astro layout wrapper.
+ *
  * @returns The Saibai landing page.
  */
 export function Saibai(): JSX.Element {
@@ -162,7 +165,9 @@ MEDIA COMPONENTS
 // hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /**
  * Draws the neutral base beneath the audio slider's buffered and played ranges.
+ *
  * @param className - Extra classes merged with the slider track styles.
+ *
  * @returns The base track element.
  */
 function SliderTrack({ className }: { className?: string }): React.JSX.Element {
@@ -172,7 +177,9 @@ function SliderTrack({ className }: { className?: string }): React.JSX.Element {
 // hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /**
  * Draws the portion of the audio slider that has already played.
+ *
  * @param className - Extra classes merged with the played-range styles.
+ *
  * @returns The played-range element.
  */
 function SliderTrackFill({ className }: { className?: string }): React.JSX.Element {
@@ -187,7 +194,9 @@ function SliderTrackFill({ className }: { className?: string }): React.JSX.Eleme
 // hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /**
  * Draws the buffered range behind the played portion of the audio slider.
+ *
  * @param className - Extra classes merged with the buffered-range styles.
+ *
  * @returns The buffered-range element.
  */
 function SliderTrackProgress({ className }: { className?: string }): React.JSX.Element {
@@ -202,7 +211,9 @@ function SliderTrackProgress({ className }: { className?: string }): React.JSX.E
 // hygiene-ignore single-use -- Vidstack receives this as a component; inlining would change its component boundary and slot identity.
 /**
  * Marks the current playback position and follows the pointer while dragging.
+ *
  * @param className - Extra classes merged with the slider thumb styles.
+ *
  * @returns The playback-position indicator.
  */
 function SliderThumb({ className }: { className?: string }): React.JSX.Element {
@@ -215,7 +226,9 @@ function SliderThumb({ className }: { className?: string }): React.JSX.Element {
 
 /**
  * Positions thumbnail and time content at the slider's current hover point.
+ *
  * @param children - Thumbnail and time components shown in the preview.
+ *
  * @returns Vidstack's slider preview slot.
  */
 function SliderPreview({ children }: { children: ReactNode }): React.JSX.Element {
@@ -266,6 +279,7 @@ export function MediaSlider({ className, src }: { className?: string; src?: stri
  * @remarks Vidstack Play/Pause button wrapper handling iconography.
  *
  * @param attrs - Additional attributes forwarded to the media play control.
+ *
  * @returns Vidstack's accessible play/pause button.
  */
 function PlayButton(attrs: React.ComponentProps<typeof MediaPlayButton>) {
@@ -377,6 +391,7 @@ MAP COMPONENT
 // hygiene-ignore single-use -- This module-level fallback retains a stable function identity across map renders.
 /**
  * Provides the map-specific fallback while keeping the rest of the corpus usable.
+ *
  * @returns An alert explaining that the map is unavailable.
  */
 function renderMapFailureFallback(): React.JSX.Element {
@@ -400,9 +415,11 @@ export function GeographicMap(): React.JSX.Element {
 	}, []);
 
 	/**
-	 * Selects one map feature when its geography shape can open details.
-	 * @param g - Geography feature rendered by react-simple-maps.
-	 * @returns The feature element and optional selection handler.
+ * Selects one map feature when its geography shape can open details.
+ *
+ * @param g - Geography feature rendered by react-simple-maps.
+ *
+ * @returns The feature element and optional selection handler.
 	 */
 	function renderGeography(g: MapGeography): React.JSX.Element {
 		const props = g.properties || {};
@@ -432,10 +449,12 @@ export function GeographicMap(): React.JSX.Element {
 	}
 
 	/**
-	 * Renders one video listed on the selected map feature.
-	 * @param v - Video URL and optional title from the map properties.
-	 * @param i - Video position used for the fallback title and React key.
-	 * @returns The embedded video frame.
+ * Renders one video listed on the selected map feature.
+ *
+ * @param v - Video URL and optional title from the map properties.
+ * @param i - Video position used for the fallback title and React key.
+ *
+ * @returns The embedded video frame.
 	 */
 	function renderSelectedVideo(v: NonNullable<NonNullable<MapGeography['properties']>['videos']>[number], i: number): React.JSX.Element {
 		return (
@@ -500,6 +519,7 @@ MAIN CORPUS DASHBOARD
  *
  * @param value - Identifies the specific tab panel.
  * @param children - Button label/content.
+ *
  * @returns A tabs trigger that updates the URL and scrolls to the history panel when selected.
  */
 function TabsTrigger({ value, children }: { value: string; children: React.ReactNode }): React.JSX.Element {
@@ -549,6 +569,7 @@ type CorpusTab = (typeof CORPUS_TABS)[number];
 // hygiene-ignore single-use -- This module-level fallback retains a stable function identity across dashboard renders.
 /**
  * Keeps a corpus rendering error from removing the rest of the page.
+ *
  * @returns A message that the corpus dashboard could not be rendered.
  */
 function renderCorpusFailureFallback(): React.JSX.Element {
@@ -562,6 +583,7 @@ function renderCorpusFailureFallback(): React.JSX.Element {
  * @remarks The primary dashboard interface organizing Timeline, Map, and Genealogy views into tabs.
  *
  * @param defaultTab - Initializes the view (e.g., 'Chronological', 'Geographic', 'Genealogical').
+ *
  * @returns Fully composed layout with integrated sub-components.
  */
 function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
@@ -569,9 +591,11 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 	useEffect(() => setSelectedTab(resolveCorpusTab(window.location.search, defaultTab)), [defaultTab]);
 
 	/**
-	 * Renders one navigation control for a configured corpus view.
-	 * @param t - View identifier and visible label.
-	 * @returns The view's Radix tab trigger.
+ * Renders one navigation control for a configured corpus view.
+ *
+ * @param t - View identifier and visible label.
+ *
+ * @returns The view's Radix tab trigger.
 	 */
 	function renderTabButton(t: CorpusTab): React.JSX.Element {
 		return (
@@ -582,18 +606,22 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 	}
 
 	/**
-	 * Renders one audio entry in the chronological corpus view.
-	 * @param i - Recording metadata and audio source from the archive.
-	 * @returns The audio player for the entry.
+ * Renders one audio entry in the chronological corpus view.
+ *
+ * @param i - Recording metadata and audio source from the archive.
+ *
+ * @returns The audio player for the entry.
 	 */
 	function renderTimelineItem(i: { title: string; author: string; audio: string }): React.JSX.Element {
 		return <Player key={i.audio} title={i.title} author={i.author} src={i.audio} />;
 	}
 
 	/**
-	 * Renders a titled set of recordings in the chronological archive.
-	 * @param s - Section heading and its description and recordings.
-	 * @returns The sticky heading and its audio players.
+ * Renders a titled set of recordings in the chronological archive.
+ *
+ * @param s - Section heading and its description and recordings.
+ *
+ * @returns The sticky heading and its audio players.
 	 */
 	function renderTimelineSection(s: [string, TimelineGroup]): React.JSX.Element {
 		const [section, group] = s;
@@ -610,9 +638,11 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 	}
 
 	/**
-	 * Renders one tab panel and its selected view.
-	 * @param t - View identifier, style, and optional component.
-	 * @returns The tab panel and its view contents.
+ * Renders one tab panel and its selected view.
+ *
+ * @param t - View identifier, style, and optional component.
+ *
+ * @returns The tab panel and its view contents.
 	 */
 	function renderCorpusPanel(t: CorpusTab): React.JSX.Element {
 		return (
