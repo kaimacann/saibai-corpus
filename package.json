@@ -12,7 +12,9 @@
 		"build": "pnpm --dir config run build",
 		"quality": "node \"$(git rev-parse --show-toplevel)/scripts/quality-runner.mjs\" quality",
 		"quality:all": "node \"$(git rev-parse --show-toplevel)/scripts/quality-runner.mjs\" quality --all",
-		"test": "pnpm --dir config run test"
+		"test": "pnpm --dir config run test",
+		"skills:prepare": "terra-skills prepare",
+		"skills:check": "terra-skills check"
 	},
 	"dependencies": {
 		"@astrojs/react": "^6.0.4",
@@ -57,7 +59,8 @@
 		"tailwindcss-scrim-gradients": "^0.4.2",
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8",
-		"vidstack": "^0.4.5"
+		"vidstack": "^0.4.5",
+		"@terra-symposium/skills": "0.1.2"
 	},
 	"engines": {
 		"node": ">=22.19.0"

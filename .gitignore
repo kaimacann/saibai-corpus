@@ -17,3 +17,6 @@ tests/results/
 
 # Local generated caches and dependency links
 .astro
+
+# Generated agent skills
+/.agents/skills/
