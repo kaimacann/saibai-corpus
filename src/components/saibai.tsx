@@ -415,11 +415,11 @@ export function GeographicMap(): React.JSX.Element {
 	}, []);
 
 	/**
- * Selects one map feature when its geography shape can open details.
- *
- * @param g - Geography feature rendered by react-simple-maps.
- *
- * @returns The feature element and optional selection handler.
+	 * Selects one map feature when its geography shape can open details.
+	 *
+	 * @param g - Geography feature rendered by react-simple-maps.
+	 *
+	 * @returns The feature element and optional selection handler.
 	 */
 	function renderGeography(g: MapGeography): React.JSX.Element {
 		const props = g.properties || {};
@@ -449,12 +449,12 @@ export function GeographicMap(): React.JSX.Element {
 	}
 
 	/**
- * Renders one video listed on the selected map feature.
- *
- * @param v - Video URL and optional title from the map properties.
- * @param i - Video position used for the fallback title and React key.
- *
- * @returns The embedded video frame.
+	 * Renders one video listed on the selected map feature.
+	 *
+	 * @param v - Video URL and optional title from the map properties.
+	 * @param i - Video position used for the fallback title and React key.
+	 *
+	 * @returns The embedded video frame.
 	 */
 	function renderSelectedVideo(v: NonNullable<NonNullable<MapGeography['properties']>['videos']>[number], i: number): React.JSX.Element {
 		return (
@@ -591,11 +591,11 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 	useEffect(() => setSelectedTab(resolveCorpusTab(window.location.search, defaultTab)), [defaultTab]);
 
 	/**
- * Renders one navigation control for a configured corpus view.
- *
- * @param t - View identifier and visible label.
- *
- * @returns The view's Radix tab trigger.
+	 * Renders one navigation control for a configured corpus view.
+	 *
+	 * @param t - View identifier and visible label.
+	 *
+	 * @returns The view's Radix tab trigger.
 	 */
 	function renderTabButton(t: CorpusTab): React.JSX.Element {
 		return (
@@ -606,22 +606,22 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 	}
 
 	/**
- * Renders one audio entry in the chronological corpus view.
- *
- * @param i - Recording metadata and audio source from the archive.
- *
- * @returns The audio player for the entry.
+	 * Renders one audio entry in the chronological corpus view.
+	 *
+	 * @param i - Recording metadata and audio source from the archive.
+	 *
+	 * @returns The audio player for the entry.
 	 */
 	function renderTimelineItem(i: { title: string; author: string; audio: string }): React.JSX.Element {
 		return <Player key={i.audio} title={i.title} author={i.author} src={i.audio} />;
 	}
 
 	/**
- * Renders a titled set of recordings in the chronological archive.
- *
- * @param s - Section heading and its description and recordings.
- *
- * @returns The sticky heading and its audio players.
+	 * Renders a titled set of recordings in the chronological archive.
+	 *
+	 * @param s - Section heading and its description and recordings.
+	 *
+	 * @returns The sticky heading and its audio players.
 	 */
 	function renderTimelineSection(s: [string, TimelineGroup]): React.JSX.Element {
 		const [section, group] = s;
@@ -638,11 +638,11 @@ function Corpus({ defaultTab }: { defaultTab: string }): React.JSX.Element {
 	}
 
 	/**
- * Renders one tab panel and its selected view.
- *
- * @param t - View identifier, style, and optional component.
- *
- * @returns The tab panel and its view contents.
+	 * Renders one tab panel and its selected view.
+	 *
+	 * @param t - View identifier, style, and optional component.
+	 *
+	 * @returns The tab panel and its view contents.
 	 */
 	function renderCorpusPanel(t: CorpusTab): React.JSX.Element {
 		return (

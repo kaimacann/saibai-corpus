@@ -51,21 +51,21 @@ const colorLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
  */
 function colorScale(name: string) {
 	/**
- * Builds one callback entry for the legacy Tailwind color scale.
- *
- * @param l - Legacy scale step used in the CSS variable name.
- *
- * @returns The level and its opacity-aware color callback.
+	 * Builds one callback entry for the legacy Tailwind color scale.
+	 *
+	 * @param l - Legacy scale step used in the CSS variable name.
+	 *
+	 * @returns The level and its opacity-aware color callback.
 	 */
 	function toLegacyColorEntry(l: (typeof legacyColorLevels)[number]) {
 		return [l, applyOpacityValue(`--${name}${l}`)] as const;
 	}
 	/**
- * Builds one callback entry for the numbered color scale.
- *
- * @param l - Numbered scale step used in the CSS variable name.
- *
- * @returns The level and its opacity-aware color callback.
+	 * Builds one callback entry for the numbered color scale.
+	 *
+	 * @param l - Numbered scale step used in the CSS variable name.
+	 *
+	 * @returns The level and its opacity-aware color callback.
 	 */
 	function toNumberedColorEntry(l: (typeof colorLevels)[number]) {
 		return [l, applyOpacityValue(`--${name}-${l}`)] as const;

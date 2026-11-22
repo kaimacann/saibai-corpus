@@ -278,17 +278,17 @@ function getLayoutedEls<TNode extends Node>(nodes: TNode[], edges: ReactFlowEdge
 		ranksep: opts.ranksep || 50,
 	});
 	/**
- * Adds each source relationship to Dagre's working graph.
- *
- * @param e - React Flow edge whose endpoints define the relationship.
+	 * Adds each source relationship to Dagre's working graph.
+	 *
+	 * @param e - React Flow edge whose endpoints define the relationship.
 	 */
 	function addEdgeToGraph(e: ReactFlowEdge): void {
 		g.setEdge(e.source, e.target);
 	}
 	/**
- * Adds one node with dimensions needed by Dagre's positioning pass.
- *
- * @param n - React Flow node to size and register.
+	 * Adds one node with dimensions needed by Dagre's positioning pass.
+	 *
+	 * @param n - React Flow node to size and register.
 	 */
 	function addNodeToGraph(n: TNode): void {
 		g.setNode(n.id, { ...n, ...getNodeDimensions(n) });
@@ -298,11 +298,11 @@ function getLayoutedEls<TNode extends Node>(nodes: TNode[], edges: ReactFlowEdge
 	Dagre.layout(g);
 
 	/**
- * Applies Dagre's center coordinates to React Flow's top-left positions.
- *
- * @param n - Original node to position in the laid-out graph.
- *
- * @returns The node with layout position and dragging disabled.
+	 * Applies Dagre's center coordinates to React Flow's top-left positions.
+	 *
+	 * @param n - Original node to position in the laid-out graph.
+	 *
+	 * @returns The node with layout position and dragging disabled.
 	 */
 	function positionNode(n: TNode): TNode {
 		const { x, y } = g.node(n.id);
@@ -332,21 +332,21 @@ function getLayoutedEls<TNode extends Node>(nodes: TNode[], edges: ReactFlowEdge
 function PersonNode({ data }: NodeProps<PersonGraphNode>) {
 	const { nodeData, setSelectedNode } = data;
 	/**
- * Finds a different person sharing the selected node's id.
- *
- * @param p - Record checked for an id/name collision.
- *
- * @returns Whether the record conflicts with the rendered node identity.
+	 * Finds a different person sharing the selected node's id.
+	 *
+	 * @param p - Record checked for an id/name collision.
+	 *
+	 * @returns Whether the record conflicts with the rendered node identity.
 	 */
 	function hasConflictingNameForSelectedId(p: Person): boolean {
 		return p.id === nodeData.id && p.name !== nodeData.name;
 	}
 	/**
- * Matches the original data record represented by this rendered node.
- *
- * @param p - Record from the source genealogy data.
- *
- * @returns Whether the record maps uniquely to the rendered node.
+	 * Matches the original data record represented by this rendered node.
+	 *
+	 * @param p - Record from the source genealogy data.
+	 *
+	 * @returns Whether the record maps uniquely to the rendered node.
 	 */
 	function matchesSelectedPerson(p: Person): boolean {
 		return p.id === nodeData.id || (p.name === nodeData.name && !genealogyData.some(hasConflictingNameForSelectedId));
@@ -449,9 +449,9 @@ function LayoutFlow({ genealogyData }: { genealogyData: Person[] }): React.JSX.E
 		const marriageChildEdgeSet = new Set<string>();
 
 		/**
- * Registers one source person as a React Flow node.
- *
- * @param p - Source genealogy record to include in the graph.
+		 * Registers one source person as a React Flow node.
+		 *
+		 * @param p - Source genealogy record to include in the graph.
 		 */
 		function addPersonNode(p: Person): void {
 			nNodes.push({
@@ -469,19 +469,19 @@ function LayoutFlow({ genealogyData }: { genealogyData: Person[] }): React.JSX.E
 		}
 
 		/**
- * Adds non-marriage parent-child edges for one source person.
- *
- * @param p - Record whose children are linked directly.
+		 * Adds non-marriage parent-child edges for one source person.
+		 *
+		 * @param p - Record whose children are linked directly.
 		 */
 		function addDirectRelationships(p: Person): void {
 			if (p.spouseId) {
 				const primaryPersonId = p.id;
 				/**
- * Locates the source p whose id is the spouse reference.
- *
- * @param c - Person record considered as the spouse.
- *
- * @returns Whether the source record matches the spouse id.
+				 * Locates the source p whose id is the spouse reference.
+				 *
+				 * @param c - Person record considered as the spouse.
+				 *
+				 * @returns Whether the source record matches the spouse id.
 				 */
 				function isSpouse(c: Person): boolean {
 					return c.id === p.spouseId;
@@ -536,9 +536,9 @@ function LayoutFlow({ genealogyData }: { genealogyData: Person[] }): React.JSX.E
 					});
 				}
 				/**
- * Connects each recorded child to this spouse pair's connector.
- *
- * @param c - Source record id of the child.
+				 * Connects each recorded child to this spouse pair's connector.
+				 *
+				 * @param c - Source record id of the child.
 				 */
 				function addMarriageChildEdge(c: string): void {
 					if (!personNodeMap.has(c)) return;
@@ -552,9 +552,9 @@ function LayoutFlow({ genealogyData }: { genealogyData: Person[] }): React.JSX.E
 			}
 
 			/**
- * Connects a recorded child directly when the person has no spouse.
- *
- * @param c - Source record id of the child.
+			 * Connects a recorded child directly when the person has no spouse.
+			 *
+			 * @param c - Source record id of the child.
 			 */
 			function addDirectChildEdge(c: string): void {
 				if (!personNodeMap.has(c)) return;
@@ -605,33 +605,33 @@ function LayoutFlow({ genealogyData }: { genealogyData: Person[] }): React.JSX.E
 	}, [fitView]);
 
 	/**
- * Capitalizes the first character of a display name segment.
- *
- * @param character - Name segment whose initial should be uppercased.
- *
- * @returns The segment's initial character in uppercase.
+	 * Capitalizes the first character of a display name segment.
+	 *
+	 * @param character - Name segment whose initial should be uppercased.
+	 *
+	 * @returns The segment's initial character in uppercase.
 	 */
 	function capitalizeInitial(character: string): string {
 		return character.toUpperCase();
 	}
 
 	/**
- * Converts a source person id into the visible child name.
- *
- * @param p - Genealogy id containing the name before its first hyphen.
- *
- * @returns The capitalized name segment, or undefined for an empty id.
+	 * Converts a source person id into the visible child name.
+	 *
+	 * @param p - Genealogy id containing the name before its first hyphen.
+	 *
+	 * @returns The capitalized name segment, or undefined for an empty id.
 	 */
 	function getChildName(p: string): string | undefined {
 		return p.split('-')[0]?.replace(SHARED_REGEX, capitalizeInitial);
 	}
 
 	/**
- * Renders an audio item attached to the selected genealogy person.
- *
- * @param r - Audio metadata from the person's genealogy record.
- *
- * @returns The recording's player row.
+	 * Renders an audio item attached to the selected genealogy person.
+	 *
+	 * @param r - Audio metadata from the person's genealogy record.
+	 *
+	 * @returns The recording's player row.
 	 */
 	function renderPersonAudio(r: NonNullable<Person['audio']>[number]): React.JSX.Element {
 		return <Player key={r.audio} title={r.title} author={r.author} src={r.audio} />;
