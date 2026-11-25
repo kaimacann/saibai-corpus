@@ -1,2 +1,10 @@
-/** @type {import('prettier').Config} */
-export default { plugins: ["prettier-plugin-astro"] };
+/**
+ * config/.prettierrc.mjs
+ */
+/*//////////////////////////////////////////////////
+IMPORTS
+//////////////////////////////////////////////////*/
+
+import config from '../prettier.config.cjs';
+
+export default config;
